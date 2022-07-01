@@ -9,8 +9,11 @@ public class Managers : MonoBehaviour
     public static SoundManager s_Sound = new SoundManager();
     public static UIManager s_ui = new UIManager();
     public static SceneManagerEx s_Scene = new SceneManagerEx();
+    public static DataManager s_Data = new DataManager();
 
     public static Managers Instance { get { return s_instance; } }
+
+    public static DataManager Data { get { Init(); return s_Data; } }
     public static ResourceManager Resource { get { Init();  return s_Resource; } }
     public static SoundManager Sound { get { Init(); return s_Sound; } }
     public static UIManager UI { get { Init(); return s_ui; } }
@@ -36,6 +39,7 @@ public class Managers : MonoBehaviour
             DontDestroyOnLoad(go);
             s_Resource.Init();
             s_Scene.Init();
+            s_Data.Init();
         }
     }
 }

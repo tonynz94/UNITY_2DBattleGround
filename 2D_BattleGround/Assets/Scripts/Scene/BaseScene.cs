@@ -22,7 +22,8 @@ public class BaseScene : MonoBehaviour
         GameObject go = GameObject.Find("EventSystem");
         if (go == null)
             Managers.Resource.Instantiate("UI/EventSystem").name = "@EventSystem";
-        
+        else
+            go.name = "@EventSysyem";
         return true;
     }
 

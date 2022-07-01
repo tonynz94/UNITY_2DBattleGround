@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class UI_IntroPopup : UI_Base
+public class UI_IntroPopup : UI_Popup
 {
     protected enum Buttons
     {
@@ -12,13 +12,17 @@ public class UI_IntroPopup : UI_Base
     }
 
     // Start is called before the first frame update
-    public override void Init()
+    public override bool Init()
     {
-        base.Init();
+        if (base.Init() == false)
+            return false;
+
         Bind<Button>(typeof(Buttons));
 
         GetButton((int)Buttons.StartButton).gameObject.BindEvent(OnStartButton);
         GetButton((int)Buttons.ExitButton).gameObject.BindEvent(OnExitButton);
+        
+        return true;
     }
 
     void OnStartButton()

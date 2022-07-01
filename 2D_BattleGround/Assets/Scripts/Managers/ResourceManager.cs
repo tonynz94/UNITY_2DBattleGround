@@ -15,7 +15,7 @@ public class ResourceManager
 
     public GameObject Instantiate(string path, Transform parent = null)
     {
-        GameObject prefeb = Load<GameObject>($"Prefab/{path}");
+        GameObject prefeb = Load<GameObject>($"Prefabs/{path}");
         if (prefeb == null)
         {
             return null;

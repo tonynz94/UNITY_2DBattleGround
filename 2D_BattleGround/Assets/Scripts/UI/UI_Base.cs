@@ -9,13 +9,19 @@ using UnityEngine.UI;
 public class UI_Base : MonoBehaviour
 {
     Dictionary<Type, UnityEngine.Object[]> _objects = new Dictionary<Type, UnityEngine.Object[]>();
+
+    protected bool _init = false;
     private void Start()
     {
         Init();
     }
 
-    public virtual void Init()
+    public virtual bool Init()
     {
+        if (_init)
+            return false;
+
+        return _init = true;
     }
 
     protected void Bind<T>(Type type) where T : UnityEngine.Object

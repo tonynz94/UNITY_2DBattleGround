@@ -10,6 +10,8 @@ public class Managers : MonoBehaviour
     public static UIManager s_ui = new UIManager();
     public static SceneManagerEx s_Scene = new SceneManagerEx();
     public static DataManager s_Data = new DataManager();
+    public static ObjectManager s_Object = new ObjectManager();
+    public static PlayerManager s_Player = new PlayerManager();
 
     public static Managers Instance { get { return s_instance; } }
 
@@ -18,7 +20,7 @@ public class Managers : MonoBehaviour
     public static SoundManager Sound { get { Init(); return s_Sound; } }
     public static UIManager UI { get { Init(); return s_ui; } }
     public static SceneManagerEx Scene { get { Init(); return s_Scene; } }
-
+    public static PlayerManager Player{ get { Init(); return s_Player; } }
 
 
     // Start is called before the first frame update
@@ -40,6 +42,7 @@ public class Managers : MonoBehaviour
             s_Resource.Init();
             s_Scene.Init();
             s_Data.Init();
+            s_Object.Init();
         }
     }
 }

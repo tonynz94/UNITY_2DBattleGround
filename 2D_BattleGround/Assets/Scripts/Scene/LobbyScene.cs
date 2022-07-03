@@ -9,9 +9,8 @@ public class LobbyScene : BaseScene
         if (base.Init() == false)
             return false;
 
-        SceneType = Define.Scene.LobbyScene;
-        Managers.UI.ShowPopupUI<UI_IntroPopup>();
-        Managers.Sound.Play(Define.Sound.Bgm, "Sound_MainPlayBGM");
+        Managers.UI.ShowPopupUI<UI_LobbyPopup>();
+
         return true;
     }
 }

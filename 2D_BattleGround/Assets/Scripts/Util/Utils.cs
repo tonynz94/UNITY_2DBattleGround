@@ -40,7 +40,7 @@ public class Utils : MonoBehaviour
 
     }
 
-    public static GameObject FindChild(GameObject go, string name = null, bool recursive = false)
+    public static GameObject FindChild(GameObject go, string name = null, bool recursive = true)
     {
         Transform transform = FindChild<Transform>(go, name, recursive);
         if (transform != null)

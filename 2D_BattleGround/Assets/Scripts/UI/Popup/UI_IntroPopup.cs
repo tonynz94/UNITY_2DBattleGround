@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using DG.Tweening;
 
 public class UI_IntroPopup : UI_Popup
 {
@@ -39,7 +40,7 @@ public class UI_IntroPopup : UI_Popup
     {
         Debug.Log("ContinueButton");
         Managers.Sound.Play(Define.Sound.Effect, "Sound_MainButton");
-
+        GetButton((int)Buttons.StartButton).gameObject.transform.DORotate(new Vector3(0, 180, 0), 2.0f);
         //ToDo
         //????? ??? ??
         //??? ??? ?? ? ??? ??? ??

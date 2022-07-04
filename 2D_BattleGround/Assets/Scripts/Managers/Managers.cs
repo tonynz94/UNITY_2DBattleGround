@@ -12,6 +12,7 @@ public class Managers : MonoBehaviour
     public static DataManager s_Data = new DataManager();
     public static ObjectManager s_Object = new ObjectManager();
     public static PlayerManager s_Player = new PlayerManager();
+    public static MapManager s_Map = new MapManager();
 
     public static Managers Instance { get { return s_instance; } }
 
@@ -21,6 +22,7 @@ public class Managers : MonoBehaviour
     public static UIManager UI { get { Init(); return s_ui; } }
     public static SceneManagerEx Scene { get { Init(); return s_Scene; } }
     public static PlayerManager Player{ get { Init(); return s_Player; } }
+    public static MapManager Map { get { Init(); return s_Map; } }
 
 
     // Start is called before the first frame update
@@ -43,6 +45,7 @@ public class Managers : MonoBehaviour
             s_Scene.Init();
             s_Data.Init();
             s_Object.Init();
+            s_Map.init();
         }
     }
 }

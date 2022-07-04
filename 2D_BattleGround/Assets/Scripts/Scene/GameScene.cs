@@ -9,6 +9,8 @@ public class GameScene : BaseScene
         if (base.Init() == false)
             return false;
 
+        Managers.Map.LoadMap(1);
+
         return true;
     }
 

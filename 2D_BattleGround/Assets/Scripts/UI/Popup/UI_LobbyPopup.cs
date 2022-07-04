@@ -6,13 +6,15 @@ public class UI_LobbyPopup : UI_Popup
 {
     enum Buttons
     {
-        StartButton,
+        ShowRoomButton,
+        CreateRoomButton,
         HeroButton,
     }
 
     enum Texts
     {
-        StartButtonText,
+        ShowRoomButtonText,
+        CreateRoomButtonText,
         HeroButtonText,
         PlayerNickText,
         PlayerLevelText,
@@ -42,7 +44,9 @@ public class UI_LobbyPopup : UI_Popup
         BindImage(typeof(Images));
         BindObject(typeof(GameObjects));
 
-        BindEvent(GetButton((int)Buttons.StartButton).gameObject, OnStartButton);
+        BindEvent(GetButton((int)Buttons.ShowRoomButton).gameObject, OnShowRoomButton);
+        BindEvent(GetButton((int)Buttons.CreateRoomButton).gameObject, OnCreateButton);
+
         BindEvent(GetButton((int)Buttons.HeroButton).gameObject, OnHeroButton);
 
         InitPlayerInfo();
@@ -50,9 +54,15 @@ public class UI_LobbyPopup : UI_Popup
         return true;
     }
 
-    public void OnStartButton()
+    public void OnShowRoomButton()
     {
-        Debug.Log("Play Game");
+        Debug.Log("Show Room");
+        Managers.UI.ShowPopupUI<UI_RoomList>();
+    }
+
+    public void OnCreateButton()
+    {
+        Debug.Log("Create Room");
     }
 
     public void OnHeroButton()

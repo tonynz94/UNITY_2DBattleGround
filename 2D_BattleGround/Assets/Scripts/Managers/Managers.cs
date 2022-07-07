@@ -44,7 +44,6 @@ public class Managers : MonoBehaviour
             s_Resource.Init();
             s_Scene.Init();
             s_Data.Init();
-            s_Object.Init();
             s_Map.init();
         }
     }

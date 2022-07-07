@@ -4,8 +4,5 @@ using UnityEngine;
 
 public class ObjectManager
 {
-    public void Init()
-    {
-        
-    }
+
 }

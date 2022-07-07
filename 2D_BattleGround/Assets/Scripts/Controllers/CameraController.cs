@@ -15,9 +15,16 @@ public class CameraController : MonoBehaviour
     void LateUpdate()
     {
         //현재 살아남아서 플레이 중 일때
-        if(_mode == Define.CameraMode.AliveMode)
+        switch(_mode)
         {
-
+            case Define.CameraMode.AliveMode:
+                break;
+            case Define.CameraMode.DieMode:
+                break;
+            case Define.CameraMode.EndingMode:
+                break;
+            case Define.CameraMode.GameOverMode:
+                break;
         }
     }
 }

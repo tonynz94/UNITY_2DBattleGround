@@ -10,6 +10,8 @@ public class GameScene : BaseScene
             return false;
 
         Managers.Map.LoadMap(1);
+        Managers.Sound.Play(Define.Sound.Bgm, "Sound_AboveTheTreetops");
+        Managers.Game.Spawn(Define.WorldObject.Player, "Objects/Player");
 
         return true;
     }

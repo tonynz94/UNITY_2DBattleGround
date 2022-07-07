@@ -7,11 +7,36 @@ public class Define
 {
     public enum ObjectState
     {
-        None,
         Idle,
-        Move,
+        Moving,
         Attack,
+        Dead,
     }
+
+    public enum MoveDir
+    {
+        None,
+        Up,
+        Down,
+        Left,
+        Right,
+    }
+
+    public enum WorldObject
+    {
+        Unknown,
+        Player,
+        Monster,
+        Boss
+    }
+
+    public enum GameMode
+    {
+        PvPMode,
+        CooperativeMode,
+    }
+
+
     public enum Scene
     {
         Unknown,

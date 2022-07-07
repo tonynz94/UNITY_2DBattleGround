@@ -49,8 +49,8 @@ public class SoundManager
             return false;
         
         AudioSource audioSource = _audioSources[(int)type];
-        if (path.Contains("Sound/"))
-            string.Format("Sound/{0}", path);
+        if (!path.Contains("Sound/"))
+            path = string.Format("Sound/{0}", path);
 
         if (audioSource == null)
             return false;
@@ -68,6 +68,7 @@ public class SoundManager
                 audioSource.Stop();
 
             audioSource.clip = audioClip;
+            audioSource.Play();
             return true;      
         }
         else if (type == Define.Sound.Effect)

@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Net;
 using UnityEngine;
 
-public class NetworkManager : MonoBehaviour
+public class NetworkManager
 {
 	ServerSession _session = new ServerSession();
 
@@ -15,7 +15,7 @@ public class NetworkManager : MonoBehaviour
 		_session.Send(sendBuff);
 	}
 
-    void Start()
+    public void ConnectServer()
     {
 		// DNS (Domain Name System)
 		string host = Dns.GetHostName();
@@ -30,7 +30,7 @@ public class NetworkManager : MonoBehaviour
 			1);
 	}
 
-    void Update()
+    public void Update()
     {
 		List<IPacket> list = PacketQueue.Instance.PopAll();
 		foreach (IPacket packet in list)

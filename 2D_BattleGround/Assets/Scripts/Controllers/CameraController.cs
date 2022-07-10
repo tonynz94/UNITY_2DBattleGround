@@ -18,6 +18,7 @@ public class CameraController : MonoBehaviour
         switch(_mode)
         {
             case Define.CameraMode.AliveMode:
+                transform.position = new Vector3(_targetPoint.transform.position.x, _targetPoint.transform.position.y, -10);
                 break;
             case Define.CameraMode.DieMode:
                 break;

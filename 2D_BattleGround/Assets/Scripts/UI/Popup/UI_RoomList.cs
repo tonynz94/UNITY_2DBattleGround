@@ -37,8 +37,8 @@ public class UI_RoomList : UI_Popup
         BindText(typeof(Texts));
         BindImage(typeof(Images));
 
-        BindEvent(GetObject((int)Buttons.JoinButton), OnJoinButton);
-        BindEvent(GetObject((int)Buttons.BackButton), OnBackButton);
+        BindEvent(GetButton((int)Buttons.JoinButton).gameObject, OnJoinButton);
+        BindEvent(GetButton((int)Buttons.BackButton).gameObject, OnBackButton);
 
         //TODO
         //서버로부터 룸 정보를 받아
@@ -54,6 +54,7 @@ public class UI_RoomList : UI_Popup
 
     public void OnBackButton()
     {
+        
         Managers.UI.ClosePopupUI(this);
         Debug.Log("Close Button Click");
     }

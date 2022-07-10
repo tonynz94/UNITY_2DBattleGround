@@ -10,6 +10,7 @@ public class LobbyScene : BaseScene
             return false;
 
         Managers.UI.ShowPopupUI<UI_LobbyPopup>();
+        Managers.Sound.Play(Define.Sound.Bgm, "Sound_IobbyBGM");
 
         return true;
     }

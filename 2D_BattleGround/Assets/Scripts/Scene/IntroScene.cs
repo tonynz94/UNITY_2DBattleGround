@@ -11,7 +11,7 @@ public class IntroScene : BaseScene
 
         SceneType = Define.Scene.IntroScene;
         Managers.UI.ShowPopupUI<UI_IntroPopup>();
-        Managers.Sound.Play(Define.Sound.Bgm, "Sound_MainPlayBGM");
+        Managers.Sound.Play(Define.Sound.Bgm, "Sound_IntroBGM");
         return true;
     }
 }

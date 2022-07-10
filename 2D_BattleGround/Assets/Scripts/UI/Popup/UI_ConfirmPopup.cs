@@ -47,10 +47,8 @@ public class UI_ConfirmPopup : UI_Popup
             Debug.Log("아이디를 입력하시오");
             return;
         }
-
+        Managers.Net.ConnectServer();
         Managers.Player.NewGame(inputField.text);
-        Managers.Sound.Play(Define.Sound.Effect, "Sound_Bubble");
-        Managers.UI.ClosePopupUI(this);
-        Managers.Scene.ChangeScene(Define.Scene.LobbyScene);
+
     }
 }

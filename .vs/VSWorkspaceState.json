@@ -1,0 +1,17 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\2D_BattleGround",
+    "\\2D_BattleGround\\Assets",
+    "\\2D_BattleGround\\Assets\\Scripts",
+    "\\2D_BattleGround\\Assets\\Scripts\\Managers",
+    "\\2D_BattleGround\\Assets\\TopDown 2D RPG BE3",
+    "\\Server",
+    "\\Server\\bin",
+    "\\Server\\bin\\Debug",
+    "\\Server\\obj",
+    "\\Server\\obj\\Debug"
+  ],
+  "SelectedNode": "\\2D_BattleGround\\Assets\\Scripts\\Managers\\DataManager.cs",
+  "PreviewInSolutionExplorer": false
+}

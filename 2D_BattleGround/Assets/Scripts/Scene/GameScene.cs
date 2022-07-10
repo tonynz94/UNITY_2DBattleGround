@@ -10,8 +10,9 @@ public class GameScene : BaseScene
             return false;
 
         Managers.Map.LoadMap(1);
-        Managers.Sound.Play(Define.Sound.Bgm, "Sound_AboveTheTreetops");
-        Managers.Game.Spawn(Define.WorldObject.Player, "Objects/Player");
+        Managers.Sound.Play(Define.Sound.Bgm, "Sound_IngameBGM");
+        GameObject player =Managers.Game.Spawn(Define.WorldObject.Player, "Objects/Player");
+        Camera.main.gameObject.AddComponent<CameraController>().TargetPoint(player);
 
         return true;
     }

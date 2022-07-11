@@ -6,6 +6,7 @@ namespace Server.Game
 {
     public class PlayerInfo
     {
+        public String NickName;
         public bool isInGame;
         public float PosX;
         public float PosY;
@@ -15,7 +16,7 @@ namespace Server.Game
 
     class Player
     {
-        public PlayerInfo Info { get; set; }
+        public PlayerInfo Info { get; set; } = new PlayerInfo(); 
         public ClientSession Session { get; set; }
         public GameRoom Room { get; set; }
     }

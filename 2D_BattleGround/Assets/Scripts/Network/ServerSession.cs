@@ -12,6 +12,10 @@ namespace DummyClient
 		public override void OnConnected(EndPoint endPoint)
 		{
 			Debug.Log($"OnConnected : {endPoint}");
+
+			C_FirstEnter firstEnter = new C_FirstEnter();
+			firstEnter.playerNickName = Managers.Player.NickName;
+			Managers.Net.Send(firstEnter.Write());
 		}
 
 		public override void OnDisconnected(EndPoint endPoint)

@@ -6,12 +6,14 @@ using ServerCore;
 
 public enum PacketID
 {
-	S_BroadcastEnterGame = 1,
-	C_LeaveGame = 2,
-	S_BroadcastLeaveGame = 3,
-	S_PlayerList = 4,
-	C_Move = 5,
-	S_BroadcastMove = 6,
+	C_FirstEnter = 1,
+	S_FirstEnter = 2,
+	S_BroadcastEnterGame = 3,
+	C_LeaveGame = 4,
+	S_BroadcastLeaveGame = 5,
+	S_PlayerList = 6,
+	C_Move = 7,
+	S_BroadcastMove = 8,
 	
 }
 
@@ -22,6 +24,83 @@ public interface IPacket
 	ArraySegment<byte> Write();
 }
 
+
+public class C_FirstEnter : IPacket
+{
+	public string playerNickName;
+
+	public ushort Protocol { get { return (ushort)PacketID.C_FirstEnter; } }
+
+	public void Read(ArraySegment<byte> segment)
+	{
+		ushort count = 0;
+		count += sizeof(ushort);
+		count += sizeof(ushort);
+		ushort playerNickNameLen = BitConverter.ToUInt16(segment.Array, segment.Offset + count);
+		count += sizeof(ushort);
+		this.playerNickName = Encoding.Unicode.GetString(segment.Array, segment.Offset + count, playerNickNameLen);
+		count += playerNickNameLen;
+	}
+
+	public ArraySegment<byte> Write()
+	{
+		ArraySegment<byte> segment = SendBufferHelper.Open(4096);
+		ushort count = 0;
+
+		count += sizeof(ushort);
+		Array.Copy(BitConverter.GetBytes((ushort)PacketID.C_FirstEnter), 0, segment.Array, segment.Offset + count, sizeof(ushort));
+		count += sizeof(ushort);
+		ushort playerNickNameLen = (ushort)Encoding.Unicode.GetBytes(this.playerNickName, 0, this.playerNickName.Length, segment.Array, segment.Offset + count + sizeof(ushort));
+		Array.Copy(BitConverter.GetBytes(playerNickNameLen), 0, segment.Array, segment.Offset + count, sizeof(ushort));
+		count += sizeof(ushort);
+		count += playerNickNameLen;
+
+		Array.Copy(BitConverter.GetBytes(count), 0, segment.Array, segment.Offset, sizeof(ushort));
+
+		return SendBufferHelper.Close(count);
+	}
+}
+
+public class S_FirstEnter : IPacket
+{
+	public string playerNickName;
+	public int CGUID;
+
+	public ushort Protocol { get { return (ushort)PacketID.S_FirstEnter; } }
+
+	public void Read(ArraySegment<byte> segment)
+	{
+		ushort count = 0;
+		count += sizeof(ushort);
+		count += sizeof(ushort);
+		ushort playerNickNameLen = BitConverter.ToUInt16(segment.Array, segment.Offset + count);
+		count += sizeof(ushort);
+		this.playerNickName = Encoding.Unicode.GetString(segment.Array, segment.Offset + count, playerNickNameLen);
+		count += playerNickNameLen;
+		this.CGUID = BitConverter.ToInt32(segment.Array, segment.Offset + count);
+		count += sizeof(int);
+	}
+
+	public ArraySegment<byte> Write()
+	{
+		ArraySegment<byte> segment = SendBufferHelper.Open(4096);
+		ushort count = 0;
+
+		count += sizeof(ushort);
+		Array.Copy(BitConverter.GetBytes((ushort)PacketID.S_FirstEnter), 0, segment.Array, segment.Offset + count, sizeof(ushort));
+		count += sizeof(ushort);
+		ushort playerNickNameLen = (ushort)Encoding.Unicode.GetBytes(this.playerNickName, 0, this.playerNickName.Length, segment.Array, segment.Offset + count + sizeof(ushort));
+		Array.Copy(BitConverter.GetBytes(playerNickNameLen), 0, segment.Array, segment.Offset + count, sizeof(ushort));
+		count += sizeof(ushort);
+		count += playerNickNameLen;
+		Array.Copy(BitConverter.GetBytes(this.CGUID), 0, segment.Array, segment.Offset + count, sizeof(int));
+		count += sizeof(int);
+
+		Array.Copy(BitConverter.GetBytes(count), 0, segment.Array, segment.Offset, sizeof(ushort));
+
+		return SendBufferHelper.Close(count);
+	}
+}
 
 public class S_BroadcastEnterGame : IPacket
 {

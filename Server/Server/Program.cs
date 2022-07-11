@@ -6,17 +6,18 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using ServerCore;
+using Server.Game;
 
 namespace Server
 {
 	class Program
 	{
 		static Listener _listener = new Listener();
-		public static GameRoom Room = new GameRoom();
+		//public static GameRoom Room = new GameRoom();
 
 		static void FlushRoom()
 		{
-			Room.Flush();
+			//Room.Flush();
 			JobTimer.Instance.Push(FlushRoom, 250);
 		}
 

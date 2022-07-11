@@ -5,6 +5,7 @@ using UnityEngine;
 //내 플레이어대한 모든 정보
 public class PlayerManager
 {
+    public int CGUID;
     public int _level;
     public int _totalExp;
     public int _currentExp;

@@ -38,12 +38,12 @@ namespace Server.Game
         //끝난 게임 삭제
         public GameRoom Remove(int roomId)
         {
-
+            return null;
         }
 
         public GameRoom Find(int roomId)
         {
-
+            return null;
         }
     }
 }

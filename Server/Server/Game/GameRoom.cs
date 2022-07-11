@@ -11,13 +11,13 @@ namespace Server.Game
 		//0번은 로비 
 		//1 ~ n번은 실행중인 게임
 		public int RoomID { get; set; }
-		List<Player> _players = new List<Player>();
+		Dictionary<int, Player> _players = new Dictionary<int, Player>();
 		List<ArraySegment<byte>> _pendingList = new List<ArraySegment<byte>>();
 
 		public void Flush()
 		{
-			foreach (Player s in _players)
-				s.Session.Send(_pendingList);
+			foreach (KeyValuePair<int, Player> player in _players)
+				player.Value.Session.Send(_pendingList);
 			//Console.WriteLine($"Flushed {_pendingList.Count} items");
 			_pendingList.Clear();
 		}
@@ -30,7 +30,7 @@ namespace Server.Game
 		public void EnterLobby(Player player)
 		{
 			//로비에 추가
-			_players.Add(player);
+			_players.Add(player.Session.SessionId, player);
 			player.Room = this;
 
 			//// 신입생한테 모든 플레이어 목록 전송

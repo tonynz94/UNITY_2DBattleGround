@@ -6,15 +6,25 @@ using System.Text;
 
 class PacketHandler
 {
+	public static void C_FirstEnterHandler(PacketSession session, IPacket packet)
+	{
+		
+		C_FirstEnter pkt = packet as C_FirstEnter;
+		ClientSession clientSession = session as ClientSession;
+		//Lock이 필요한가?
+		clientSession.MyPlayer.Info.NickName = pkt.playerNickName;
+		Console.WriteLine($"클라로 부터 설정한 닉네임 받음 : { pkt.playerNickName}");
+	}
+
 	public static void C_LeaveGameHandler(PacketSession session, IPacket packet)
 	{
 		ClientSession clientSession = session as ClientSession;
 
-		if (clientSession.Room == null)
-			return;
+		//if (clientSession.Room == null)
+		//	return;
 
-		GameRoom room = clientSession.Room;
-		room.LeaveLobby(clientSession);
+		//GameRoom room = clientSession.Room;
+		//room.LeaveLobby(clientSession);
 	}
 
 	public static void C_MoveHandler(PacketSession session, IPacket packet)
@@ -22,12 +32,12 @@ class PacketHandler
 		C_Move movePacket = packet as C_Move;
 		ClientSession clientSession = session as ClientSession;
 
-		if (clientSession.Room == null)
-			return;
+		//if (clientSession.Room == null)
+		//	return;
 
-		//Console.WriteLine($"{movePacket.posX}, {movePacket.posY}, {movePacket.posZ}");
+		////Console.WriteLine($"{movePacket.posX}, {movePacket.posY}, {movePacket.posZ}");
 
-		GameRoom room = clientSession.Room;
-		room.Move(clientSession, movePacket);
+		//GameRoom room = clientSession.Room;
+		//room.Move(clientSession, movePacket);
 	}
 }

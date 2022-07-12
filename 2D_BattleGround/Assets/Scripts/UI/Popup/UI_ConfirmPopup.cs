@@ -47,8 +47,9 @@ public class UI_ConfirmPopup : UI_Popup
             Debug.Log("아이디를 입력하시오");
             return;
         }
-        Managers.Net.ConnectServer();
-        Managers.Player.NewGame(inputField.text);
 
+        C_FirstEnter sPkt = new C_FirstEnter();
+        sPkt.playerNickName = inputField.text;
+        Managers.Net.Send(sPkt.Write());
     }
 }

@@ -1,5 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <PDL>
+
+  <packet name="S_HandShake">
+  </packet>
   
   <packet name="C_FirstEnter">
     <String name="playerNickName"/>

@@ -5,6 +5,12 @@ using UnityEngine;
 
 public class Define
 {
+    public enum ChatType
+    {
+        System,
+        Channel
+    }
+
     public enum ObjectState
     {
         Idle,

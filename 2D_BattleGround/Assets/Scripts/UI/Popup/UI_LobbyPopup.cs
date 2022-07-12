@@ -72,9 +72,9 @@ public class UI_LobbyPopup : UI_Popup
 
     public void InitPlayerInfo()
     {
-        GetText((int)Texts.PlayerNickText).text = Managers.Player.NickName;
-        GetText((int)Texts.PlayerLevelText).text = Managers.Player.Level.ToString();
-        GetText((int)Texts.DiamondText).text = Managers.Player._gameDiamond.ToString();
-        GetText((int)Texts.MoneyText).text = Managers.Player._gameMoney.ToString();
+        GetText((int)Texts.PlayerNickText).text = Managers.Player.MyPlayer.NickName;
+        GetText((int)Texts.PlayerLevelText).text = Managers.Player.MyPlayer.Level.ToString();
+        GetText((int)Texts.DiamondText).text = Managers.Player.MyPlayer._gameDiamond.ToString();
+        GetText((int)Texts.MoneyText).text = Managers.Player.MyPlayer._gameMoney.ToString();
     }
 }

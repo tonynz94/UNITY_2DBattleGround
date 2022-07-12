@@ -3,17 +3,33 @@ using ServerCore;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using Server.Game;
 
 class PacketHandler
 {
 	public static void C_FirstEnterHandler(PacketSession session, IPacket packet)
 	{
 		
-		C_FirstEnter pkt = packet as C_FirstEnter;
+		C_FirstEnter Rpkt = packet as C_FirstEnter;
 		ClientSession clientSession = session as ClientSession;
 		//Lock이 필요한가?
-		clientSession.MyPlayer.Info.NickName = pkt.playerNickName;
-		Console.WriteLine($"클라로 부터 설정한 닉네임 받음 : { pkt.playerNickName}");
+
+		Player player = null;
+		player = PlayerManager.Instance.Add(clientSession.SessionId);
+		player.Info.NickName = Rpkt.playerNickName;
+		player.Info.isInGame = false;
+		player.Session = clientSession;
+		
+		RoomManager.Instance.EnterToLobby(player);
+
+		S_FirstEnter Spkt = new S_FirstEnter();
+		Spkt.CGUID = player.Session.SessionId;
+		Spkt.playerNickName = player.Info.NickName;
+		clientSession.MyPlayer = player;
+
+		clientSession.Send(Spkt.Write());
+
+		Console.WriteLine($"클라로 부터 설정한 닉네임 받음 : { Rpkt.playerNickName}");
 	}
 
 	public static void C_LeaveGameHandler(PacketSession session, IPacket packet)

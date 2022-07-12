@@ -6,14 +6,15 @@ using ServerCore;
 
 public enum PacketID
 {
-	C_FirstEnter = 1,
-	S_FirstEnter = 2,
-	S_BroadcastEnterGame = 3,
-	C_LeaveGame = 4,
-	S_BroadcastLeaveGame = 5,
-	S_PlayerList = 6,
-	C_Move = 7,
-	S_BroadcastMove = 8,
+	S_HandShake = 1,
+	C_FirstEnter = 2,
+	S_FirstEnter = 3,
+	S_BroadcastEnterGame = 4,
+	C_LeaveGame = 5,
+	S_BroadcastLeaveGame = 6,
+	S_PlayerList = 7,
+	C_Move = 8,
+	S_BroadcastMove = 9,
 	
 }
 
@@ -24,6 +25,36 @@ public interface IPacket
 	ArraySegment<byte> Write();
 }
 
+
+public class S_HandShake : IPacket
+{
+	
+
+	public ushort Protocol { get { return (ushort)PacketID.S_HandShake; } }
+
+	public void Read(ArraySegment<byte> segment)
+	{
+		ushort count = 0;
+		count += sizeof(ushort);
+		count += sizeof(ushort);
+		
+	}
+
+	public ArraySegment<byte> Write()
+	{
+		ArraySegment<byte> segment = SendBufferHelper.Open(4096);
+		ushort count = 0;
+
+		count += sizeof(ushort);
+		Array.Copy(BitConverter.GetBytes((ushort)PacketID.S_HandShake), 0, segment.Array, segment.Offset + count, sizeof(ushort));
+		count += sizeof(ushort);
+		
+
+		Array.Copy(BitConverter.GetBytes(count), 0, segment.Array, segment.Offset, sizeof(ushort));
+
+		return SendBufferHelper.Close(count);
+	}
+}
 
 public class C_FirstEnter : IPacket
 {

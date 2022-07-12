@@ -8,8 +8,7 @@ public class UI_IntroPopup : UI_Popup
 {
     protected enum Buttons
     {
-        StartButton,
-        ContinueButton
+        TapToStartButton,
     }
 
     // Start is called before the first frame update
@@ -20,29 +19,16 @@ public class UI_IntroPopup : UI_Popup
 
         BindButton(typeof(Buttons));
 
-        GetButton((int)Buttons.StartButton).gameObject.BindEvent(OnStartButton);
-        GetButton((int)Buttons.ContinueButton).gameObject.BindEvent(OnContinueButton);
+        GetButton((int)Buttons.TapToStartButton).gameObject.BindEvent(OnTapToStartButton);
         
         return true;
     }
 
-    //????
-    void OnStartButton()
+    void OnTapToStartButton()
     {
         Debug.Log("start Button");
         Managers.Sound.Play(Define.Sound.Effect, "Sound_MainButton");
-        Managers.UI.ClosePopupUI(this);
-        Managers.UI.ShowPopupUI<UI_ConfirmPopup>();
+        Managers.Net.ConnectServer();
     }
 
-    //???
-    void OnContinueButton()
-    {
-        Debug.Log("ContinueButton");
-        Managers.Sound.Play(Define.Sound.Effect, "Sound_MainButton");
-        GetButton((int)Buttons.StartButton).gameObject.transform.DORotate(new Vector3(0, 180, 0), 2.0f);
-        //ToDo
-        //????? ??? ??
-        //??? ??? ?? ? ??? ??? ??
-    }
 }

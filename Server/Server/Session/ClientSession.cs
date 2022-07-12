@@ -23,11 +23,9 @@ namespace Server
 		{
 			Console.WriteLine($"OnConnected : {endPoint}, SessionID : {SessionId}");
 
-			MyPlayer = PlayerManager.Instance.Add(SessionId);
-			MyPlayer.Info.isInGame = false;
-			MyPlayer.Session = this;
+			S_HandShake sPkt = new S_HandShake();
+			Send(sPkt.Write());
 
-			RoomManager.Instance.EnterToLobby(MyPlayer);
 		}
 
 		public override void OnRecvPacket(ArraySegment<byte> buffer)

@@ -32,6 +32,11 @@ class PacketHandler
 		Console.WriteLine($"클라로 부터 설정한 닉네임 받음 : { Rpkt.playerNickName}");
 	}
 
+	public static void C_SendChatHandler(PacketSession session, IPacket packet)
+    {
+		C_SendChat pkt = packet as C_SendChat;
+    }
+
 	public static void C_LeaveGameHandler(PacketSession session, IPacket packet)
 	{
 		ClientSession clientSession = session as ClientSession;

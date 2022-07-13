@@ -12,6 +12,22 @@
     <String name="playerNickName"/>
     <int name="CGUID"/>
   </packet>
+
+  <packet name="C_SendChat">
+    <int name="messageType"/>
+    <string name="nickName"/>
+    <string name="chatContent"/>
+  </packet>
+
+  <packet name="S_SendChat">
+    <int name="messageType"/>
+    <string name="nickName"/>
+    <string name="chatContent"/>
+  </packet>
+
+  <packet name="S_NoticeAll">
+    <string name="chatContent"/>
+  </packet>
   
   <packet name="S_BroadcastEnterGame">
 	<int name="playerId"/>

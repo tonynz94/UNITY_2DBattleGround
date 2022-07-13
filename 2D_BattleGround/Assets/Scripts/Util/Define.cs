@@ -8,7 +8,8 @@ public class Define
     public enum ChatType
     {
         System,
-        Channel
+        Channel,
+        AllNotices
     }
 
     public enum ObjectState
@@ -79,6 +80,8 @@ public class Define
 
     public enum MESSAGE_EVENT_TYPE
     {
+        MESS_CHATTING_ADD,
+        MESS_ALLNOTICE_ADD,
         MESS_MAXCOUNT
     }
 
@@ -87,7 +90,7 @@ public class Define
     {
         static Action<object>[] _eventProcDelegates = new Action<object>[(int)MESSAGE_EVENT_TYPE.MESS_MAXCOUNT];
 
-        public static void CallEventMessage(int evtType, object obj)
+        public static void CallEventMessage(int evtType, object obj = null)
         {
                 _eventProcDelegates[evtType]?.Invoke(obj);
         }
@@ -97,7 +100,7 @@ public class Define
             _eventProcDelegates[evtType] += evt;
         }
 
-        public static void UnRegiserMessageSystem(int evtType, Action<object> evt)
+        public static void UnRegisterMessageSystem(int evtType, Action<object> evt)
         {
             _eventProcDelegates[evtType] -= evt;
         }

@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
+using static Define;
 
 class PacketHandler
 {
@@ -21,8 +22,22 @@ class PacketHandler
 
 		Managers.UI.ClosePopupUI();
 		Managers.Scene.ChangeScene(Define.Scene.LobbyScene);
+		Managers.Chat.chatAdd(ChatType.System, "", "Entered Channel 1");
 	} 
 
+	//상대방의 채팅을 받았을때
+	public static void S_SendChatHandler(PacketSession session, IPacket packet)
+    {
+		Debug.Log("[NetworkManager] @>> RECV : S_SendChat ");
+	}
+
+	public static void S_NoticeAllHandler(PacketSession session, IPacket packet)
+	{
+		Debug.Log("[NetworkManager] @>> RECV : S_NoticeAll ");
+	}
+	//===============================================================================================
+	//===============================================================================================
+	//===============================================================================================
 	public static void S_BroadcastEnterGameHandler(PacketSession session, IPacket packet)
 	{
 		Debug.Log("[NetworkManager] @>> RECV : S_BroadcastEnterGame ");

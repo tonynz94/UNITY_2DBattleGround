@@ -9,12 +9,15 @@ public enum PacketID
 	S_HandShake = 1,
 	C_FirstEnter = 2,
 	S_FirstEnter = 3,
-	S_BroadcastEnterGame = 4,
-	C_LeaveGame = 5,
-	S_BroadcastLeaveGame = 6,
-	S_PlayerList = 7,
-	C_Move = 8,
-	S_BroadcastMove = 9,
+	C_SendChat = 4,
+	S_SendChat = 5,
+	S_NoticeAll = 6,
+	S_BroadcastEnterGame = 7,
+	C_LeaveGame = 8,
+	S_BroadcastLeaveGame = 9,
+	S_PlayerList = 10,
+	C_Move = 11,
+	S_BroadcastMove = 12,
 	
 }
 
@@ -126,6 +129,142 @@ public class S_FirstEnter : IPacket
 		count += playerNickNameLen;
 		Array.Copy(BitConverter.GetBytes(this.CGUID), 0, segment.Array, segment.Offset + count, sizeof(int));
 		count += sizeof(int);
+
+		Array.Copy(BitConverter.GetBytes(count), 0, segment.Array, segment.Offset, sizeof(ushort));
+
+		return SendBufferHelper.Close(count);
+	}
+}
+
+public class C_SendChat : IPacket
+{
+	public int messageType;
+	public string nickName;
+	public string chatContent;
+
+	public ushort Protocol { get { return (ushort)PacketID.C_SendChat; } }
+
+	public void Read(ArraySegment<byte> segment)
+	{
+		ushort count = 0;
+		count += sizeof(ushort);
+		count += sizeof(ushort);
+		this.messageType = BitConverter.ToInt32(segment.Array, segment.Offset + count);
+		count += sizeof(int);
+		ushort nickNameLen = BitConverter.ToUInt16(segment.Array, segment.Offset + count);
+		count += sizeof(ushort);
+		this.nickName = Encoding.Unicode.GetString(segment.Array, segment.Offset + count, nickNameLen);
+		count += nickNameLen;
+		ushort chatContentLen = BitConverter.ToUInt16(segment.Array, segment.Offset + count);
+		count += sizeof(ushort);
+		this.chatContent = Encoding.Unicode.GetString(segment.Array, segment.Offset + count, chatContentLen);
+		count += chatContentLen;
+	}
+
+	public ArraySegment<byte> Write()
+	{
+		ArraySegment<byte> segment = SendBufferHelper.Open(4096);
+		ushort count = 0;
+
+		count += sizeof(ushort);
+		Array.Copy(BitConverter.GetBytes((ushort)PacketID.C_SendChat), 0, segment.Array, segment.Offset + count, sizeof(ushort));
+		count += sizeof(ushort);
+		Array.Copy(BitConverter.GetBytes(this.messageType), 0, segment.Array, segment.Offset + count, sizeof(int));
+		count += sizeof(int);
+		ushort nickNameLen = (ushort)Encoding.Unicode.GetBytes(this.nickName, 0, this.nickName.Length, segment.Array, segment.Offset + count + sizeof(ushort));
+		Array.Copy(BitConverter.GetBytes(nickNameLen), 0, segment.Array, segment.Offset + count, sizeof(ushort));
+		count += sizeof(ushort);
+		count += nickNameLen;
+		ushort chatContentLen = (ushort)Encoding.Unicode.GetBytes(this.chatContent, 0, this.chatContent.Length, segment.Array, segment.Offset + count + sizeof(ushort));
+		Array.Copy(BitConverter.GetBytes(chatContentLen), 0, segment.Array, segment.Offset + count, sizeof(ushort));
+		count += sizeof(ushort);
+		count += chatContentLen;
+
+		Array.Copy(BitConverter.GetBytes(count), 0, segment.Array, segment.Offset, sizeof(ushort));
+
+		return SendBufferHelper.Close(count);
+	}
+}
+
+public class S_SendChat : IPacket
+{
+	public int messageType;
+	public string nickName;
+	public string chatContent;
+
+	public ushort Protocol { get { return (ushort)PacketID.S_SendChat; } }
+
+	public void Read(ArraySegment<byte> segment)
+	{
+		ushort count = 0;
+		count += sizeof(ushort);
+		count += sizeof(ushort);
+		this.messageType = BitConverter.ToInt32(segment.Array, segment.Offset + count);
+		count += sizeof(int);
+		ushort nickNameLen = BitConverter.ToUInt16(segment.Array, segment.Offset + count);
+		count += sizeof(ushort);
+		this.nickName = Encoding.Unicode.GetString(segment.Array, segment.Offset + count, nickNameLen);
+		count += nickNameLen;
+		ushort chatContentLen = BitConverter.ToUInt16(segment.Array, segment.Offset + count);
+		count += sizeof(ushort);
+		this.chatContent = Encoding.Unicode.GetString(segment.Array, segment.Offset + count, chatContentLen);
+		count += chatContentLen;
+	}
+
+	public ArraySegment<byte> Write()
+	{
+		ArraySegment<byte> segment = SendBufferHelper.Open(4096);
+		ushort count = 0;
+
+		count += sizeof(ushort);
+		Array.Copy(BitConverter.GetBytes((ushort)PacketID.S_SendChat), 0, segment.Array, segment.Offset + count, sizeof(ushort));
+		count += sizeof(ushort);
+		Array.Copy(BitConverter.GetBytes(this.messageType), 0, segment.Array, segment.Offset + count, sizeof(int));
+		count += sizeof(int);
+		ushort nickNameLen = (ushort)Encoding.Unicode.GetBytes(this.nickName, 0, this.nickName.Length, segment.Array, segment.Offset + count + sizeof(ushort));
+		Array.Copy(BitConverter.GetBytes(nickNameLen), 0, segment.Array, segment.Offset + count, sizeof(ushort));
+		count += sizeof(ushort);
+		count += nickNameLen;
+		ushort chatContentLen = (ushort)Encoding.Unicode.GetBytes(this.chatContent, 0, this.chatContent.Length, segment.Array, segment.Offset + count + sizeof(ushort));
+		Array.Copy(BitConverter.GetBytes(chatContentLen), 0, segment.Array, segment.Offset + count, sizeof(ushort));
+		count += sizeof(ushort);
+		count += chatContentLen;
+
+		Array.Copy(BitConverter.GetBytes(count), 0, segment.Array, segment.Offset, sizeof(ushort));
+
+		return SendBufferHelper.Close(count);
+	}
+}
+
+public class S_NoticeAll : IPacket
+{
+	public string chatContent;
+
+	public ushort Protocol { get { return (ushort)PacketID.S_NoticeAll; } }
+
+	public void Read(ArraySegment<byte> segment)
+	{
+		ushort count = 0;
+		count += sizeof(ushort);
+		count += sizeof(ushort);
+		ushort chatContentLen = BitConverter.ToUInt16(segment.Array, segment.Offset + count);
+		count += sizeof(ushort);
+		this.chatContent = Encoding.Unicode.GetString(segment.Array, segment.Offset + count, chatContentLen);
+		count += chatContentLen;
+	}
+
+	public ArraySegment<byte> Write()
+	{
+		ArraySegment<byte> segment = SendBufferHelper.Open(4096);
+		ushort count = 0;
+
+		count += sizeof(ushort);
+		Array.Copy(BitConverter.GetBytes((ushort)PacketID.S_NoticeAll), 0, segment.Array, segment.Offset + count, sizeof(ushort));
+		count += sizeof(ushort);
+		ushort chatContentLen = (ushort)Encoding.Unicode.GetBytes(this.chatContent, 0, this.chatContent.Length, segment.Array, segment.Offset + count + sizeof(ushort));
+		Array.Copy(BitConverter.GetBytes(chatContentLen), 0, segment.Array, segment.Offset + count, sizeof(ushort));
+		count += sizeof(ushort);
+		count += chatContentLen;
 
 		Array.Copy(BitConverter.GetBytes(count), 0, segment.Array, segment.Offset, sizeof(ushort));
 

@@ -496,7 +496,7 @@ GameObject:
   - component: {fileID: 7052295087620291350}
   - component: {fileID: 8227785814690314142}
   m_Layer: 5
-  m_Name: 'ChatItemText '
+  m_Name: ChatItemText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

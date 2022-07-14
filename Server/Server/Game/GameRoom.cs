@@ -8,6 +8,7 @@ namespace Server.Game
 	//게임 중인 방 정보
 	class GameRoom
 	{
+		object _lock = new object();
 		//0번은 로비 
 		//1 ~ n번은 실행중인 게임
 		public int RoomID { get; set; }
@@ -22,9 +23,17 @@ namespace Server.Game
 			_pendingList.Clear();
 		}
 
-		public void Broadcast(ArraySegment<byte> segment)
+		public void Broadcast(ArraySegment<byte> packet)
 		{
-			_pendingList.Add(segment);			
+			//jobQueue를 사용시
+			//_pendingList.Add(segment);		
+			lock(_lock)
+			{
+				foreach(Player player in _players.Values)
+				{
+					player.Session.Send(packet);
+				}
+			}
 		}
 
 		public void EnterLobby(Player player)
@@ -68,7 +77,7 @@ namespace Server.Game
 			//Broadcast(leave.Write());
 		}
 
-		public void Move(ClientSession session, C_Move packet)
+		public void HandleMove(ClientSession session, C_Move packet)
 		{
 			// 좌표 바꿔주고
 			session.PosX = packet.posX;
@@ -82,6 +91,19 @@ namespace Server.Game
 			move.posY = session.PosY;
 			move.posZ = session.PosZ;
 			//Broadcast(move.Write());
+		}
+
+		public void HandleChatting(C_SendChat Rpkt)
+		{
+			lock (_lock) {
+				S_SendChat sPkt = new S_SendChat();
+
+				sPkt.messageType = Rpkt.messageType;
+				sPkt.nickName = Rpkt.nickName;
+				sPkt.chatContent = Rpkt.chatContent;
+
+				Broadcast(sPkt.Write());
+			}
 		}
 	}
 }

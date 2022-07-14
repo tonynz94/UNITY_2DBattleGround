@@ -7,10 +7,16 @@ namespace Server
 
     public class Define
     {
+        public enum ChatType
+        {
+            System,
+            AllNotices,
+            Channel,
+        }
+
         public enum RoomID
         {
             Lobby = 0,
-        
         }
 
         public enum ObjectState

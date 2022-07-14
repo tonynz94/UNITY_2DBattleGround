@@ -11,7 +11,7 @@ public class UI_Base : MonoBehaviour
     Dictionary<Type, UnityEngine.Object[]> _objects = new Dictionary<Type, UnityEngine.Object[]>();
 
     protected bool _init = false;
-    private void Start()
+    private void Awake()
     {
         Init();
     }

@@ -16,7 +16,7 @@ namespace Server
 
 		static void FlushRoom()
 		{
-			RoomManager.Instance.Find((int)Define.RoomID.Lobby).Flush();
+			//RoomManager.Instance.Find((int)Define.RoomID.Lobby).Flush();
 			JobTimer.Instance.Push(FlushRoom, 250);
 		}
 

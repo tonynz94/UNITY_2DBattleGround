@@ -5,11 +5,12 @@ using System.Collections.Generic;
 using System.Text;
 using Server.Game;
 
+//PacketSession은 클라이언트에서 보낸 사람의 셰션을 말함
 class PacketHandler
 {
 	public static void C_FirstEnterHandler(PacketSession session, IPacket packet)
 	{
-		
+		Console.WriteLine("[Server] @>> RECV : C_FirstEnter");
 		C_FirstEnter Rpkt = packet as C_FirstEnter;
 		ClientSession clientSession = session as ClientSession;
 		//Lock이 필요한가?
@@ -34,13 +35,19 @@ class PacketHandler
 
 	public static void C_SendChatHandler(PacketSession session, IPacket packet)
     {
-		C_SendChat pkt = packet as C_SendChat;
+		Console.WriteLine("[Server] @>> RECV : C_SendChat");
+		C_SendChat Rpkt = packet as C_SendChat;
 		GameRoom gameRoom = RoomManager.Instance.Find((int)Define.RoomID.Lobby);
-		gameRoom.Broadcast(pkt.Write());
+
+		if (gameRoom == null)
+			return;
+
+		gameRoom.HandleChatting(Rpkt);
     }
 
 	public static void C_LeaveGameHandler(PacketSession session, IPacket packet)
 	{
+		Console.WriteLine("[Server] @>> RECV : C_LeaveGame");
 		ClientSession clientSession = session as ClientSession;
 
 		//if (clientSession.Room == null)

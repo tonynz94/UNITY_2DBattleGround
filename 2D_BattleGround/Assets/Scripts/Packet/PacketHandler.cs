@@ -21,8 +21,7 @@ class PacketHandler
 		Managers.Player.AddMyPlayer(Rpkt.CGUID, Rpkt.playerNickName);
 
 		Managers.UI.ClosePopupUI();
-		Managers.Scene.ChangeScene(Define.Scene.LobbyScene);
-		Managers.Chat.chatAdd(ChatType.System, "", "Entered Channel 1");
+		Managers.Scene.ChangeScene(Define.Scene.LobbyScene);	
 	} 
 
 	//상대방의 채팅을 받았을때

@@ -23,8 +23,7 @@ public class ChatManager
     Queue<ChatPiece> _chatFieldList = new Queue<ChatPiece>();
     public void chatAdd(Define.ChatType chatType, string nickName, string chatContent)
     {
-        _chatFieldList.Enqueue(new ChatPiece(chatType, nickName, chatContent));
-        MessageSystem.CallEventMessage((int)MESSAGE_EVENT_TYPE.MESS_CHATTING_ADD, _chatFieldList.Peek());
+        MessageSystem.CallEventMessage((int)MESSAGE_EVENT_TYPE.MESS_CHATTING_ADD, new ChatPiece(chatType, nickName, chatContent));
     }
 
     public void AllNotice(string chatContent)

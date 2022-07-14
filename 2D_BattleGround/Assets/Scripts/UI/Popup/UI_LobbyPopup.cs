@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 using static Define;
 
 public class UI_LobbyPopup : UI_Popup
@@ -102,7 +103,7 @@ public class UI_LobbyPopup : UI_Popup
 
     public void OnSendChatButton()
     {
-        string chatStr = GetObject((int)GameObjects.ChatContentField).GetComponent<InputField>().text;
+        string chatStr = GetObject((int)GameObjects.ChatContentField).GetComponent<TMP_InputField>().text;
 
         if (string.IsNullOrEmpty(chatStr))
             return;
@@ -113,12 +114,14 @@ public class UI_LobbyPopup : UI_Popup
         sPkt.chatContent = chatStr;
 
         Managers.Net.Send(sPkt.Write());
+
+        GetObject((int)GameObjects.ChatContentField).GetComponent<TMP_InputField>().text = "";
     }
 
     public void OnChatAdd(object obj)
     {
         ChatPiece chatPiece = obj as ChatPiece;
-        GameObject go =Managers.Resource.Instantiate("SubItem/UI_ChatItem", GetObject((int)GameObjects.ChatDashBoardObject).transform);
+        GameObject go =Managers.Resource.Instantiate("UI/SubItem/UI_ChatItem", GetObject((int)GameObjects.ChatDashBoardObject).transform);
         go.GetComponent<UI_ChatItem>().SetChatPiece(chatPiece._chatType, chatPiece._nickName, chatPiece._chatContent);
     }
 

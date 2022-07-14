@@ -11,10 +11,9 @@ public class UI_ChatItem : UI_Base
 
     enum Texts
     { 
-
         ChatTypeText,
         ChatNickText,
-        ChatItemText,
+        ChatItemText
     }
 
     public override bool Init()

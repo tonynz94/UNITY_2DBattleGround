@@ -8,7 +8,7 @@ public class BaseScene : MonoBehaviour
 
     protected bool _init = false;
 
-    private void Start()
+    private void Awake()
     {
         Init();
     }

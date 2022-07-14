@@ -13,11 +13,10 @@ namespace Server
 	class Program
 	{
 		static Listener _listener = new Listener();
-		//public static GameRoom Room = new GameRoom();
 
 		static void FlushRoom()
 		{
-			//Room.Flush();
+			RoomManager.Instance.Find((int)Define.RoomID.Lobby).Flush();
 			JobTimer.Instance.Push(FlushRoom, 250);
 		}
 

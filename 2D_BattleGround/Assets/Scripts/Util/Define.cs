@@ -8,8 +8,9 @@ public class Define
     public enum ChatType
     {
         System,
+        AllNotices,
         Channel,
-        AllNotices
+        
     }
 
     public enum ObjectState

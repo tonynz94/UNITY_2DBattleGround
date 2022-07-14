@@ -35,6 +35,8 @@ class PacketHandler
 	public static void C_SendChatHandler(PacketSession session, IPacket packet)
     {
 		C_SendChat pkt = packet as C_SendChat;
+		GameRoom gameRoom = RoomManager.Instance.Find((int)Define.RoomID.Lobby);
+		gameRoom.Broadcast(pkt.Write());
     }
 
 	public static void C_LeaveGameHandler(PacketSession session, IPacket packet)

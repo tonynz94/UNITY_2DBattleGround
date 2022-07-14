@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
+using UnityEngine.UI;
 using static Define;
 
 public class UI_LobbyPopup : UI_Popup
@@ -11,6 +12,7 @@ public class UI_LobbyPopup : UI_Popup
         ShowRoomButton,
         CreateRoomButton,
         HeroButton,
+        SendChatButton,
     }
 
     enum Texts
@@ -34,7 +36,9 @@ public class UI_LobbyPopup : UI_Popup
 
     enum GameObjects
     {
-        PlayerEXPBar
+        PlayerEXPBar,
+        ChatDashBoardObject,
+        ChatContentField
     }
 
     public void OnEnable()
@@ -61,10 +65,13 @@ public class UI_LobbyPopup : UI_Popup
 
         BindEvent(GetButton((int)Buttons.ShowRoomButton).gameObject, OnShowRoomButton);
         BindEvent(GetButton((int)Buttons.CreateRoomButton).gameObject, OnCreateButton);
-
         BindEvent(GetButton((int)Buttons.HeroButton).gameObject, OnHeroButton);
+        BindEvent(GetButton((int)Buttons.SendChatButton).gameObject, OnSendChatButton);
 
         InitPlayerInfo();
+
+        //채팅 자주 사용할꺼같아서 먼저 로드하면 최적화에 좋을꺼같지만 나중에...
+        //Managers.Resource.Load<GameObject>("Prefabs/SubItem/UI_chatItem");
 
         return true;
     }
@@ -93,9 +100,26 @@ public class UI_LobbyPopup : UI_Popup
         GetText((int)Texts.MoneyText).text = Managers.Player.MyPlayer._gameMoney.ToString();
     }
 
+    public void OnSendChatButton()
+    {
+        string chatStr = GetObject((int)GameObjects.ChatContentField).GetComponent<InputField>().text;
+
+        if (string.IsNullOrEmpty(chatStr))
+            return;
+
+        C_SendChat sPkt = new C_SendChat();
+        sPkt.messageType = (int)Define.ChatType.Channel;
+        sPkt.nickName = Managers.Player.MyPlayer.NickName;
+        sPkt.chatContent = chatStr;
+
+        Managers.Net.Send(sPkt.Write());
+    }
+
     public void OnChatAdd(object obj)
-    {      
-        
+    {
+        ChatPiece chatPiece = obj as ChatPiece;
+        GameObject go =Managers.Resource.Instantiate("SubItem/UI_ChatItem", GetObject((int)GameObjects.ChatDashBoardObject).transform);
+        go.GetComponent<UI_ChatItem>().SetChatPiece(chatPiece._chatType, chatPiece._nickName, chatPiece._chatContent);
     }
 
     public void OnAllNoticeAdd(object obj)

@@ -29,6 +29,8 @@ class PacketHandler
 	public static void S_SendChatHandler(PacketSession session, IPacket packet)
     {
 		Debug.Log("[NetworkManager] @>> RECV : S_SendChat ");
+		S_SendChat rPkt = packet as S_SendChat;
+		Managers.Chat.chatAdd(ChatType.Channel, rPkt.nickName, rPkt.chatContent);
 	}
 
 	public static void S_NoticeAllHandler(PacketSession session, IPacket packet)

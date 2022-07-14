@@ -6,9 +6,9 @@ using static Define;
 
 class ChatPiece
 {
-    Define.ChatType _chatType;
-    string _nickName;
-    string _chatContent;
+    public Define.ChatType _chatType;
+    public string _nickName;
+    public string _chatContent;
 
     public ChatPiece(Define.ChatType chatType, string nickName, string chatContent)
     {
@@ -21,11 +21,10 @@ class ChatPiece
 public class ChatManager
 {
     Queue<ChatPiece> _chatFieldList = new Queue<ChatPiece>();
-    int _chatCount;
     public void chatAdd(Define.ChatType chatType, string nickName, string chatContent)
     {
         _chatFieldList.Enqueue(new ChatPiece(chatType, nickName, chatContent));
-        MessageSystem.CallEventMessage((int)MESSAGE_EVENT_TYPE.MESS_CHATTING_ADD);
+        MessageSystem.CallEventMessage((int)MESSAGE_EVENT_TYPE.MESS_CHATTING_ADD, _chatFieldList.Peek());
     }
 
     public void AllNotice(string chatContent)

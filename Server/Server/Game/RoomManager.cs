@@ -43,6 +43,19 @@ namespace Server.Game
 
         public GameRoom Find(int roomId)
         {
+            if(roomId == 0)
+            {
+                return _Lobby;
+            }
+            else
+            {
+                GameRoom gameRoom;
+                _rooms.TryGetValue(roomId, out gameRoom);
+                if (gameRoom != null)
+                    return gameRoom;
+            }
+
+            Console.WriteLine($"theres no such a room {roomId}");
             return null;
         }
     }

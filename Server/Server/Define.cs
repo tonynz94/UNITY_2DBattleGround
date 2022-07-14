@@ -7,6 +7,12 @@ namespace Server
 
     public class Define
     {
+        public enum RoomID
+        {
+            Lobby = 0,
+        
+        }
+
         public enum ObjectState
         {
             Idle,

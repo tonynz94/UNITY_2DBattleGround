@@ -5,6 +5,22 @@ using UnityEngine;
 
 public class Define
 {
+    public enum MapType
+    {
+        None,
+        TreeMap,
+        LakeMap,
+        GrassMap,   
+    }
+
+    public enum GameMode
+    {
+        None,
+        PvPMode,
+        CooperativeMode,
+    }
+
+
     public enum ChatType
     {
         System,
@@ -36,12 +52,6 @@ public class Define
         Player,
         Monster,
         Boss
-    }
-
-    public enum GameMode
-    {
-        PvPMode,
-        CooperativeMode,
     }
 
 
@@ -76,8 +86,6 @@ public class Define
         Speech,
         Max
     }
-
-
 
     public enum MESSAGE_EVENT_TYPE
     {

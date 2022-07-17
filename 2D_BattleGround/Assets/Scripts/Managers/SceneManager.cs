@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class SceneManagerEx : MonoBehaviour
+public class SceneManagerEx 
 {
     private Define.Scene _curSceneType = Define.Scene.Unknown;
 

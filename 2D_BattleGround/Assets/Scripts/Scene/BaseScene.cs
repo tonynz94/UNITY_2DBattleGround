@@ -19,6 +19,9 @@ public class BaseScene : MonoBehaviour
             return false;
 
         _init = true;
+
+        Screen.SetResolution(640, 480, false);
+
         GameObject go = GameObject.Find("EventSystem");
         if (go == null)
             Managers.Resource.Instantiate("UI/EventSystem").name = "@EventSystem";

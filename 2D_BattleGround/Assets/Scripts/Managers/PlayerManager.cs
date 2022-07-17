@@ -6,20 +6,20 @@ using UnityEngine;
 public class Player
 {
     public int _CGUID;
+    public string _nickName;
+
     public int _level;
     public int _totalExp;
     public int _currentExp;
-    public string _nickName;
     public int _profileImage;
     public int _maxHP;
-
     public int _gameMoney;
     public int _gameDiamond;
 
     public Player(int CGUID, string nickName)
     {
-        _nickName = nickName;
         _CGUID = CGUID;
+        _nickName = nickName;
 
         _level = 1;
         _totalExp = 0;
@@ -55,12 +55,36 @@ public class PlayerManager
     //내 플레이어 정보
     public Player MyPlayer;
 
-    //게임중인 플레이어 정보
+    //게임 안에 있는 모든 플레이어 
     Dictionary<int, Player> _ingamePlayers = new Dictionary<int, Player>();
+
 
     public void AddMyPlayer(int CGUID, string nickName)
     {
         MyPlayer = new Player(CGUID, nickName);
+    }
+
+    public void AddPlayer(int CGUID, string nickName)
+    {
+        Player player = new Player(CGUID, nickName);
+        _ingamePlayers.Add(CGUID, player);
+    }
+
+    public int MyCGUID()
+    {
+        return MyPlayer._CGUID;
+    }
+
+    public int GetPlayerNick(int CGUID)
+    {
+        return -1;
+    }
+
+    public Player GetPlayer(int CGUID)
+    {
+        Player player;
+        _ingamePlayers.TryGetValue(CGUID, out player);
+        return player;
     }
 
 }

@@ -26,7 +26,6 @@ public class UI_LobbyPopup : UI_Popup
         MoneyText,
         DiamondText,
         ChatText,
-
     }
 
     enum Images
@@ -85,7 +84,7 @@ public class UI_LobbyPopup : UI_Popup
 
     public void OnCreateButton()
     {
-        Debug.Log("Create Room");
+        Managers.UI.ShowPopupUI<UI_CreateRoom>();
     }
 
     public void OnHeroButton()

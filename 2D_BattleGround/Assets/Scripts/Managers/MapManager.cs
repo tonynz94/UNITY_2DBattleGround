@@ -6,6 +6,7 @@ using UnityEngine.Tilemaps;
 public class MapManager
 {
 	Dictionary<int, List<List<int>>> _mapInfoDic = new Dictionary<int, List<List<int>>>();
+	Dictionary<Define.MapType, Sprite> _mapSprite = new Dictionary<Define.MapType, Sprite>();
 	public Grid CurrentGrid { get; private set; }
 	int _currentMapID;
 
@@ -16,8 +17,14 @@ public class MapManager
 
 	public void init()
     {
+		Sprite treeMap = Managers.Resource.Load<Sprite>("Sprites/Tree 1");
+		_mapSprite.Add(Define.MapType.TreeMap, treeMap);
+		Sprite lakeMap = Managers.Resource.Load<Sprite>("Sprites/Water 4");
+		_mapSprite.Add(Define.MapType.LakeMap, lakeMap);
+		Sprite grassMap = Managers.Resource.Load<Sprite>("Sprites/TX Tileset Grass 13");
+		_mapSprite.Add(Define.MapType.GrassMap, grassMap);
 
-    }
+	}
 
     public void LoadMap(int mapId)
     {
@@ -78,5 +85,12 @@ public class MapManager
 		{
 			GameObject.Destroy(map);
 		}
+	}
+
+	public Sprite GetMapSprite(Define.MapType maptype)
+	{
+		Sprite spr = null;
+		_mapSprite.TryGetValue(maptype, out spr);
+		return spr;
 	}
 }

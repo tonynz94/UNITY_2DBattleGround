@@ -48,8 +48,11 @@ public class UI_ConfirmPopup : UI_Popup
             return;
         }
 
+        Managers.Player.MyPlayer.NickName = inputField.text;
+
         C_FirstEnter sPkt = new C_FirstEnter();
         sPkt.playerNickName = inputField.text;
         Managers.Net.Send(sPkt.Write());
+
     }
 }

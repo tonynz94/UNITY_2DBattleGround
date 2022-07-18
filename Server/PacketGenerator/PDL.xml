@@ -2,6 +2,7 @@
 <PDL>
 
   <packet name="S_HandShake">
+    <int name="CGUID"/>
   </packet>
   
   <packet name="C_FirstEnter">

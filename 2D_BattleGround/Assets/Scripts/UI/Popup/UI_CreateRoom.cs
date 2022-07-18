@@ -9,6 +9,8 @@ public class UI_CreateRoom : UI_Popup
     public Define.MapType _mapType = Define.MapType.None;
     public Define.GameMode _modeType = Define.GameMode.None;
 
+    GameRoom _gameRoom = null;
+
     enum Texts
     {
         SubTitleText
@@ -65,8 +67,10 @@ public class UI_CreateRoom : UI_Popup
         GetObject((int)Objects.SelectModeObject).SetActive(true);
         GetObject((int)Objects.SelectMapObject).SetActive(false);
 
-        OnModeSelect(Define.GameMode.PvPMode);
+        _gameRoom = new GameRoom();
 
+        OnModeSelect(Define.GameMode.PvPMode);
+        
         return true;
     }
 
@@ -84,11 +88,13 @@ public class UI_CreateRoom : UI_Popup
         {
             //최종적으로 방 만들어짐 
             Debug.Log($"_modeType : {_modeType} , _mapType : {_mapType}");
-            Managers.Game.gameSetting.SetGameRoom(_modeType, _mapType);
+            _gameRoom.SetGameRoom(_modeType, _mapType);
+            Managers.Room.CreateGameRoom(_gameRoom);
+
             //서버로 전송.
             Managers.UI.ClosePopupUI();
-            UI_RoomLobby room = Managers.UI.ShowPopupUI<UI_RoomLobby>();
-            room.SetRoom(10000, Managers.Player.MyPlayer);
+            UI_GameRoom room = Managers.UI.ShowPopupUI<UI_GameRoom>();
+            room.SetRoom(_gameRoom.roomId, Managers.Player.MyPlayer);
         }
     }
 
@@ -96,7 +102,6 @@ public class UI_CreateRoom : UI_Popup
     {
         if(GetObject((int)Objects.SelectModeObject).activeSelf)
         {
-            Managers.Game.gameSetting.Clear();
             Managers.UI.ClosePopupUI();
         }
         else

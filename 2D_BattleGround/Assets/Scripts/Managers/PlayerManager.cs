@@ -54,37 +54,50 @@ public class PlayerManager
 {
     //내 플레이어 정보
     public Player MyPlayer;
-
     //게임 안에 있는 모든 플레이어 
-    Dictionary<int, Player> _ingamePlayers = new Dictionary<int, Player>();
-
+    Dictionary<int, Player> _players = new Dictionary<int, Player>();
 
     public void AddMyPlayer(int CGUID, string nickName)
     {
         MyPlayer = new Player(CGUID, nickName);
+        AddPlayer(MyPlayer);
     }
 
     public void AddPlayer(int CGUID, string nickName)
     {
         Player player = new Player(CGUID, nickName);
-        _ingamePlayers.Add(CGUID, player);
+        _players.Add(CGUID, player);
     }
 
-    public int MyCGUID()
+    public void AddPlayer(Player player)
+    {
+        _players.Add(player._CGUID, player);
+    }
+
+    public int GetMyCGUID()
     {
         return MyPlayer._CGUID;
     }
 
-    public int GetPlayerNick(int CGUID)
+    public string GetMyNick()
     {
-        return -1;
+        return MyPlayer.NickName;
     }
 
     public Player GetPlayer(int CGUID)
     {
         Player player;
-        _ingamePlayers.TryGetValue(CGUID, out player);
+        _players.TryGetValue(CGUID, out player);
         return player;
     }
+
+    public string GetPlayerNick(int CGUID)
+    {
+        Player player;
+        _players.TryGetValue(CGUID, out player);
+        return player.NickName;
+    }
+
+
 
 }

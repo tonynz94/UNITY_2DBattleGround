@@ -11,14 +11,18 @@ class PacketHandler
 	public static void S_HandShakeHandler(PacketSession session, IPacket packet)
     {
 		Debug.Log("[NetworkManager] @>> RECV : S_HandShake ");
+		S_HandShake rPkt = packet as S_HandShake;
+		Managers.Player.AddMyPlayer(rPkt.CGUID, rPkt.CGUID.ToString());
+
 		Managers.UI.ClosePopupUI();
 		Managers.UI.ShowPopupUI<UI_ConfirmPopup>();
 	}
 	public static void S_FirstEnterHandler(PacketSession session, IPacket packet)
 	{
 		Debug.Log("[NetworkManager] @>> RECV : S_FirstEnter ");
-		S_FirstEnter Rpkt = packet as S_FirstEnter;
-		Managers.Player.AddMyPlayer(Rpkt.CGUID, Rpkt.playerNickName);
+		S_FirstEnter rPkt = packet as S_FirstEnter;
+
+		Managers.Room.MoveIntroToLobbyRoom(rPkt.CGUID);
 
 		Managers.UI.ClosePopupUI();
 		Managers.Scene.ChangeScene(Define.Scene.LobbyScene);	

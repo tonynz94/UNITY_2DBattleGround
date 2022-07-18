@@ -4,24 +4,72 @@ using System.Text;
 
 namespace Server.Game
 {
-    //로비 방
-    //게임중인인 방 (중간중간 추가될수 있음)
+    public class GameRoom
+    {
+        public int roomOwner;   //CGUID
+        public int roomId;
+        public Define.MapType _mapType;
+        public Define.GameMode _gameMode;
+        public Dictionary<int, Player> playerDic = new Dictionary<int, Player>();
+
+        public void AddPlayer(int CGUID)
+        {
+            playerDic.Add(CGUID, PlayerManager.Instance.GetPlayer(CGUID));
+        }
+
+        public void LeaveGameRoom(int CGUID)
+        {
+            playerDic.Remove(CGUID);
+        }
+
+        public void SetGameRoom(Define.GameMode gameMode, Define.MapType mapType)
+        {
+            _gameMode = gameMode;
+            _mapType = mapType;
+        }
+
+        public void Clear()
+        {
+            _mapType = Define.MapType.None;
+            _gameMode = Define.GameMode.None;
+        }
+    }
+
+    public class LobbyRoom
+    {
+        public Dictionary<int, Player> playerDic = new Dictionary<int, Player>();
+
+        public void EnterLobbyRoom(int CGUID)
+        {
+            playerDic.Add(CGUID, Managers.Player.GetPlayer(CGUID));
+        }
+
+        public void LeaveLobbyRoom(int CGUID)
+        {
+            playerDic.Remove(CGUID);
+        }
+    }
+
+
     class RoomManager
     {
         public static RoomManager Instance { get; } = new RoomManager();
 
-        //로비룸
-        GameRoom _Lobby = new GameRoom();
+        Dictionary<int, GameRoom> _gameRooms = new Dictionary<int, GameRoom>();
+        LobbyRoom _lobbyRoom = new LobbyRoom();
 
-        //실행중인 게임룸
-        Dictionary<int, GameRoom> _rooms = new Dictionary<int, GameRoom>();
         object _lock = new object();
         int roomId = 1;
 
         //실행 중인 게임 추가
-        public void EnterToLobby(Player player)
+        public void FirstEnterToLobby(Player player)
         {
-            _Lobby.EnterLobby(player);
+            lock (_lock)
+            {
+                _lobbyRoom.EnterLobby(player);
+
+               
+            }
         }
 
         public GameRoom Add()
@@ -30,7 +78,7 @@ namespace Server.Game
             lock(_lock)
             {
                 gameRoom.RoomID = roomId++;
-                _rooms.Add(gameRoom.RoomID, gameRoom);
+                _gameRooms.Add(gameRoom.RoomID, gameRoom);
             }
             return gameRoom;
         }
@@ -45,12 +93,12 @@ namespace Server.Game
         {
             if(roomId == 0)
             {
-                return _Lobby;
+                return _lobbyRoom;
             }
             else
             {
                 GameRoom gameRoom;
-                _rooms.TryGetValue(roomId, out gameRoom);
+                _gameRooms.TryGetValue(roomId, out gameRoom);
                 if (gameRoom != null)
                     return gameRoom;
             }

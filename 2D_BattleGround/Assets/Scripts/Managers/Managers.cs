@@ -16,6 +16,7 @@ public class Managers : MonoBehaviour
     public static GameManager s_Game = new GameManager();
     public static NetworkManager s_Net = new NetworkManager();
     public static ChatManager s_Chat = new ChatManager();
+    public static RoomManager s_Room = new RoomManager();
 
     public static Managers Instance { get { return s_instance; } }
 
@@ -29,7 +30,7 @@ public class Managers : MonoBehaviour
     public static GameManager Game { get { Init(); return s_Game; } }
     public static NetworkManager Net { get { Init(); return s_Net; } }
     public static ChatManager Chat { get { Init(); return s_Chat; } }
-
+    public static RoomManager Room { get { Init(); return s_Room; } }
 
     // Start is called before the first frame update
     void Start()

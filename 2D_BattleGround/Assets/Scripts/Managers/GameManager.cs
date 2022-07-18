@@ -4,20 +4,7 @@ using UnityEngine;
 
 public class GameLobbyRoom
 {
-    public Define.MapType _mapType;
-    public Define.GameMode _gameMode;
 
-    public void SetGameRoom(Define.GameMode gameMode , Define.MapType mapType)
-    {
-        _gameMode = gameMode;
-        _mapType = mapType;
-    }
-
-    public void Clear()
-    {
-        _mapType = Define.MapType.None;
-        _gameMode = Define.GameMode.None;
-    }
 }
 
 public class GameManager

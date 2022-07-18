@@ -24,6 +24,7 @@ namespace Server
 			Console.WriteLine($"OnConnected : {endPoint}, SessionID : {SessionId}");
 
 			S_HandShake sPkt = new S_HandShake();
+			sPkt.CGUID = SessionId;
 			Send(sPkt.Write());
 
 		}

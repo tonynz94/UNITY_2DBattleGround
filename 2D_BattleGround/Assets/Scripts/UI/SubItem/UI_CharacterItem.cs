@@ -6,6 +6,8 @@ public class UI_CharacterItem : UI_Base
 {
     public bool _ready { get; private set; } = false;
     public bool _isOwner { get; private set; } = false;
+    public bool _isSlotEmpty { get; private set; } = true;
+
     enum Objects
     {
         OnCharacterObject,
@@ -27,7 +29,7 @@ public class UI_CharacterItem : UI_Base
     public void PlayerEnter(bool isOwner = false)
     {
         _isOwner = isOwner;
-
+        _isSlotEmpty = false;
         GetObject((int)Objects.OnCharacterObject).SetActive(true);
         GetObject((int)Objects.OffCharacterObject).SetActive(false);
 
@@ -36,6 +38,7 @@ public class UI_CharacterItem : UI_Base
 
     public void PlayerLeave()
     {
+        _isSlotEmpty = true;
         GetObject((int)Objects.OnCharacterObject).SetActive(false);
         GetObject((int)Objects.OffCharacterObject).SetActive(true);
     }

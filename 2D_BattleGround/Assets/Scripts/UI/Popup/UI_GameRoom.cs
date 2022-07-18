@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class UI_RoomLobby : UI_Popup
+public class UI_GameRoom : UI_Popup
 {
     //방 ID
-    int _RoomID;
+    int _roomID;
     int _countPlayer = 0;
     //방 안에 플레이어
     Dictionary<int, Player> playerList = new Dictionary<int, Player>();
@@ -58,12 +58,15 @@ public class UI_RoomLobby : UI_Popup
     //방 만들사람만 이 함수를 실행하게 됨
     public void SetRoom(int roomID, Player ownerPlayer)
     {
-        _RoomID = roomID;
+        _roomID = roomID;
         Get<UI_CharacterItem>((int)CharacterItem.UI_CharacterItem_1).PlayerEnter(isOwner: true);
         Get<UI_CharacterItem>((int)CharacterItem.UI_CharacterItem_2).PlayerLeave();
         Get<UI_CharacterItem>((int)CharacterItem.UI_CharacterItem_3).PlayerLeave();
         Get<UI_CharacterItem>((int)CharacterItem.UI_CharacterItem_4).PlayerLeave();
+
         playerList.Add(ownerPlayer._CGUID, ownerPlayer);
+        GameRoom gameRoom = Managers.Room.GetGameRoom(_roomID);
+        gameRoom.AddPlayer(ownerPlayer._CGUID);
 
         RefreashTitle();
         RefreashMap();
@@ -100,6 +103,9 @@ public class UI_RoomLobby : UI_Popup
         Get<UI_CharacterItem>((int)CharacterItem.UI_CharacterItem_4).PlayerEnter();
 
         playerList.Add(CGUID, Managers.Player.GetPlayer(CGUID));
+        GameRoom gameRoom = Managers.Room.GetGameRoom(_roomID);
+        gameRoom.AddPlayer(CGUID);
+
         RefreashTitle();
     }
 
@@ -110,7 +116,7 @@ public class UI_RoomLobby : UI_Popup
 
     public void RefreashMap()
     {
-        switch (Managers.Game.gameSetting._mapType)
+        switch (Managers.Room.GetGameRoom(_roomID)._mapType)
         {
             case Define.MapType.GrassMap:
                 GetImage((int)Images.MapImage).sprite = Managers.Map.GetMapSprite(Define.MapType.GrassMap);

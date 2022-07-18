@@ -16,19 +16,10 @@ class PacketHandler
 		//Lock이 필요한가?
 
 		Player player = null;
-		player = PlayerManager.Instance.Add(clientSession.SessionId);
-		player.Info.NickName = Rpkt.playerNickName;
-		player.Info.isInGame = false;
-		player.Session = clientSession;
-		
-		RoomManager.Instance.EnterToLobby(player);
+		player = PlayerManager.Instance.Add(clientSession.SessionId, Rpkt.playerNickName, false, clientSession) ;
 
-		S_FirstEnter Spkt = new S_FirstEnter();
-		Spkt.CGUID = player.Session.SessionId;
-		Spkt.playerNickName = player.Info.NickName;
-		clientSession.MyPlayer = player;
-
-		clientSession.Send(Spkt.Write());
+		//입장과 동시에 로비로 넣어주기
+		RoomManager.Instance.FirstEnterToLobby(player);
 
 		Console.WriteLine($"클라로 부터 설정한 닉네임 받음 : { Rpkt.playerNickName}");
 	}

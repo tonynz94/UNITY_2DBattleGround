@@ -8,16 +8,16 @@ public class GameRoom
     public int roomId;
     public Define.MapType _mapType;
     public Define.GameMode _gameMode;
-    public Dictionary<int, Player> playerDic = new Dictionary<int, Player>();
+    public Dictionary<int, Player> _playerDic = new Dictionary<int, Player>();
 
     public void AddPlayer(int CGUID)
     {
-        playerDic.Add(CGUID, Managers.Player.GetPlayer(CGUID));
+        _playerDic.Add(CGUID, Managers.Player.GetPlayer(CGUID));
     }
 
     public void LeaveGameRoom(int CGUID)
     {
-        playerDic.Remove(CGUID);
+        _playerDic.Remove(CGUID);
     }
 
     public void SetGameRoom(Define.GameMode gameMode, Define.MapType mapType)
@@ -35,22 +35,22 @@ public class GameRoom
 
 public class LobbyRoom
 {
-    public Dictionary<int, Player> playerDic = new Dictionary<int, Player>();
+    public Dictionary<int, Player> _playerDic = new Dictionary<int, Player>();
 
     public void EnterLobbyRoom(int CGUID)
     {
-        playerDic.Add(CGUID, Managers.Player.GetPlayer(CGUID));
+        _playerDic.Add(CGUID, Managers.Player.GetPlayer(CGUID));
     }
 
     public void LeaveLobbyRoom(int CGUID)
     {
-        playerDic.Remove(CGUID);
+        _playerDic.Remove(CGUID);
     }
 
 }
 
 //로비 방 모음
-public class RoomManager : MonoBehaviour
+public class RoomManager
 {
     public Dictionary<int, GameRoom> _gameRooms { get; private set; } = new Dictionary<int, GameRoom>();
     public LobbyRoom _lobbyRoom { get; private set; } = new LobbyRoom();

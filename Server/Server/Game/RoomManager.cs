@@ -10,16 +10,16 @@ namespace Server.Game
         public int roomId;
         public Define.MapType _mapType;
         public Define.GameMode _gameMode;
-        public Dictionary<int, Player> playerDic = new Dictionary<int, Player>();
+        Dictionary<int, Player> _playerDic = new Dictionary<int, Player>();
 
         public void AddPlayer(int CGUID)
         {
-            playerDic.Add(CGUID, PlayerManager.Instance.GetPlayer(CGUID));
+            _playerDic.Add(CGUID, PlayerManager.Instance.GetPlayer(CGUID));
         }
 
         public void LeaveGameRoom(int CGUID)
         {
-            playerDic.Remove(CGUID);
+            _playerDic.Remove(CGUID);
         }
 
         public void SetGameRoom(Define.GameMode gameMode, Define.MapType mapType)
@@ -37,16 +37,16 @@ namespace Server.Game
 
     public class LobbyRoom
     {
-        public Dictionary<int, Player> playerDic = new Dictionary<int, Player>();
+        Dictionary<int, Player> _playerDic = new Dictionary<int, Player>();
 
         public void EnterLobbyRoom(int CGUID)
         {
-            playerDic.Add(CGUID, Managers.Player.GetPlayer(CGUID));
+            _playerDic.Add(CGUID, PlayerManager.Instance.GetPlayer(CGUID));
         }
 
         public void LeaveLobbyRoom(int CGUID)
         {
-            playerDic.Remove(CGUID);
+            _playerDic.Remove(CGUID);
         }
     }
 
@@ -59,52 +59,53 @@ namespace Server.Game
         LobbyRoom _lobbyRoom = new LobbyRoom();
 
         object _lock = new object();
-        int roomId = 1;
+        int _roomId = 10000;
 
         //실행 중인 게임 추가
-        public void FirstEnterToLobby(Player player)
+        public void MoveIntroToLobbyRoom(Player player)
         {
             lock (_lock)
             {
-                _lobbyRoom.EnterLobby(player);
-
-               
+                _lobbyRoom.EnterLobbyRoom(player.Session.SessionId);
             }
         }
 
-        public GameRoom Add()
+        public void MoveLobbytToGameRoom(int CGUID, int roomId)
         {
-            GameRoom gameRoom = new GameRoom();
-            lock(_lock)
-            {
-                gameRoom.RoomID = roomId++;
-                _gameRooms.Add(gameRoom.RoomID, gameRoom);
-            }
+            _lobbyRoom.LeaveLobbyRoom(CGUID);
+            GameRoom gameRoom = GetGameRoom(roomId);
+            gameRoom.AddPlayer(CGUID);
+        }
+
+        public void MoveGameToLobbyRoom(int CGUID, int roomId)
+        {
+            GameRoom gameRoom = GetGameRoom(roomId);
+            gameRoom.LeaveGameRoom(CGUID);
+            _lobbyRoom.EnterLobbyRoom(CGUID);
+        }
+
+        public void CreateGameRoom(GameRoom gameRoom)
+        {
+            gameRoom.roomId = _roomId;
+            _gameRooms.Add(_roomId, gameRoom);
+            _roomId++;
+        }
+
+        public void RemoveGameRoom(int roomId)
+        {
+            _gameRooms.Remove(roomId);
+        }
+
+        public GameRoom GetGameRoom(int roomId)
+        {
+            GameRoom gameRoom;
+            _gameRooms.TryGetValue(roomId, out gameRoom);
             return gameRoom;
         }
 
-        //끝난 게임 삭제
-        public GameRoom Remove(int roomId)
+        public void RoomAllClear()
         {
-            return null;
-        }
-
-        public GameRoom Find(int roomId)
-        {
-            if(roomId == 0)
-            {
-                return _lobbyRoom;
-            }
-            else
-            {
-                GameRoom gameRoom;
-                _gameRooms.TryGetValue(roomId, out gameRoom);
-                if (gameRoom != null)
-                    return gameRoom;
-            }
-
-            Console.WriteLine($"theres no such a room {roomId}");
-            return null;
+            _gameRooms.Clear();
         }
     }
 }

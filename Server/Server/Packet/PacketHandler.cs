@@ -19,7 +19,7 @@ class PacketHandler
 		player = PlayerManager.Instance.Add(clientSession.SessionId, Rpkt.playerNickName, false, clientSession) ;
 
 		//입장과 동시에 로비로 넣어주기
-		RoomManager.Instance.FirstEnterToLobby(player);
+		RoomManager.Instance.MoveIntroToLobbyRoom(player.Session.SessionId);
 
 		Console.WriteLine($"클라로 부터 설정한 닉네임 받음 : { Rpkt.playerNickName}");
 	}
@@ -28,12 +28,12 @@ class PacketHandler
     {
 		Console.WriteLine("[Server] @>> RECV : C_SendChat");
 		C_SendChat Rpkt = packet as C_SendChat;
-		GameRoom gameRoom = RoomManager.Instance.Find((int)Define.RoomID.Lobby);
+		LobbyRoom lobbyRoom = RoomManager.Instance.Find((int)Define.RoomID.Lobby);
 
-		if (gameRoom == null)
+		if (lobbyRoom == null)
 			return;
 
-		gameRoom.HandleChatting(Rpkt);
+		lobbyRoom.HandleChatting(Rpkt);
     }
 
 	public static void C_LeaveGameHandler(PacketSession session, IPacket packet)

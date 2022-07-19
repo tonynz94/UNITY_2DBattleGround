@@ -24,6 +24,9 @@ class PacketHandler
 
 		Managers.Room.MoveIntroToLobbyRoom(rPkt.CGUID);
 
+		if (rPkt.CGUID != Managers.Player.GetMyCGUID())
+			Managers.Player.AddPlayer(rPkt.CGUID, rPkt.playerNickName);
+
 		Managers.UI.ClosePopupUI();
 		Managers.Scene.ChangeScene(Define.Scene.LobbyScene);	
 	} 

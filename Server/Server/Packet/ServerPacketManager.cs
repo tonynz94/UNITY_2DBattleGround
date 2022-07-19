@@ -21,6 +21,12 @@ public class PacketManager
 	{
 		_makeFunc.Add((ushort)PacketID.C_FirstEnter, MakePacket<C_FirstEnter>);
 		_handler.Add((ushort)PacketID.C_FirstEnter, PacketHandler.C_FirstEnterHandler);
+		_makeFunc.Add((ushort)PacketID.C_IntroToLobby, MakePacket<C_IntroToLobby>);
+		_handler.Add((ushort)PacketID.C_IntroToLobby, PacketHandler.C_IntroToLobbyHandler);
+		_makeFunc.Add((ushort)PacketID.C_LobbyToGame, MakePacket<C_LobbyToGame>);
+		_handler.Add((ushort)PacketID.C_LobbyToGame, PacketHandler.C_LobbyToGameHandler);
+		_makeFunc.Add((ushort)PacketID.C_GameToLobby, MakePacket<C_GameToLobby>);
+		_handler.Add((ushort)PacketID.C_GameToLobby, PacketHandler.C_GameToLobbyHandler);
 		_makeFunc.Add((ushort)PacketID.C_SendChat, MakePacket<C_SendChat>);
 		_handler.Add((ushort)PacketID.C_SendChat, PacketHandler.C_SendChatHandler);
 		_makeFunc.Add((ushort)PacketID.C_LeaveGame, MakePacket<C_LeaveGame>);

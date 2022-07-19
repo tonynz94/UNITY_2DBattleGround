@@ -29,7 +29,7 @@ namespace Server.Game
                 Spkt.CGUID = player.Session.SessionId;
                 Spkt.playerNickName = player.Info.NickName;
 
-                player.Session.Send(Spkt.Write());
+                BroadCast(Spkt.Write());
 
                 return player;
             }
@@ -41,7 +41,7 @@ namespace Server.Game
             {
                 foreach (Player player in _players.Values)
                 {
-                    player.Session.Send();
+                    player.Session.Send(packet);
                 }
             }
         }

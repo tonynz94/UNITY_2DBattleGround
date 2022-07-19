@@ -14,6 +14,20 @@
     <int name="CGUID"/>
   </packet>
 
+  <packet name="C_IntroToLobby">
+    <int name="CGUID"/>
+  </packet>
+
+  <packet name="C_LobbyToGame">
+    <int name="CGUID"/>
+    <int name="roomId"/>
+  </packet>
+
+  <packet name="C_GameToLobby">
+    <int name="CGUID"/>
+    <int name="roomId"/>
+  </packet>
+
   <packet name="C_SendChat">
     <int name="messageType"/>
     <string name="nickName"/>

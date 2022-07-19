@@ -4,13 +4,32 @@ using System.Text;
 
 namespace Server.Game
 {
-    public class GameRoom
+    class Room
+    {
+        object _lock = new object();
+        public Dictionary<int, Player> _playerDic = new Dictionary<int, Player>();
+
+        public void Broadcast(ArraySegment<byte> packet)
+        {
+        	//jobQueue를 사용시
+        	//_pendingList.Add(segment);		
+        	lock(_lock)
+        	{
+        		foreach(Player player in _playerDic.Values)
+        		{
+        			player.Session.Send(packet);
+        		}
+        	}
+        }
+    }
+
+    class GameRoom : Room
     {
         public int roomOwner;   //CGUID
         public int roomId;
         public Define.MapType _mapType;
         public Define.GameMode _gameMode;
-        Dictionary<int, Player> _playerDic = new Dictionary<int, Player>();
+
 
         public void AddPlayer(int CGUID)
         {
@@ -35,10 +54,8 @@ namespace Server.Game
         }
     }
 
-    public class LobbyRoom
+    class LobbyRoom : Room
     {
-        Dictionary<int, Player> _playerDic = new Dictionary<int, Player>();
-
         public void EnterLobbyRoom(int CGUID)
         {
             _playerDic.Add(CGUID, PlayerManager.Instance.GetPlayer(CGUID));
@@ -48,8 +65,17 @@ namespace Server.Game
         {
             _playerDic.Remove(CGUID);
         }
-    }
 
+        public void HandleChatting(C_SendChat cPkt)
+        {
+            S_SendChat sPkt = new S_SendChat();
+            sPkt.messageType = (int)Define.ChatType.Channel;
+            sPkt.nickName = cPkt.nickName;
+            sPkt.chatContent = cPkt.chatContent;
+
+            Broadcast(sPkt.Write());
+        }
+    }
 
     class RoomManager
     {
@@ -62,33 +88,54 @@ namespace Server.Game
         int _roomId = 10000;
 
         //실행 중인 게임 추가
-        public void MoveIntroToLobbyRoom(Player player)
+        public LobbyRoom GetLobby()
+        {
+            return _lobbyRoom;
+        }
+        public GameRoom GetGameRoom(int roomId)
+        {
+            GameRoom gameRoom;
+            _gameRooms.TryGetValue(roomId, out gameRoom);
+            return gameRoom;
+        }
+
+
+        public void MoveIntroToLobbyRoom(int CGUID)
         {
             lock (_lock)
             {
-                _lobbyRoom.EnterLobbyRoom(player.Session.SessionId);
+                _lobbyRoom.EnterLobbyRoom(CGUID);
             }
         }
 
         public void MoveLobbytToGameRoom(int CGUID, int roomId)
         {
-            _lobbyRoom.LeaveLobbyRoom(CGUID);
-            GameRoom gameRoom = GetGameRoom(roomId);
-            gameRoom.AddPlayer(CGUID);
+            lock (_lock)
+            {
+                _lobbyRoom.LeaveLobbyRoom(CGUID);
+                GameRoom gameRoom = GetGameRoom(roomId);
+                gameRoom.AddPlayer(CGUID);
+            }
         }
 
         public void MoveGameToLobbyRoom(int CGUID, int roomId)
         {
-            GameRoom gameRoom = GetGameRoom(roomId);
-            gameRoom.LeaveGameRoom(CGUID);
-            _lobbyRoom.EnterLobbyRoom(CGUID);
+            lock (_lock)
+            {
+                GameRoom gameRoom = GetGameRoom(roomId);
+                gameRoom.LeaveGameRoom(CGUID);
+                _lobbyRoom.EnterLobbyRoom(CGUID);
+            }
         }
 
         public void CreateGameRoom(GameRoom gameRoom)
         {
-            gameRoom.roomId = _roomId;
-            _gameRooms.Add(_roomId, gameRoom);
-            _roomId++;
+            lock (_lock)
+            {
+                gameRoom.roomId = _roomId;
+                _gameRooms.Add(_roomId, gameRoom);
+                _roomId++;
+            }
         }
 
         public void RemoveGameRoom(int roomId)
@@ -96,12 +143,6 @@ namespace Server.Game
             _gameRooms.Remove(roomId);
         }
 
-        public GameRoom GetGameRoom(int roomId)
-        {
-            GameRoom gameRoom;
-            _gameRooms.TryGetValue(roomId, out gameRoom);
-            return gameRoom;
-        }
 
         public void RoomAllClear()
         {

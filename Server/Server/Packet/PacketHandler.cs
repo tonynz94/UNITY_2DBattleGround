@@ -24,16 +24,41 @@ class PacketHandler
 		Console.WriteLine($"클라로 부터 설정한 닉네임 받음 : { Rpkt.playerNickName}");
 	}
 
+	public static void C_IntroToLobbyHandler(PacketSession session, IPacket packet)
+    {
+		Console.WriteLine("[Server] @>> RECV : C_IntroToLobby");
+		ClientSession clientSession = session as ClientSession;
+		RoomManager.Instance.MoveIntroToLobbyRoom(clientSession.SessionId);
+    }
+
+	public static void C_LobbyToGameHandler(PacketSession session, IPacket packet)
+	{
+		Console.WriteLine("[Server] @>> RECV : C_LobbyToGame");
+		C_LobbyToGame cPkt = packet as C_LobbyToGame;
+		ClientSession clientSession = session as ClientSession;
+
+		RoomManager.Instance.MoveLobbytToGameRoom(clientSession.SessionId, cPkt.roomId);
+
+	}
+
+	public static void C_GameToLobbyHandler(PacketSession session, IPacket packet)
+	{
+		Console.WriteLine("[Server] @>> RECV : C_GameToLobby");
+		C_GameToLobby cPkt = packet as C_GameToLobby;
+		ClientSession clientSession = session as ClientSession;
+		RoomManager.Instance.MoveGameToLobbyRoom(clientSession.SessionId, cPkt.roomId);
+	}
+
 	public static void C_SendChatHandler(PacketSession session, IPacket packet)
     {
 		Console.WriteLine("[Server] @>> RECV : C_SendChat");
-		C_SendChat Rpkt = packet as C_SendChat;
-		LobbyRoom lobbyRoom = RoomManager.Instance.Find((int)Define.RoomID.Lobby);
+		C_SendChat cPkt = packet as C_SendChat;
+		LobbyRoom lobbyRoom = RoomManager.Instance.GetLobby();
 
 		if (lobbyRoom == null)
 			return;
 
-		lobbyRoom.HandleChatting(Rpkt);
+		lobbyRoom.HandleChatting(cPkt);
     }
 
 	public static void C_LeaveGameHandler(PacketSession session, IPacket packet)

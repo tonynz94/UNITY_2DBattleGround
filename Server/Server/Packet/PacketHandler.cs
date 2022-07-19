@@ -23,6 +23,24 @@ class PacketHandler
 
 		Console.WriteLine($"클라로 부터 설정한 닉네임 받음 : { Rpkt.playerNickName}");
 	}
+	
+	public static void C_CreateGameRoomHandler(PacketSession session, IPacket packet)
+	{
+		Console.WriteLine("[Server] @>> RECV : C_CreateGameRoom");
+		ClientSession clientSession = session as ClientSession;
+		C_CreateGameRoom cPkt = packet as C_CreateGameRoom;
+
+		RoomManager.Instance.HandleCreateGameRoom(cPkt);
+
+	}
+
+	public static void C_GetGameRoomsHandler(PacketSession session, IPacket packet)
+	{
+		Console.WriteLine("[Server] @>> RECV : C_CreateGameRoom");
+		ClientSession clientSession = session as ClientSession;
+
+		RoomManager.Instance.HandleGetAllGameRooms(clientSession);
+	}
 
 	public static void C_IntroToLobbyHandler(PacketSession session, IPacket packet)
     {

@@ -55,8 +55,6 @@ public class RoomManager
     public Dictionary<int, GameRoom> _gameRooms { get; private set; } = new Dictionary<int, GameRoom>();
     public LobbyRoom _lobbyRoom { get; private set; } = new LobbyRoom();
 
-    public int _roomId = 10000;
-
     public void MoveIntroToLobbyRoom(int CGUID)
     {
         _lobbyRoom.EnterLobbyRoom(CGUID);
@@ -76,12 +74,21 @@ public class RoomManager
         _lobbyRoom.EnterLobbyRoom(CGUID);
     }
 
-    public void CreateGameRoom(GameRoom gameRoom)
+    public void HandleCreateGameRoom(S_CreateGameRoom sPkt)
     {
         Debug.Log("Create Room Complete");
-        gameRoom.roomId = _roomId;
-        _gameRooms.Add(_roomId, gameRoom);
-        _roomId++;
+        
+        GameRoom gameRoom = new GameRoom();
+        gameRoom.roomId = sPkt.RoomId;
+        gameRoom.roomOwner = sPkt.CGUID;
+        gameRoom.SetGameRoom((Define.GameMode)sPkt.GameType, (Define.MapType)sPkt.MapType);
+        _gameRooms.Add(gameRoom.roomId, gameRoom);
+
+        Managers.UI.ClosePopupUI();
+        UI_GameRoom room = Managers.UI.ShowPopupUI<UI_GameRoom>();
+
+        //Managers.Room.GetGameRoom(gameRoom.roomId).roomOwner
+        room.SetRoom(gameRoom.roomId, Managers.Player.MyPlayer);
     }
 
     public void RemoveGameRoom(int roomId)

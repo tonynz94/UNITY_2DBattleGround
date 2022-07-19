@@ -2302,7 +2302,7 @@ GameObject:
   - component: {fileID: 3344626854829900438}
   - component: {fileID: 3344626854829900434}
   m_Layer: 5
-  m_Name: UI_RoomLobby
+  m_Name: UI_GameRoom
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

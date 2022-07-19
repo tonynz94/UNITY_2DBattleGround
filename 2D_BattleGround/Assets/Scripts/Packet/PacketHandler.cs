@@ -31,6 +31,21 @@ class PacketHandler
 		Managers.Scene.ChangeScene(Define.Scene.LobbyScene);	
 	} 
 
+	public static void S_CreateGameRoomHandler(PacketSession session, IPacket packet)
+	{
+		Debug.Log("[NetworkManager] @>> RECV : S_SendChat ");
+		S_CreateGameRoom sPkt = packet as S_CreateGameRoom;
+
+		Managers.Room.HandleCreateGameRoom(sPkt);
+	}
+
+	public static void S_GetGameRoomsHandler(PacketSession session, IPacket packet)
+	{
+		Debug.Log("[NetworkManager] @>> RECV : S_SendChat ");
+		S_GetGameRooms sPkt = packet as S_GetGameRooms;
+	}
+
+
 	//상대방의 채팅을 받았을때
 	public static void S_SendChatHandler(PacketSession session, IPacket packet)
     {
@@ -77,5 +92,7 @@ class PacketHandler
 		ServerSession serverSession = session as ServerSession;
 
 	}
+
+	
 	
 }

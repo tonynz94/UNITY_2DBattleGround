@@ -14,6 +14,35 @@
     <int name="CGUID"/>
   </packet>
 
+  <packet name="C_CreateGameRoom">
+    <int name="CGUID"/>
+    <int name="MapType"/>
+    <int name="GameType"/>
+  </packet>
+
+  <packet name="S_CreateGameRoom">
+    <int name="CGUID"/>
+    <int name="MapType"/>
+    <int name="GameType"/>
+    <int name="RoomId"/>
+  </packet>
+
+  <packet name="C_GetGameRooms">
+    <int name="result"/>
+  </packet>
+
+  <packet name="S_GetGameRooms"> 
+    <list name="GameRoomlist">
+      <int name="RoomId"/>
+      <int name="MapType"/>
+      <int name="GameMode"/>
+      <list name="PlayerList">
+        <int name="CGUID"/>
+      </list>
+    </list>
+  </packet>
+
+
   <packet name="C_IntroToLobby">
     <int name="CGUID"/>
   </packet>
@@ -50,11 +79,14 @@
 	<float name="posY"/>
 	<float name="posZ"/>
   </packet>
+  
   <packet name="C_LeaveGame">
   </packet>
+  
   <packet name="S_BroadcastLeaveGame">
 	<int name="playerId"/>
   </packet>
+  
   <packet name="S_PlayerList">
 	<list name="player">
 	  <bool name="isSelf"/>
@@ -63,16 +95,19 @@
 	  <float name="posY"/>
 	  <float name="posZ"/>
 	</list>
+    
   </packet>
   <packet name="C_Move">
 	<float name="posX"/>
 	<float name="posY"/>
 	<float name="posZ"/>
   </packet>
+  
   <packet name="S_BroadcastMove">
 	<int name="playerId"/>
 	<float name="posX"/>
 	<float name="posY"/>
 	<float name="posZ"/>
   </packet>
+  
 </PDL>

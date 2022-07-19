@@ -128,13 +128,52 @@ namespace Server.Game
             }
         }
 
-        public void CreateGameRoom(GameRoom gameRoom)
+        public void HandleCreateGameRoom(C_CreateGameRoom cPkt)
         {
             lock (_lock)
             {
-                gameRoom.roomId = _roomId;
-                _gameRooms.Add(_roomId, gameRoom);
-                _roomId++;
+                GameRoom gameRoom = new GameRoom();
+                gameRoom.roomOwner = cPkt.CGUID;
+                gameRoom.AddPlayer(cPkt.CGUID);
+                gameRoom.roomId = _roomId++;
+                gameRoom.SetGameRoom((Define.GameMode)cPkt.GameType , (Define.MapType)cPkt.MapType);
+                _gameRooms.Add(gameRoom.roomId, gameRoom);
+
+                //반들어 준 사람에게 에코로 보내 줌
+                S_CreateGameRoom sPkt = new S_CreateGameRoom();
+                sPkt.CGUID = gameRoom.roomOwner;
+                sPkt.RoomId = gameRoom.roomId;
+                sPkt.MapType = (int)gameRoom._mapType;
+                sPkt.GameType = (int)gameRoom._gameMode;
+             
+                ClientSession session = SessionManager.Instance.Find(sPkt.CGUID);
+                session.Send(sPkt.Write());
+            }
+        }
+
+        public void HandleGetAllGameRooms(ClientSession  session)
+        {
+            lock(_lock)
+            {
+                S_GetGameRooms sPkt = new S_GetGameRooms();
+                
+                foreach (KeyValuePair<int, GameRoom> gameRoom  in _gameRooms)
+                {
+                    S_GetGameRooms.GameRoomlist tempRoom = new S_GetGameRooms.GameRoomlist();
+                    tempRoom.GameMode = (int)gameRoom.Value._gameMode;
+                    tempRoom.MapType = (int)gameRoom.Value._mapType;
+                    tempRoom.RoomId = gameRoom.Key;
+                    foreach(KeyValuePair<int, Player> player in gameRoom.Value._playerDic)
+                    {
+                        S_GetGameRooms.GameRoomlist.PlayerList tempPlayer = new S_GetGameRooms.GameRoomlist.PlayerList();
+                        tempPlayer.CGUID = player.Key;
+                        tempRoom.playerLists.Add(tempPlayer);
+                    }
+
+                    sPkt.gameRoomlists.Add(tempRoom);
+                }
+
+                session.Send(sPkt.Write());
             }
         }
 

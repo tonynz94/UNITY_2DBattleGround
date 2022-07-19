@@ -86,15 +86,16 @@ public class UI_CreateRoom : UI_Popup
         }
         else
         {
-            //최종적으로 방 만들어짐 
             Debug.Log($"_modeType : {_modeType} , _mapType : {_mapType}");
-            _gameRoom.SetGameRoom(_modeType, _mapType);
-            Managers.Room.CreateGameRoom(_gameRoom);
-
             //서버로 전송.
-            Managers.UI.ClosePopupUI();
-            UI_GameRoom room = Managers.UI.ShowPopupUI<UI_GameRoom>();
-            room.SetRoom(_gameRoom.roomId, Managers.Player.MyPlayer);
+
+            C_CreateGameRoom cPkt = new C_CreateGameRoom();
+            
+            cPkt.CGUID = Managers.Player.GetMyCGUID();
+            cPkt.MapType = (int)_mapType;
+            cPkt.GameType = (int)_modeType;
+
+            //요청 ack를 받으면 생성해주기.
         }
     }
 

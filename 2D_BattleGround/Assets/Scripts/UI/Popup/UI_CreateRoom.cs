@@ -95,6 +95,7 @@ public class UI_CreateRoom : UI_Popup
             cPkt.MapType = (int)_mapType;
             cPkt.GameType = (int)_modeType;
 
+            Managers.Net.Send(cPkt.Write());
             //요청 ack를 받으면 생성해주기.
         }
     }

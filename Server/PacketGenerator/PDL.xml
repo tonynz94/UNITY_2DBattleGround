@@ -34,6 +34,7 @@
   <packet name="S_GetGameRooms"> 
     <list name="GameRoomlist">
       <int name="RoomId"/>
+      <int name="RoomOwner"/>
       <int name="MapType"/>
       <int name="GameMode"/>
       <list name="PlayerList">
@@ -52,9 +53,18 @@
     <int name="roomId"/>
   </packet>
 
+  <packet name="S_LobbyToGame">
+    <int name="CGUID"/>
+    <bool name="IsNoSlot"/>
+  </packet>
+
   <packet name="C_GameToLobby">
     <int name="CGUID"/>
     <int name="roomId"/>
+  </packet>
+
+  <packet name="S_GameToLobby">
+    <int name="CGUID"/>
   </packet>
 
   <packet name="C_SendChat">

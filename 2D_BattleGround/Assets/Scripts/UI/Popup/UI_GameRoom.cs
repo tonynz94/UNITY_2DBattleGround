@@ -93,6 +93,12 @@ public class UI_GameRoom : UI_Popup
     public void OnBackButton()
     {
         Managers.UI.ClosePopupUI();
+        C_GameToLobby cPkt = new C_GameToLobby();
+        cPkt.CGUID = Managers.Player.GetMyCGUID();
+        cPkt.roomId = _roomID;
+
+        Managers.Net.Send(cPkt.Write());
+
         Debug.Log("Back Clicked");
     }
 

@@ -91,6 +91,24 @@ public class RoomManager
         room.SetRoom(gameRoom.roomId, Managers.Player.MyPlayer);
     }
 
+    public void HandleGetAllGamrRooms(S_GetGameRooms sPkt)
+    {
+        foreach(S_GetGameRooms.GameRoomlist temp in sPkt.gameRoomlists)
+        {
+            GameRoom gameRoom = new GameRoom();
+            gameRoom.SetGameRoom((Define.GameMode)temp.GameMode, (Define.MapType)temp.MapType);
+            gameRoom.roomId =temp.RoomId;
+            gameRoom.roomOwner =temp.RoomOwner;
+            
+            foreach(S_GetGameRooms.GameRoomlist.PlayerList tempPlayer in temp.playerLists)
+            {
+                gameRoom.AddPlayer(tempPlayer.CGUID);
+            }
+        }
+
+        Managers.UI.ShowPopupUI<UI_RoomList>();
+    }
+
     public void RemoveGameRoom(int roomId)
     {
         _gameRooms.Remove(roomId);

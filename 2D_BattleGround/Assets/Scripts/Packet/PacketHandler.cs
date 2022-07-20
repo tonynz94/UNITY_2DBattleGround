@@ -33,7 +33,7 @@ class PacketHandler
 
 	public static void S_CreateGameRoomHandler(PacketSession session, IPacket packet)
 	{
-		Debug.Log("[NetworkManager] @>> RECV : S_SendChat ");
+		Debug.Log("[NetworkManager] @>> RECV : S_CreateGameRoom ");
 		S_CreateGameRoom sPkt = packet as S_CreateGameRoom;
 
 		Managers.Room.HandleCreateGameRoom(sPkt);
@@ -41,10 +41,26 @@ class PacketHandler
 
 	public static void S_GetGameRoomsHandler(PacketSession session, IPacket packet)
 	{
-		Debug.Log("[NetworkManager] @>> RECV : S_SendChat ");
+		Debug.Log("[NetworkManager] @>> RECV : S_GetGameRooms ");
 		S_GetGameRooms sPkt = packet as S_GetGameRooms;
+
+		Managers.Room.HandleGetAllGamrRooms(sPkt);
+	}
+	public static void S_LobbyToGameHandler(PacketSession session, IPacket packet)
+	{
+		Debug.Log("[NetworkManager] @>> RECV : S_GetGameRooms ");
+		S_LobbyToGame sPkt = packet as S_LobbyToGame;
+
+
 	}
 
+	public static void S_GameToLobbyHandler(PacketSession session, IPacket packet)
+	{
+		Debug.Log("[NetworkManager] @>> RECV : S_GetGameRooms ");
+		S_GameToLobby sPkt = packet as S_GameToLobby;
+
+
+	}
 
 	//상대방의 채팅을 받았을때
 	public static void S_SendChatHandler(PacketSession session, IPacket packet)

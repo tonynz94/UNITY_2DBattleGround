@@ -9,6 +9,11 @@ namespace Server.Game
         object _lock = new object();
         public Dictionary<int, Player> _playerDic = new Dictionary<int, Player>();
 
+        public int GetPlayerCount()
+        {
+            return _playerDic.Count;
+        }
+
         public void Broadcast(ArraySegment<byte> packet)
         {
         	//jobQueue를 사용시
@@ -112,9 +117,25 @@ namespace Server.Game
         {
             lock (_lock)
             {
+                bool isNotSlot = false;
                 _lobbyRoom.LeaveLobbyRoom(CGUID);
                 GameRoom gameRoom = GetGameRoom(roomId);
-                gameRoom.AddPlayer(CGUID);
+
+                if(gameRoom.GetPlayerCount() < 4)
+                {
+                    gameRoom.AddPlayer(CGUID);
+                    isNotSlot = false;
+                }
+                else
+                {
+                    isNotSlot = true;
+                }
+                
+
+                S_LobbyToGame sPkt = new S_LobbyToGame();
+                sPkt.CGUID = CGUID;
+                sPkt.IsNoSlot = isNotSlot;
+                gameRoom.Broadcast(sPkt.Write());
             }
         }
 
@@ -124,7 +145,16 @@ namespace Server.Game
             {
                 GameRoom gameRoom = GetGameRoom(roomId);
                 gameRoom.LeaveGameRoom(CGUID);
+                if (gameRoom.GetPlayerCount() == 0)
+                    RemoveGameRoom(roomId);
+
+                C_LobbyToGame cPkt = new C_LobbyToGame();
+                cPkt.CGUID = CGUID;
+                gameRoom.Broadcast(cPkt.Write());
+
                 _lobbyRoom.EnterLobbyRoom(CGUID);
+
+            
             }
         }
 
@@ -163,7 +193,8 @@ namespace Server.Game
                     tempRoom.GameMode = (int)gameRoom.Value._gameMode;
                     tempRoom.MapType = (int)gameRoom.Value._mapType;
                     tempRoom.RoomId = gameRoom.Key;
-                    foreach(KeyValuePair<int, Player> player in gameRoom.Value._playerDic)
+                    tempRoom.RoomOwner = gameRoom.Value.roomOwner;
+                    foreach (KeyValuePair<int, Player> player in gameRoom.Value._playerDic)
                     {
                         S_GetGameRooms.GameRoomlist.PlayerList tempPlayer = new S_GetGameRooms.GameRoomlist.PlayerList();
                         tempPlayer.CGUID = player.Key;

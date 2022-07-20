@@ -18,9 +18,10 @@ public class NetworkManager
     public void ConnectServer()
     {
 		// DNS (Domain Name System)
-		//string host = Dns.GetHostName();
-		//IPHostEntry ipHost = Dns.GetHostEntry(host);
-		IPAddress ipAddr = IPAddress.Parse("fe80::8128:9711:e077:f977%15");
+		string host = Dns.GetHostName();
+		IPHostEntry ipHost = Dns.GetHostEntry(host);
+		//IPAddress ipAddr = IPAddress.Parse("fe80::8128:9711:e077:f977%15");
+		IPAddress ipAddr = ipHost.AddressList[0];
 		IPEndPoint endPoint = new IPEndPoint(ipAddr, 7777);
 
 		Connector connector = new Connector();

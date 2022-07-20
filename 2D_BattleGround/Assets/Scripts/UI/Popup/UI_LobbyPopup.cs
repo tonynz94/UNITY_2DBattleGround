@@ -79,7 +79,10 @@ public class UI_LobbyPopup : UI_Popup
     public void OnShowRoomButton()
     {
         Debug.Log("Show Room");
-        Managers.UI.ShowPopupUI<UI_RoomList>();
+        C_GetGameRooms cPkt = new C_GetGameRooms();
+        Managers.Net.Send(cPkt.Write());
+
+        
     }
 
     public void OnCreateButton()

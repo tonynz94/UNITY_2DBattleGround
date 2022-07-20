@@ -27,6 +27,10 @@ public class PacketManager
 		_handler.Add((ushort)PacketID.S_CreateGameRoom, PacketHandler.S_CreateGameRoomHandler);
 		_makeFunc.Add((ushort)PacketID.S_GetGameRooms, MakePacket<S_GetGameRooms>);
 		_handler.Add((ushort)PacketID.S_GetGameRooms, PacketHandler.S_GetGameRoomsHandler);
+		_makeFunc.Add((ushort)PacketID.S_LobbyToGame, MakePacket<S_LobbyToGame>);
+		_handler.Add((ushort)PacketID.S_LobbyToGame, PacketHandler.S_LobbyToGameHandler);
+		_makeFunc.Add((ushort)PacketID.S_GameToLobby, MakePacket<S_GameToLobby>);
+		_handler.Add((ushort)PacketID.S_GameToLobby, PacketHandler.S_GameToLobbyHandler);
 		_makeFunc.Add((ushort)PacketID.S_SendChat, MakePacket<S_SendChat>);
 		_handler.Add((ushort)PacketID.S_SendChat, PacketHandler.S_SendChatHandler);
 		_makeFunc.Add((ushort)PacketID.S_NoticeAll, MakePacket<S_NoticeAll>);

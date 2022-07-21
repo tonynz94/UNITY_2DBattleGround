@@ -22,14 +22,27 @@ class PacketHandler
 		Debug.Log("[NetworkManager] @>> RECV : S_FirstEnter ");
 		S_FirstEnter rPkt = packet as S_FirstEnter;
 
-		Managers.Room.MoveIntroToLobbyRoom(rPkt.CGUID);
+		//Managers.Room.MoveIntroToLobbyRoom(rPkt.CGUID);
 
 		if (rPkt.CGUID != Managers.Player.GetMyCGUID())
 			Managers.Player.AddPlayer(rPkt.CGUID, rPkt.playerNickName);
 
 		Managers.UI.ClosePopupUI();
 		Managers.Scene.ChangeScene(Define.Scene.LobbyScene);	
-	} 
+	}
+
+	//Recv from Server of All Player (if i Entered this will not excute only other player comin)
+	public static void S_AllPlayerListHandler(PacketSession session, IPacket packet)
+	{
+		Debug.Log("[NetworkManager] @>> RECV : S_FirstEnter ");
+		S_AllPlayerList rPkt = packet as S_AllPlayerList;
+
+		foreach(S_AllPlayerList.OnLinePlayer player in rPkt.onLinePlayers)
+        {
+			if(player.CGUID != Managers.Player.GetMyCGUID())
+				Managers.Player.AddPlayer(player.CGUID, player.playerNickName);
+        }
+	}
 
 	public static void S_CreateGameRoomHandler(PacketSession session, IPacket packet)
 	{

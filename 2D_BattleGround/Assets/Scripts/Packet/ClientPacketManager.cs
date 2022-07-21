@@ -23,6 +23,8 @@ public class PacketManager
 		_handler.Add((ushort)PacketID.S_HandShake, PacketHandler.S_HandShakeHandler);
 		_makeFunc.Add((ushort)PacketID.S_FirstEnter, MakePacket<S_FirstEnter>);
 		_handler.Add((ushort)PacketID.S_FirstEnter, PacketHandler.S_FirstEnterHandler);
+		_makeFunc.Add((ushort)PacketID.S_AllPlayerList, MakePacket<S_AllPlayerList>);
+		_handler.Add((ushort)PacketID.S_AllPlayerList, PacketHandler.S_AllPlayerListHandler);
 		_makeFunc.Add((ushort)PacketID.S_CreateGameRoom, MakePacket<S_CreateGameRoom>);
 		_handler.Add((ushort)PacketID.S_CreateGameRoom, PacketHandler.S_CreateGameRoomHandler);
 		_makeFunc.Add((ushort)PacketID.S_GetGameRooms, MakePacket<S_GetGameRooms>);

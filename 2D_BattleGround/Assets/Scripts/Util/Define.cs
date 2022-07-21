@@ -87,6 +87,12 @@ public class Define
         Max
     }
 
+    public enum GameState
+    {
+        Waiting,
+        Started,
+    }
+
     public enum MESSAGE_EVENT_TYPE
     {
         MESS_CHATTING_ADD,

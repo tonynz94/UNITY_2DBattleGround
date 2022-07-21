@@ -17,9 +17,9 @@ class PacketHandler
 
 		Player player = null;
 		player = PlayerManager.Instance.Add(clientSession.SessionId, Rpkt.playerNickName, false, clientSession) ;
-
+	
 		//입장과 동시에 로비로 넣어주기
-		RoomManager.Instance.MoveIntroToLobbyRoom(player.Session.SessionId);
+		RoomManager.Instance.MoveIntroToLobbyRoom(clientSession ,player.Session.SessionId);
 
 		Console.WriteLine($"클라로 부터 설정한 닉네임 받음 : { Rpkt.playerNickName}");
 	}

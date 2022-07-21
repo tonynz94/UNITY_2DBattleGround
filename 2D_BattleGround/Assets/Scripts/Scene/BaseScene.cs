@@ -20,7 +20,7 @@ public class BaseScene : MonoBehaviour
 
         _init = true;
 
-        Screen.SetResolution(640, 480, false);
+        Screen.SetResolution(1920, 1080, false);
 
         GameObject go = GameObject.Find("EventSystem");
         if (go == null)

@@ -8,6 +8,7 @@ namespace Server.Game
     {
         public String NickName;
         public bool isInGame;
+        public int Level;
         public float PosX;
         public float PosY;
         public Define.ObjectState State;

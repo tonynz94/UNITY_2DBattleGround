@@ -70,7 +70,7 @@ public class UI_LobbyPopup : UI_Popup
 
         InitPlayerInfo();
 
-        //채팅 자주 사용할꺼같아서 먼저 로드하면 최적화에 좋을꺼같지만 나중에...
+        //???? ???? ?????????????? ???? ???????? ???????? ???????????? ??????...
         //Managers.Resource.Load<GameObject>("Prefabs/SubItem/UI_chatItem");
 
         return true;
@@ -123,7 +123,7 @@ public class UI_LobbyPopup : UI_Popup
     public void OnChatAdd(object obj)
     {
         ChatPiece chatPiece = obj as ChatPiece;
-        GameObject go =Managers.Resource.Instantiate("UI/SubItem/UI_ChatItem", GetObject((int)GameObjects.ChatDashBoardObject).transform);
+        GameObject go = Managers.Resource.Instantiate("UI/SubItem/UI_ChatItem", GetObject((int)GameObjects.ChatDashBoardObject).transform);
         go.GetComponent<UI_ChatItem>().SetChatPiece(chatPiece._chatType, chatPiece._nickName, chatPiece._chatContent);
     }
 

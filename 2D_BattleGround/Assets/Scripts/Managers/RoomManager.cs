@@ -26,6 +26,11 @@ public class GameRoom
         _mapType = mapType;
     }
 
+    public int GetPlayerCount()
+    {
+        return _playerDic.Count;
+    }
+
     public void Clear()
     {
         _mapType = Define.MapType.None;
@@ -49,30 +54,29 @@ public class LobbyRoom
 
 }
 
-//로비 방 모음
 public class RoomManager
 {
     public Dictionary<int, GameRoom> _gameRooms { get; private set; } = new Dictionary<int, GameRoom>();
     public LobbyRoom _lobbyRoom { get; private set; } = new LobbyRoom();
 
-    public void MoveIntroToLobbyRoom(int CGUID)
-    {
-        _lobbyRoom.EnterLobbyRoom(CGUID);
-    }
+    //public void MoveIntroToLobbyRoom(int CGUID)
+    //{
+    //    _lobbyRoom.EnterLobbyRoom(CGUID);
+    //}
 
-    public void MoveLobbytToGameRoom(int CGUID, int roomId)
-    {
-        _lobbyRoom.LeaveLobbyRoom(CGUID);
-        GameRoom gameRoom = GetGameRoom(roomId);
-        gameRoom.AddPlayer(CGUID);
-    }
+    //public void MoveLobbytToGameRoom(int CGUID, int roomId)
+    //{
+    //    _lobbyRoom.LeaveLobbyRoom(CGUID);
+    //    GameRoom gameRoom = GetGameRoom(roomId);
+    //    gameRoom.AddPlayer(CGUID);
+    //}
 
-    public void MoveGameToLobbyRoom(int CGUID, int roomId)
-    {
-        GameRoom gameRoom = GetGameRoom(roomId);
-        gameRoom.LeaveGameRoom(CGUID);
-        _lobbyRoom.EnterLobbyRoom(CGUID);
-    }
+    //public void MoveGameToLobbyRoom(int CGUID, int roomId)
+    //{
+    //    GameRoom gameRoom = GetGameRoom(roomId);
+    //    gameRoom.LeaveGameRoom(CGUID);
+    //    _lobbyRoom.EnterLobbyRoom(CGUID);
+    //}
 
     public void HandleCreateGameRoom(S_CreateGameRoom sPkt)
     {
@@ -106,7 +110,8 @@ public class RoomManager
             }
         }
 
-        Managers.UI.ShowPopupUI<UI_RoomList>();
+        UI_RoomList roomlist = Managers.UI.ShowPopupUI<UI_RoomList>();
+        roomlist.RefreshGameRoom();
     }
 
     public void RemoveGameRoom(int roomId)
@@ -121,7 +126,7 @@ public class RoomManager
         return gameRoom;
     }
 
-    public void RoomAllClear()
+    public void GameRoomAllClear()
     {
         _gameRooms.Clear();
     }

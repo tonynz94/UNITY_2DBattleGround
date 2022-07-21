@@ -9,7 +9,7 @@ namespace Server.Game
         public static PlayerManager Instance { get; } = new PlayerManager();
 
         //서버에 연결한 모든 플레이어들
-        Dictionary<int, Player> _players = new Dictionary<int, Player>();
+        public Dictionary<int, Player> _players { get; private set; } = new Dictionary<int, Player>();
 
         object _lock = new object();
         
@@ -51,6 +51,12 @@ namespace Server.Game
             Player player;
             _players.TryGetValue(CGUID, out player);
             return player;
+        }
+
+        public String GetPlayerNickName(int CGUID)
+        {
+            Player player = GetPlayer(CGUID);
+            return player.Info.NickName;
         }
     }
 }

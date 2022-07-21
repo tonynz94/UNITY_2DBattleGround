@@ -105,11 +105,35 @@ namespace Server.Game
         }
 
 
-        public void MoveIntroToLobbyRoom(int CGUID)
+        public void MoveIntroToLobbyRoom(ClientSession session ,int CGUID)
         {
             lock (_lock)
             {
                 _lobbyRoom.EnterLobbyRoom(CGUID);
+                //to me
+                //Send All Player Online in the game
+
+                //other who already in Game
+                //Send Only me to Add
+
+                S_AllPlayerList sPkt1 = new S_AllPlayerList();
+                foreach(Player player in PlayerManager.Instance._players.Values)
+                {
+                    S_AllPlayerList.OnLinePlayer temp = new S_AllPlayerList.OnLinePlayer();
+                    temp.CGUID = player.Session.SessionId;
+                    temp.Level = player.Info.Level;
+                    temp.playerNickName = player.Info.NickName;
+
+                    sPkt1.onLinePlayers.Add(temp);
+
+                    session.Send(sPkt1.Write());
+                }
+
+                S_FirstEnter sPkt2 = new S_FirstEnter();
+                sPkt2.CGUID = CGUID;
+                sPkt2.playerNickName = PlayerManager.Instance.GetPlayerNickName(CGUID);
+
+                PlayerManager.Instance.BroadCast(sPkt2.Write());
             }
         }
 

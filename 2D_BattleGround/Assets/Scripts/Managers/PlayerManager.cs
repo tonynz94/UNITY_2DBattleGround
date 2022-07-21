@@ -63,7 +63,7 @@ public class PlayerManager
         AddPlayer(MyPlayer);
     }
 
-    public void AddPlayer(int CGUID, string nickName)
+    public void AddPlayer(int CGUID, string nickName, int level = 0)
     {
         Player player = new Player(CGUID, nickName);
         _players.Add(CGUID, player);

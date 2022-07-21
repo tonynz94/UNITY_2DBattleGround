@@ -14,6 +14,14 @@
     <int name="CGUID"/>
   </packet>
 
+  <packet name="S_AllPlayerList">
+      <list name="OnLinePlayer">
+          <int name="CGUID"/>
+          <string name="playerNickName"/>
+          <int name="Level"/>
+      </list>
+  </packet>
+
   <packet name="C_CreateGameRoom">
     <int name="CGUID"/>
     <int name="MapType"/>

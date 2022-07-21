@@ -18,11 +18,11 @@ public class NetworkManager
     public void ConnectServer()
     {
         // DNS (Domain Name System)
-        //string host = Dns.GetHostName();
-        //IPHostEntry ipHost = Dns.GetHostEntry(host);
-        //IPAddress ipAddr = ipHost.AddressList[0];
+        string host = Dns.GetHostName();
+        IPHostEntry ipHost = Dns.GetHostEntry(host);
+        IPAddress ipAddr = ipHost.AddressList[0];
 
-        IPAddress ipAddr = IPAddress.Parse("172.29.121.103");
+        //IPAddress ipAddr = IPAddress.Parse("172.29.121.103");
 		IPEndPoint endPoint = new IPEndPoint(ipAddr, 7777);
 
 		Connector connector = new Connector();

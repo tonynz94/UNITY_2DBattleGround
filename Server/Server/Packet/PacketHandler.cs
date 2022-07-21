@@ -46,7 +46,7 @@ class PacketHandler
     {
 		Console.WriteLine("[Server] @>> RECV : C_IntroToLobby");
 		ClientSession clientSession = session as ClientSession;
-		RoomManager.Instance.MoveIntroToLobbyRoom(clientSession.SessionId);
+		RoomManager.Instance.MoveIntroToLobbyRoom(clientSession, clientSession.SessionId);
     }
 
 	public static void C_LobbyToGameHandler(PacketSession session, IPacket packet)

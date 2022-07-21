@@ -17,31 +17,42 @@ class PacketHandler
 		Managers.UI.ClosePopupUI();
 		Managers.UI.ShowPopupUI<UI_ConfirmPopup>();
 	}
+
+	//내가 들어가면 나 포함 모든 플레이어가 받음.
 	public static void S_FirstEnterHandler(PacketSession session, IPacket packet)
 	{
-		Debug.Log("[NetworkManager] @>> RECV : S_FirstEnter ");
+		
 		S_FirstEnter rPkt = packet as S_FirstEnter;
 
 		//Managers.Room.MoveIntroToLobbyRoom(rPkt.CGUID);
 
-		if (rPkt.CGUID != Managers.Player.GetMyCGUID())
+		//모든 플레이어가 받기 때문에 나는 이미 넣어줬기 때문에 다른 플레이만 받음.
+		if (rPkt.CGUID != Managers.Player.GetMyCGUID()) {
 			Managers.Player.AddPlayer(rPkt.CGUID, rPkt.playerNickName);
+			Debug.Log($"[NetworkManager] @>> RECV : S_FirstEnter { rPkt.playerNickName} 입장 ");
+		}
+		else
+		{
+			Debug.Log("[NetworkManager] @>> RECV : S_FirstEnter : 내가 들어간거에 대해 받아기 때문에 Player에 안넣어줌  ");
+		}
 
-		Managers.UI.ClosePopupUI();
-		Managers.Scene.ChangeScene(Define.Scene.LobbyScene);	
 	}
 
-	//Recv from Server of All Player (if i Entered this will not excute only other player comin)
+	//내가 들어가면 나만 받음.
 	public static void S_AllPlayerListHandler(PacketSession session, IPacket packet)
 	{
-		Debug.Log("[NetworkManager] @>> RECV : S_FirstEnter ");
+
 		S_AllPlayerList rPkt = packet as S_AllPlayerList;
 
-		foreach(S_AllPlayerList.OnLinePlayer player in rPkt.onLinePlayers)
+		Debug.Log($"[NetworkManager] @>> RECV : S_FirstEnter 현재 나 포함 {rPkt.onLinePlayers.Count} 온라인");
+		foreach (S_AllPlayerList.OnLinePlayer player in rPkt.onLinePlayers)
         {
 			if(player.CGUID != Managers.Player.GetMyCGUID())
 				Managers.Player.AddPlayer(player.CGUID, player.playerNickName);
         }
+
+		Managers.UI.ClosePopupUI();
+		Managers.Scene.ChangeScene(Define.Scene.LobbyScene);
 	}
 
 	public static void S_CreateGameRoomHandler(PacketSession session, IPacket packet)

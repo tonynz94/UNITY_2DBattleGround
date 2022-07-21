@@ -116,7 +116,9 @@ namespace Server.Game
                 //other who already in Game
                 //Send Only me to Add
 
+                //_players에 내가 포함 되어 있음.
                 S_AllPlayerList sPkt1 = new S_AllPlayerList();
+
                 foreach(Player player in PlayerManager.Instance._players.Values)
                 {
                     S_AllPlayerList.OnLinePlayer temp = new S_AllPlayerList.OnLinePlayer();
@@ -125,15 +127,8 @@ namespace Server.Game
                     temp.playerNickName = player.Info.NickName;
 
                     sPkt1.onLinePlayers.Add(temp);
-
-                    session.Send(sPkt1.Write());
                 }
-
-                S_FirstEnter sPkt2 = new S_FirstEnter();
-                sPkt2.CGUID = CGUID;
-                sPkt2.playerNickName = PlayerManager.Instance.GetPlayerNickName(CGUID);
-
-                PlayerManager.Instance.BroadCast(sPkt2.Write());
+                session.Send(sPkt1.Write());
             }
         }
 

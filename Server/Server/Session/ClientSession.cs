@@ -45,6 +45,7 @@ namespace Server
 			//}
 
 			Console.WriteLine($"OnDisconnected : {endPoint}");
+			
 		}
 
 		public override void OnSend(int numOfBytes)

@@ -79,7 +79,10 @@ public class UI_LobbyPopup : UI_Popup
     public void OnShowRoomButton()
     {
         Debug.Log("Show Room");
+        Managers.Room.GameRoomAllClear();
+
         C_GetGameRooms cPkt = new C_GetGameRooms();
+        Debug.Log("[NetworkManager] SEND : C_GetGameRooms");
         Managers.Net.Send(cPkt.Write());
 
         
@@ -114,7 +117,7 @@ public class UI_LobbyPopup : UI_Popup
         sPkt.messageType = (int)Define.ChatType.Channel;
         sPkt.nickName = Managers.Player.MyPlayer.NickName;
         sPkt.chatContent = chatStr;
-
+        Debug.Log("[NetworkManager] SEND : C_SendChat");
         Managers.Net.Send(sPkt.Write());
 
         GetObject((int)GameObjects.ChatContentField).GetComponent<TMP_InputField>().text = "";

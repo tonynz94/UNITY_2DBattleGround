@@ -92,36 +92,36 @@ public class Define
         Waiting,
         Started,
     }
+}
 
-    public enum MESSAGE_EVENT_TYPE
+public enum MESSAGE_EVENT_TYPE
+{
+    MESS_CHATTING_ADD,
+    MESS_ALLNOTICE_ADD,
+    MESS_ROOMLIST_SELECT,
+    MESS_MAXCOUNT
+}
+
+
+public class MessageSystem
+{
+    static Action<object>[] _eventProcDelegates = new Action<object>[(int)MESSAGE_EVENT_TYPE.MESS_MAXCOUNT];
+
+    public static void CallEventMessage(MESSAGE_EVENT_TYPE evtType, object obj = null)
     {
-        MESS_CHATTING_ADD,
-        MESS_ALLNOTICE_ADD,
-        MESS_MAXCOUNT
+        _eventProcDelegates[(int)evtType]?.Invoke(obj);
+    }
+
+    public static void RegisterMessageSystem(int evtType, Action<object> evt)
+    {
+        _eventProcDelegates[evtType] += evt;
+    }
+
+    public static void UnRegisterMessageSystem(int evtType, Action<object> evt)
+    {
+        _eventProcDelegates[evtType] -= evt;
     }
 
 
-    public class MessageSystem
-    {
-        static Action<object>[] _eventProcDelegates = new Action<object>[(int)MESSAGE_EVENT_TYPE.MESS_MAXCOUNT];
-
-        public static void CallEventMessage(int evtType, object obj = null)
-        {
-                _eventProcDelegates[evtType]?.Invoke(obj);
-        }
-
-        public static void RegisterMessageSystem(int evtType, Action<object> evt)
-        {
-            _eventProcDelegates[evtType] += evt;
-        }
-
-        public static void UnRegisterMessageSystem(int evtType, Action<object> evt)
-        {
-            _eventProcDelegates[evtType] -= evt;
-        }
-
-        
-
-    }
 
 }

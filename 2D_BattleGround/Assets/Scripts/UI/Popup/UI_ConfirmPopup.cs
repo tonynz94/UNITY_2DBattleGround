@@ -52,6 +52,7 @@ public class UI_ConfirmPopup : UI_Popup
 
         C_FirstEnter sPkt = new C_FirstEnter();
         sPkt.playerNickName = inputField.text;
+        Debug.Log("[NetworkManager] SEND : C_FirstEnter");
         Managers.Net.Send(sPkt.Write());
 
     }

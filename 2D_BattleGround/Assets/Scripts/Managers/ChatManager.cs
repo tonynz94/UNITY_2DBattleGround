@@ -23,13 +23,13 @@ public class ChatManager
     Queue<ChatPiece> _chatFieldList = new Queue<ChatPiece>();
     public void chatAdd(Define.ChatType chatType, string nickName, string chatContent)
     {
-        MessageSystem.CallEventMessage((int)MESSAGE_EVENT_TYPE.MESS_CHATTING_ADD, new ChatPiece(chatType, nickName, chatContent));
+        MessageSystem.CallEventMessage(MESSAGE_EVENT_TYPE.MESS_CHATTING_ADD, new ChatPiece(chatType, nickName, chatContent));
     }
 
     public void AllNotice(string chatContent)
     {
         Define.ChatType chatType = ChatType.AllNotices;
-        MessageSystem.CallEventMessage((int)MESSAGE_EVENT_TYPE.MESS_ALLNOTICE_ADD);
+        MessageSystem.CallEventMessage(MESSAGE_EVENT_TYPE.MESS_ALLNOTICE_ADD);
     }
 
     public int GetChatCount()

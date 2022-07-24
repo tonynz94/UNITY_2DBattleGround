@@ -97,8 +97,9 @@ public class UI_GameRoom : UI_Popup
         cPkt.CGUID = Managers.Player.GetMyCGUID();
         cPkt.roomId = _roomID;
 
+        Debug.Log("[NetworkManager] SEND : C_GameToLobby");
         Managers.Net.Send(cPkt.Write());
-
+        Managers.Room.GameRoomAllClear();
         Debug.Log("Back Clicked");
     }
 

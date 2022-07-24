@@ -16,6 +16,11 @@ public class UI_GameRoomItem : UI_Base
         BGImage
     }
 
+    enum Buttons
+    {
+        GameRoomButton,
+    }
+
     enum Texts
     {
         OwnerText,
@@ -30,7 +35,10 @@ public class UI_GameRoomItem : UI_Base
             return false;
 
         BindText(typeof(Texts));
+        BindButton(typeof(Buttons));
         BindImage(typeof(Images));
+
+        BindEvent(GetButton((int)Buttons.GameRoomButton).gameObject, OnGameRoomButton);
 
         _selected = false;
         return true;
@@ -43,6 +51,13 @@ public class UI_GameRoomItem : UI_Base
         GetText((int)Texts.MapText).text = System.Enum.GetName(typeof(MapType), (int)mapType);
         GetText((int)Texts.PlayersText).text = "(1/4)";
         GetText((int)Texts.StateText).text = System.Enum.GetName(typeof(GameState), (int)state);
+    }
+
+    public void OnGameRoomButton()
+    {
+        Debug.Log($"{_roomId}Item Clicked");
+        MessageSystem.CallEventMessage(MESSAGE_EVENT_TYPE.MESS_ROOMLIST_SELECT, _roomId);
+        Selected();
     }
 
     public void Selected()

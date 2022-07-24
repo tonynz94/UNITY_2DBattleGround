@@ -95,7 +95,7 @@ public class RoomManager
         room.SetRoom(gameRoom.roomId, Managers.Player.MyPlayer);
     }
 
-    public void HandleGetAllGamrRooms(S_GetGameRooms sPkt)
+    public void HandleGetAllGameRooms(S_GetGameRooms sPkt)
     {
         foreach(S_GetGameRooms.GameRoomlist temp in sPkt.gameRoomlists)
         {
@@ -108,6 +108,7 @@ public class RoomManager
             {
                 gameRoom.AddPlayer(tempPlayer.CGUID);
             }
+            _gameRooms.Add(gameRoom.roomId, gameRoom);
         }
 
         UI_RoomList roomlist = Managers.UI.ShowPopupUI<UI_RoomList>();

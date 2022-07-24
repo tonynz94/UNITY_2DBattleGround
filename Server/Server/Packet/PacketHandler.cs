@@ -36,7 +36,7 @@ class PacketHandler
 
 	public static void C_GetGameRoomsHandler(PacketSession session, IPacket packet)
 	{
-		Console.WriteLine("[Server] @>> RECV : C_CreateGameRoom");
+		Console.WriteLine("[Server] @>> RECV : C_GetGameRooms");
 		ClientSession clientSession = session as ClientSession;
 
 		RoomManager.Instance.HandleGetAllGameRooms(clientSession);

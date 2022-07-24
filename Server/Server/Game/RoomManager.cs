@@ -36,7 +36,7 @@ namespace Server.Game
         public Define.GameMode _gameMode;
 
 
-        public void AddPlayer(int CGUID)
+        public void EnterGameRoom(int CGUID)
         {
             _playerDic.Add(CGUID, PlayerManager.Instance.GetPlayer(CGUID));
         }
@@ -44,6 +44,7 @@ namespace Server.Game
         public void LeaveGameRoom(int CGUID)
         {
             _playerDic.Remove(CGUID);
+
         }
 
         public void SetGameRoom(Define.GameMode gameMode, Define.MapType mapType)
@@ -142,7 +143,7 @@ namespace Server.Game
 
                 if(gameRoom.GetPlayerCount() < 4)
                 {
-                    gameRoom.AddPlayer(CGUID);
+                    gameRoom.EnterGameRoom(CGUID);
                     isNotSlot = false;
                 }
                 else
@@ -183,7 +184,8 @@ namespace Server.Game
             {
                 GameRoom gameRoom = new GameRoom();
                 gameRoom.roomOwner = cPkt.CGUID;
-                gameRoom.AddPlayer(cPkt.CGUID);
+                _lobbyRoom.LeaveLobbyRoom(cPkt.CGUID);
+                gameRoom.EnterGameRoom(cPkt.CGUID);
                 gameRoom.roomId = _roomId++;
                 gameRoom.SetGameRoom((Define.GameMode)cPkt.GameType , (Define.MapType)cPkt.MapType);
                 _gameRooms.Add(gameRoom.roomId, gameRoom);

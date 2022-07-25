@@ -10,7 +10,17 @@ public class UI_RoomList : UI_Popup
     {
         NoRoomObject,
         RoomExistObject,
-        RoomItemContentObject
+        RoomItemContentObject,
+
+        Slot1OnObject,
+        Slot2OnObject,
+        Slot3OnObject,
+        Slot4OnObject,
+
+        Slot1OffObject,
+        Slot2OffObject,
+        Slot3OffObject,
+        Slot4OffObject,
     }
 
     enum Buttons
@@ -23,11 +33,22 @@ public class UI_RoomList : UI_Popup
     {
         JoinButtonText,
         BGTitleText,
+
+        Slot1NickName,
+        Slot2NickName,
+        Slot3NickName,
+        Slot4NickName,
     }
 
     enum Images
     {
-        MapImage
+        MapImage,
+        GameTypeImage,
+
+        Slot1CharImage,
+        Slot2CharImage,
+        Slot3CharImage,
+        Slot4CharImage,
     }
 
     public override bool Init()
@@ -77,7 +98,11 @@ public class UI_RoomList : UI_Popup
         if(_selectRoomId == -1)
         {
             Debug.Log("There is no room select ");
+            return;
         }
+
+
+
     }
 
     public void OnBackButton()
@@ -91,7 +116,21 @@ public class UI_RoomList : UI_Popup
     {
         _selectRoomId = (int)obj;
         GetObject((int)Objects.NoRoomObject).SetActive(false);
+
+        GameRoom room = Managers.Room.GetGameRoom(_selectRoomId);
+
         GetObject((int)Objects.RoomExistObject).SetActive(true);
+        GetImage((int)Images.MapImage).sprite = Managers.Map.GetMapSprite(room._mapType);
+        GetImage((int)Images.GameTypeImage).sprite = Managers.Map.GetGameType(room._gameMode);
+
+        int i = 0;
+        foreach(var player in room._playerDic.Values)
+        {
+            GetObject((int)System.Enum.Parse(typeof(Texts), $"Slot{i}OffObject")).SetActive(false);
+            GetObject((int)System.Enum.Parse(typeof(Texts), $"Slot{i}OnObject")).SetActive(true);
+            GetText((int)System.Enum.Parse(typeof(Texts), $"Slot{i}NickName")).text = player.NickName;
+            i++;
+        }
 
         foreach (UI_GameRoomItem item in _gameRoomItem.Values)
         {

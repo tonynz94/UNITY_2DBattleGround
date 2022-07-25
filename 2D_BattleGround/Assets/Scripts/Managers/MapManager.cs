@@ -7,6 +7,7 @@ public class MapManager
 {
 	Dictionary<int, List<List<int>>> _mapInfoDic = new Dictionary<int, List<List<int>>>();
 	Dictionary<Define.MapType, Sprite> _mapSprite = new Dictionary<Define.MapType, Sprite>();
+	Dictionary<Define.GameMode, Sprite> _gameType = new Dictionary<Define.GameMode, Sprite>();
 	public Grid CurrentGrid { get; private set; }
 	int _currentMapID;
 
@@ -24,6 +25,10 @@ public class MapManager
 		Sprite grassMap = Managers.Resource.Load<Sprite>("Sprites/TX Tileset Grass 13");
 		_mapSprite.Add(Define.MapType.GrassMap, grassMap);
 
+		Sprite coop = Managers.Resource.Load<Sprite>("Sprites/character_sample_09");
+		_gameType.Add(Define.GameMode.CooperativeMode, coop);
+		Sprite PvPMode = Managers.Resource.Load<Sprite>("Sprites/icon_itemicon_battle");
+		_gameType.Add(Define.GameMode.PvPMode, PvPMode);
 	}
 
     public void LoadMap(int mapId)
@@ -91,6 +96,13 @@ public class MapManager
 	{
 		Sprite spr = null;
 		_mapSprite.TryGetValue(maptype, out spr);
+		return spr;
+	}
+
+	public Sprite GetGameType(Define.GameMode gameType)
+    {
+		Sprite spr = null;
+		_mapSprite.TryGetValue(gameType, out spr);
 		return spr;
 	}
 }

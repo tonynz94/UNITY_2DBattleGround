@@ -92,7 +92,16 @@ public class RoomManager
         UI_GameRoom room = Managers.UI.ShowPopupUI<UI_GameRoom>();
 
         //Managers.Room.GetGameRoom(gameRoom.roomId).roomOwner
-        room.SetRoom(gameRoom.roomId, Managers.Player.MyPlayer);
+        room.CreateRoom(gameRoom.roomId, Managers.Player.MyPlayer);
+    }
+
+    public void HandleLobbyToGameRoom(int roomId)
+    {
+        GameRoom room = Managers.Room.GetGameRoom(roomId);
+        
+        Managers.UI.ClosePopupUI();
+        UI_GameRoom roomScript = Managers.UI.ShowPopupUI<UI_GameRoom>();
+        roomScript.EnterRoom();
     }
 
     public void HandleGetAllGameRooms(S_GetGameRooms sPkt)

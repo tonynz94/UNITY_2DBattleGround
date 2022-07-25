@@ -16,6 +16,10 @@ public class Player
     public int _gameMoney;
     public int _gameDiamond;
 
+    public bool _isInGameRoom;
+    public bool _isGameOwner;
+    public bool _isPlayerReady;
+
     public Player(int CGUID, string nickName)
     {
         _CGUID = CGUID;
@@ -29,6 +33,10 @@ public class Player
 
         _gameMoney = 10000;
         _gameDiamond = 300;
+
+        _isInGameRoom = false;
+        _isGameOwner = false;
+        _isPlayerReady = false;
     }
 
     public string NickName

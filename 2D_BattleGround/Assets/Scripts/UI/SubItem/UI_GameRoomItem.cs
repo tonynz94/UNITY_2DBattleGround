@@ -46,7 +46,7 @@ public class UI_GameRoomItem : UI_Base
 
     public void SetRoomItemNotice(int roomId, int Owner, MapType mapType, int playersCount, GameState state)
     {
-        int _roomId = roomId;
+        _roomId = roomId;
         GetText((int)Texts.OwnerText).text = Managers.Player.GetPlayerNick(Owner);
         GetText((int)Texts.MapText).text = System.Enum.GetName(typeof(MapType), (int)mapType);
         GetText((int)Texts.PlayersText).text = "(1/4)";

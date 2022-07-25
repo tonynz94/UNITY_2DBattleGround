@@ -34,6 +34,9 @@ public class UI_RoomList : UI_Popup
         JoinButtonText,
         BGTitleText,
 
+        MapImageText,
+        GameTypeText,
+
         Slot1NickName,
         Slot2NickName,
         Slot3NickName,
@@ -101,8 +104,19 @@ public class UI_RoomList : UI_Popup
             return;
         }
 
+        if(Managers.Room.GetGameRoom(_selectRoomId).GetPlayerCount() == 4)
+        {
+            Debug.Log("No slot to go in");
+            return;
+        }
 
 
+        C_LobbyToGame sPkt = new C_LobbyToGame();
+
+        sPkt.CGUID = Managers.Player.GetMyCGUID();
+        sPkt.roomId = _selectRoomId;
+
+        Managers.Net.Send(sPkt.Write());
     }
 
     public void OnBackButton()
@@ -121,13 +135,15 @@ public class UI_RoomList : UI_Popup
 
         GetObject((int)Objects.RoomExistObject).SetActive(true);
         GetImage((int)Images.MapImage).sprite = Managers.Map.GetMapSprite(room._mapType);
+        GetText((int)Texts.MapImageText).text = System.Enum.GetName(typeof(Define.MapType), (int)room._mapType);
         GetImage((int)Images.GameTypeImage).sprite = Managers.Map.GetGameType(room._gameMode);
+        GetText((int)Texts.GameTypeText).text = System.Enum.GetName(typeof(Define.GameMode), (int)room._gameMode);
+        int i = 1;
 
-        int i = 0;
         foreach(var player in room._playerDic.Values)
         {
-            GetObject((int)System.Enum.Parse(typeof(Texts), $"Slot{i}OffObject")).SetActive(false);
-            GetObject((int)System.Enum.Parse(typeof(Texts), $"Slot{i}OnObject")).SetActive(true);
+            GetObject((int)System.Enum.Parse(typeof(Objects), $"Slot{i}OffObject")).SetActive(false);
+            GetObject((int)System.Enum.Parse(typeof(Objects), $"Slot{i}OnObject")).SetActive(true);
             GetText((int)System.Enum.Parse(typeof(Texts), $"Slot{i}NickName")).text = player.NickName;
             i++;
         }

@@ -19,7 +19,6 @@ namespace Server.Game
             {
                 Player player = new Player();
                 player.Info.NickName = nickName;
-                player.Info.isInGame = isInGame;
                 player.Session = clientSession;
                 player.Session.MyPlayer = player;
 

@@ -6,13 +6,20 @@ namespace Server.Game
 {
     public class PlayerInfo
     {
+
         public String NickName;
-        public bool isInGame;
+
         public int Level;
         public float PosX;
         public float PosY;
         public Define.ObjectState State;
         public Define.MoveDir Dir;
+
+        public bool isInGame = false;
+        public bool isInGameRoom = false;
+        public bool isGameOwner = false;
+        public bool isPlayerReady = false;
+
     }
 
     class Player

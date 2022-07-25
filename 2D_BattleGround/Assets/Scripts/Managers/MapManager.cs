@@ -102,7 +102,7 @@ public class MapManager
 	public Sprite GetGameType(Define.GameMode gameType)
     {
 		Sprite spr = null;
-		_mapSprite.TryGetValue(gameType, out spr);
+		_gameType.TryGetValue(gameType, out spr);
 		return spr;
 	}
 }

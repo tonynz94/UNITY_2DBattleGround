@@ -73,8 +73,9 @@ class PacketHandler
 	public static void S_LobbyToGameHandler(PacketSession session, IPacket packet)
 	{
 		Debug.Log("[NetworkManager] @>> RECV : S_GetGameRooms ");
-		S_LobbyToGame sPkt = packet as S_LobbyToGame;
+		S_LobbyToGame rPkt = packet as S_LobbyToGame;
 
+		Managers.Room.HandleLobbyToGameRoom(rPkt.roomId);
 
 	}
 

@@ -8,6 +8,11 @@ public class UI_CharacterItem : UI_Base
     public bool _isOwner { get; private set; } = false;
     public bool _isSlotEmpty { get; private set; } = true;
 
+    enum Texts
+    {
+        NickNameText
+    }
+
     enum Objects
     {
         OnCharacterObject,
@@ -22,18 +27,23 @@ public class UI_CharacterItem : UI_Base
             return false;
 
         BindObject(typeof(Objects));
+        BindText(typeof(Texts));
         ReadyOff();
         return true;
     }
 
-    public void PlayerEnter(bool isOwner = false)
+    public void PlayerEnter(int CGUID ,bool isMe, bool isPlayerReady, bool isOwner = false)
     {
         _isOwner = isOwner;
         _isSlotEmpty = false;
+
+        GetObject((int)Objects.MeObject).SetActive(isMe);
+        GetObject((int)Objects.ReadyObject).SetActive(isPlayerReady);
+        GetObject((int)Objects.MeObject).SetActive(_isOwner);
+
         GetObject((int)Objects.OnCharacterObject).SetActive(true);
         GetObject((int)Objects.OffCharacterObject).SetActive(false);
-
-        GetObject((int)Objects.ReadyObject).SetActive(_isOwner);
+        GetText((int)Texts.NickNameText).text = Managers.Player.GetPlayer(CGUID).NickName; 
     }
 
     public void PlayerLeave()

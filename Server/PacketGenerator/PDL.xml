@@ -61,8 +61,22 @@
     <int name="roomId"/>
   </packet>
 
+  <packet name="C_ClickReadyOnOff">
+    <bool name="isReady"/>
+    <int name="roomId"/>
+    <int name="CGUID"/>
+  </packet>
+
+  <packet name="S_ClickReadyOnOff">
+    <bool name="isReady"/>
+    <int name="roomId"/>
+    <int name="CGUID"/>
+  </packet>
+
+
   <packet name="S_LobbyToGame">
     <int name="CGUID"/>
+    <int name="roomId"/>
     <bool name="IsNoSlot"/>
   </packet>
 

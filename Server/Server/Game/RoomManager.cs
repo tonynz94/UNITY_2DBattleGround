@@ -35,7 +35,7 @@ namespace Server.Game
         public Define.MapType _mapType;
         public Define.GameMode _gameMode;
 
-
+        //처음 들어올때(방읆 만든사람도 이 함수를 통해서 들어옴)
         public void EnterGameRoom(int CGUID)
         {
             _playerDic.Add(CGUID, PlayerManager.Instance.GetPlayer(CGUID));
@@ -137,24 +137,20 @@ namespace Server.Game
         {
             lock (_lock)
             {
-                bool isNotSlot = false;
-                _lobbyRoom.LeaveLobbyRoom(CGUID);
+                bool isNoSlotLeft = false;
                 GameRoom gameRoom = GetGameRoom(roomId);
 
-                if(gameRoom.GetPlayerCount() < 4)
+                if (gameRoom.GetPlayerCount() < 4)
                 {
+                    _lobbyRoom.LeaveLobbyRoom(CGUID);
                     gameRoom.EnterGameRoom(CGUID);
-                    isNotSlot = false;
-                }
-                else
-                {
-                    isNotSlot = true;
                 }
                 
-
                 S_LobbyToGame sPkt = new S_LobbyToGame();
                 sPkt.CGUID = CGUID;
-                sPkt.IsNoSlot = isNotSlot;
+                sPkt.roomId = roomId;
+                sPkt.IsNoSlot = false;
+
                 gameRoom.Broadcast(sPkt.Write());
             }
         }
@@ -168,9 +164,9 @@ namespace Server.Game
                 if (gameRoom.GetPlayerCount() == 0)
                     RemoveGameRoom(roomId);
 
-                C_LobbyToGame cPkt = new C_LobbyToGame();
-                cPkt.CGUID = CGUID;
-                gameRoom.Broadcast(cPkt.Write());
+                S_LobbyToGame sPkt = new S_LobbyToGame();
+                sPkt.CGUID = CGUID;
+                gameRoom.Broadcast(sPkt.Write());
 
                 _lobbyRoom.EnterLobbyRoom(CGUID);
 

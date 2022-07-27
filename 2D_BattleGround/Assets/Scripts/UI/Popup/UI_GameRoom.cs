@@ -78,10 +78,12 @@ public class UI_GameRoom : UI_Popup
         GameRoom room = Managers.Room.GetGameRoom(_roomID);
 
         //RoomManager에서 게임 방에 나까지 포함했음
+        int i = 0;
         foreach(Player player in room._playerDic.Values)
         {
             bool isMe = (player._CGUID == Managers.Player.GetMyCGUID());
             Get<UI_CharacterItem>((int)System.Enum.Parse(typeof(CharacterItem), $"UI_CharacterItem_{i + 1}")).PlayerEnter(player._CGUID, isMe, player._isPlayerReady, player._isGameOwner);
+            i++;
         }
     }
 

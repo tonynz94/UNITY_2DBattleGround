@@ -63,6 +63,11 @@ class PacketHandler
 		Managers.Room.HandleCreateGameRoom(sPkt);
 	}
 
+	public static void S_ClickReadyOnOffHandler(PacketSession session, IPacket packet)
+	{
+
+	}
+
 	public static void S_GetGameRoomsHandler(PacketSession session, IPacket packet)
 	{
 		Debug.Log("[NetworkManager] @>> RECV : S_GetGameRooms ");

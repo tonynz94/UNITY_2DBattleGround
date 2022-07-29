@@ -7,7 +7,7 @@ public class UI_GameRoom : UI_Popup
 {
     //방 ID
     int _roomID;
-    int _countPlayer = 0;
+
     //방 안에 플레이어
     Dictionary<int, Player> playerList = new Dictionary<int, Player>();
     Color _readyColor = new Color(239 / 255f, 88 / 255f, 80 / 255f, 1f);
@@ -59,46 +59,28 @@ public class UI_GameRoom : UI_Popup
     public void CreateRoom(int roomID, Player ownerPlayer)
     {
         _roomID = roomID;
-        Get<UI_CharacterItem>((int)CharacterItem.UI_CharacterItem_1).PlayerEnter(Managers.Player.GetMyCGUID(), isMe : true, isPlayerReady:false, isOwner: true);
-        Get<UI_CharacterItem>((int)CharacterItem.UI_CharacterItem_2).PlayerLeave();
-        Get<UI_CharacterItem>((int)CharacterItem.UI_CharacterItem_3).PlayerLeave();
-        Get<UI_CharacterItem>((int)CharacterItem.UI_CharacterItem_4).PlayerLeave();
-
         playerList.Add(ownerPlayer._CGUID, ownerPlayer);
-        GameRoom gameRoom = Managers.Room.GetGameRoom(_roomID);
-        gameRoom.AddPlayer(ownerPlayer._CGUID);
+        GameRoom room = Managers.Room.GetGameRoom(_roomID);
+        room.AddPlayer(ownerPlayer._CGUID);
 
+        RefreashSlot();
         RefreashTitle();
         RefreashMap();
     }
 
-    //내가 이미  생성 된 방에 방에 조인해서 입장할때.
-    public void EnterRoom()
+    
+    public void EnterRoom(int roomId, int CGUID)
     {
+        _roomID = roomId;
+
         GameRoom room = Managers.Room.GetGameRoom(_roomID);
-
-        //RoomManager에서 게임 방에 나까지 포함했음
-        int i = 0;
-        foreach(Player player in room._playerDic.Values)
-        {
-            bool isMe = (player._CGUID == Managers.Player.GetMyCGUID());
-            Get<UI_CharacterItem>((int)System.Enum.Parse(typeof(CharacterItem), $"UI_CharacterItem_{i + 1}")).PlayerEnter(player._CGUID, isMe, player._isPlayerReady, player._isGameOwner);
-            i++;
-        }
-    }
-
-    //내가 현재 있는 방에 누군가 들어왔을 때.
-    public void EnterRoom(int CGUID)
-    {
-        //Get<UI_CharacterItem>((int)CharacterItem.UI_CharacterItem_2).PlayerEnter();
-        //Get<UI_CharacterItem>((int)CharacterItem.UI_CharacterItem_3).PlayerEnter();
-        //Get<UI_CharacterItem>((int)CharacterItem.UI_CharacterItem_4).PlayerEnter();
-
+        room.AddPlayer(CGUID);
         playerList.Add(CGUID, Managers.Player.GetPlayer(CGUID));
-        GameRoom gameRoom = Managers.Room.GetGameRoom(_roomID);
-        gameRoom.AddPlayer(CGUID);
+        
 
+        RefreashSlot();
         RefreashTitle();
+        RefreashMap();
     }
 
     public void OnReadyButton()
@@ -127,8 +109,6 @@ public class UI_GameRoom : UI_Popup
 
         Debug.Log($"[NetworkManager] @>> SEND : C_ClickReadyOnOff Ready - { sPkt.isReady } ");
         Managers.Net.Send(sPkt.Write());
-
-       
     }
 
     public void OnBackButton()
@@ -144,11 +124,29 @@ public class UI_GameRoom : UI_Popup
         Debug.Log("Back Clicked");
     }
 
+    public void RefreashSlot()
+    {
+        int i = 1;
+        GameRoom room = Managers.Room.GetGameRoom(_roomID);
+        foreach(Player player in room._playerDic.Values)
+        {
+            UI_CharacterItem item = Get<UI_CharacterItem>((int)System.Enum.Parse(typeof(CharacterItem), $"UI_CharacterItem_{i}"));
+            item.PlayerEnter(
+                CGUID        : player._CGUID, 
+                isMe         : player._CGUID == Managers.Player.GetMyCGUID(), 
+                isPlayerReady: player._isPlayerReady, 
+                isOwner      : player._CGUID == room.roomOwner
+            );
+            i++;
+        }
 
+        for( ; i<=4; i++)
+            Get<UI_CharacterItem>((int)System.Enum.Parse(typeof(CharacterItem), $"UI_CharacterItem_{i}")).PlayerLeave();   
+    }
 
     public void RefreashTitle()
     {
-        GetText((int)Texts.TitleText).text = $"Match Lobby ({playerList.Count}/4)";
+        GetText((int)Texts.TitleText).text = $"Match Lobby ({Managers.Room.GetGameRoom(_roomID).GetPlayerCount()}/4)";
     }
 
     public void RefreashMap()
@@ -170,7 +168,14 @@ public class UI_GameRoom : UI_Popup
         }
     }
 
-    public void LeaveMatchRoom()
+    //내가 나갔을 때
+    public void LeaveRoom()
+    {
+
+    }
+
+    //방에 다른 유저가 나갔을 때
+    public void LeaveRoom(int CGUID)
     {
 
     }

@@ -151,6 +151,7 @@ namespace Server.Game
                 sPkt.roomId = roomId;
                 sPkt.IsNoSlot = false;
 
+                //게임 룸 안에 있는 플레이어에게만 보내 줌
                 gameRoom.Broadcast(sPkt.Write());
             }
         }

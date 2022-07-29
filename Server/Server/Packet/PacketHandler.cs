@@ -48,7 +48,8 @@ class PacketHandler
 		ClientSession clientSession = session as ClientSession;
 		RoomManager.Instance.MoveIntroToLobbyRoom(clientSession, clientSession.SessionId);
     }
-
+	
+	//누군가 Join할때만 해당 패킷을 받음
 	public static void C_LobbyToGameHandler(PacketSession session, IPacket packet)
 	{
 		Console.WriteLine("[Server] @>> RECV : C_LobbyToGame");
@@ -57,6 +58,12 @@ class PacketHandler
 
 		RoomManager.Instance.MoveLobbytToGameRoom(clientSession.SessionId, cPkt.roomId);
 
+	}
+
+	public static void C_ClickReadyOnOffHandler(PacketSession session, IPacket packet)
+    {
+		Console.WriteLine("[Server] @>> RECV : C_ClickReadyOnOff");
+		C_LobbyToGame cPkt = packet as C_LobbyToGame;
 	}
 
 	public static void C_GameToLobbyHandler(PacketSession session, IPacket packet)

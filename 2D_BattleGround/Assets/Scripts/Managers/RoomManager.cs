@@ -95,13 +95,24 @@ public class RoomManager
         room.CreateRoom(gameRoom.roomId, Managers.Player.MyPlayer);
     }
 
-    public void HandleLobbyToGameRoom(int roomId)
+    public void HandleLobbyToGameRoom(S_LobbyToGame rPkt)
     {
-        GameRoom room = Managers.Room.GetGameRoom(roomId);
-        
-        Managers.UI.ClosePopupUI();
-        UI_GameRoom roomScript = Managers.UI.ShowPopupUI<UI_GameRoom>();
-        roomScript.EnterRoom();
+        GameRoom room = Managers.Room.GetGameRoom(rPkt.roomId);
+
+        //만약 내가 로비에서 새로운 방에 들어간거라면
+        if (Managers.Player.GetMyCGUID() == rPkt.CGUID)
+        {
+            Managers.UI.ClosePopupUI();
+            UI_GameRoom roomScript = Managers.UI.ShowPopupUI<UI_GameRoom>();
+            roomScript.EnterRoom(rPkt.roomId, rPkt.CGUID);
+        }
+        //만약 내가 속한 방에 한 유저가 입장했을 때
+        else
+        {
+            UI_GameRoom roomScript = Managers.UI.PeekPopupUI<UI_GameRoom>();
+            roomScript.EnterRoom(rPkt.roomId, rPkt.CGUID);
+        }
+
     }
 
     public void HandleGetAllGameRooms(S_GetGameRooms sPkt)

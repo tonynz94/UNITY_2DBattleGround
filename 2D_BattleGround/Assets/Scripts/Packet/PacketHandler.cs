@@ -65,6 +65,8 @@ class PacketHandler
 
 	public static void S_ClickReadyOnOffHandler(PacketSession session, IPacket packet)
 	{
+		Debug.Log("[NetworkManager] @>> RECV : S_ClickReadyOnOffHandler ");
+		S_ClickReadyOnOff sPkt = packet as S_ClickReadyOnOff;
 
 	}
 
@@ -75,13 +77,16 @@ class PacketHandler
 
 		Managers.Room.HandleGetAllGameRooms(sPkt);
 	}
+
+	//브로대 캐스트로 다 받음
+	//1. 내가 속한방에 누군가 들어오면 다 받음.
+	//2. 내가 다른 방에 들어가면 받음
 	public static void S_LobbyToGameHandler(PacketSession session, IPacket packet)
 	{
 		Debug.Log("[NetworkManager] @>> RECV : S_GetGameRooms ");
 		S_LobbyToGame rPkt = packet as S_LobbyToGame;
 
-		Managers.Room.HandleLobbyToGameRoom(rPkt.roomId);
-
+		Managers.Room.HandleLobbyToGameRoom(rPkt);	
 	}
 
 	public static void S_GameToLobbyHandler(PacketSession session, IPacket packet)

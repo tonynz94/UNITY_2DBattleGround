@@ -18,7 +18,8 @@ public class UI_CharacterItem : UI_Base
         OnCharacterObject,
         OffCharacterObject,
         MeObject,
-        ReadyObject
+        OwnerObject,
+        ReadyObject,
     }
 
     public override bool Init()
@@ -39,7 +40,7 @@ public class UI_CharacterItem : UI_Base
 
         GetObject((int)Objects.MeObject).SetActive(isMe);
         GetObject((int)Objects.ReadyObject).SetActive(isPlayerReady);
-        GetObject((int)Objects.MeObject).SetActive(_isOwner);
+        GetObject((int)Objects.OwnerObject).SetActive(isOwner);
 
         GetObject((int)Objects.OnCharacterObject).SetActive(true);
         GetObject((int)Objects.OffCharacterObject).SetActive(false);

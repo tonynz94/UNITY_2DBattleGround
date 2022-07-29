@@ -20,7 +20,6 @@ public class Define
         CooperativeMode,
     }
 
-
     public enum ChatType
     {
         System,

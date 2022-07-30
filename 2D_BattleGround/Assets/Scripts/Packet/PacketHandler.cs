@@ -68,6 +68,7 @@ class PacketHandler
 		Debug.Log("[NetworkManager] @>> RECV : S_ClickReadyOnOffHandler ");
 		S_ClickReadyOnOff sPkt = packet as S_ClickReadyOnOff;
 
+		Managers.UI.PeekPopupUI<UI_GameRoom>().OnHandleReadyActiive(sPkt);
 	}
 
 	public static void S_GetGameRoomsHandler(PacketSession session, IPacket packet)

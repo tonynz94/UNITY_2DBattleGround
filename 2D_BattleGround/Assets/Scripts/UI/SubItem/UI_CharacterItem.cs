@@ -50,6 +50,8 @@ public class UI_CharacterItem : UI_Base
     public void PlayerLeave()
     {
         _isSlotEmpty = true;
+        _ready = false;
+        _isOwner = false;
         GetObject((int)Objects.OnCharacterObject).SetActive(false);
         GetObject((int)Objects.OffCharacterObject).SetActive(true);
     }

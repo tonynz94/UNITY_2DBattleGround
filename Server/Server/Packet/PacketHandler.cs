@@ -63,7 +63,9 @@ class PacketHandler
 	public static void C_ClickReadyOnOffHandler(PacketSession session, IPacket packet)
     {
 		Console.WriteLine("[Server] @>> RECV : C_ClickReadyOnOff");
-		C_LobbyToGame cPkt = packet as C_LobbyToGame;
+		C_ClickReadyOnOff cPkt = packet as C_ClickReadyOnOff;
+
+		RoomManager.Instance.HandleReadyInGameRoom(cPkt);
 	}
 
 	public static void C_GameToLobbyHandler(PacketSession session, IPacket packet)

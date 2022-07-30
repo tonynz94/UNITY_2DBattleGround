@@ -32,6 +32,7 @@ namespace Server.Game
     {
         public int roomOwner;   //CGUID
         public int roomId;
+        public int _readyCnt = 0;
         public Define.MapType _mapType;
         public Define.GameMode _gameMode;
 
@@ -44,7 +45,6 @@ namespace Server.Game
         public void LeaveGameRoom(int CGUID)
         {
             _playerDic.Remove(CGUID);
-
         }
 
         public void SetGameRoom(Define.GameMode gameMode, Define.MapType mapType)
@@ -53,11 +53,23 @@ namespace Server.Game
             _mapType = mapType;
         }
 
+        public void SetReady(bool isReady)
+        {
+            if (isReady)
+                _readyCnt += 1;
+            else
+                _readyCnt -= 1;
+
+            if (_readyCnt < 0 || _readyCnt > 4)
+                Console.WriteLine("Ready < 0 or Ready > 4 it can't be");
+        }
+
         public void Clear()
         {
             _mapType = Define.MapType.None;
             _gameMode = Define.GameMode.None;
         }
+
     }
 
     class LobbyRoom : Room
@@ -224,6 +236,23 @@ namespace Server.Game
 
                 session.Send(sPkt.Write());
             }
+        }
+
+
+        public void HandleReadyInGameRoom(C_ClickReadyOnOff cPkt)
+        {
+            GameRoom room = GetGameRoom(cPkt.roomId) ;
+            if (room == null)
+                Console.WriteLine("there is no such a room");
+
+            room.SetReady(cPkt.isReady);
+
+            S_ClickReadyOnOff sPkt = new S_ClickReadyOnOff();
+            sPkt.roomId = cPkt.roomId;
+            sPkt.isReady = cPkt.isReady;
+            sPkt.CGUID = cPkt.CGUID;
+
+            room.Broadcast(sPkt.Write());
         }
 
         public void RemoveGameRoom(int roomId)

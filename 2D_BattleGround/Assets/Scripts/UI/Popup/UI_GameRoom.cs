@@ -49,8 +49,8 @@ public class UI_GameRoom : UI_Popup
         BindImage(typeof(Images));
         BindButton(typeof(Buttons));
 
+        BindEvent(GetButton((int)Buttons.StartButton).gameObject, OnStartButton);
         BindEvent(GetButton((int)Buttons.ReadyButton).gameObject, OnReadyButton);
-        BindEvent(GetButton((int)Buttons.ReadyButton).gameObject, OnStartButton);
         BindEvent(GetButton((int)Buttons.BackButton).gameObject, OnBackButton);
 
         return true;
@@ -149,8 +149,8 @@ public class UI_GameRoom : UI_Popup
 
         GameRoom room = Managers.Room.GetGameRoom(_roomID);
 
-        GetObject((int)Buttons.StartButton).SetActive(Managers.Player.GetMyCGUID() == room.roomOwner);
-        GetObject((int)Buttons.ReadyButton).SetActive(Managers.Player.GetMyCGUID() != room.roomOwner);
+        GetButton((int)Buttons.StartButton).gameObject.SetActive(Managers.Player.GetMyCGUID() == room.roomOwner);
+        GetButton((int)Buttons.ReadyButton).gameObject.SetActive(Managers.Player.GetMyCGUID() != room.roomOwner);
 
         foreach(Player player in room._playerDic.Values)
         {

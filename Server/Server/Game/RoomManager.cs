@@ -4,47 +4,47 @@ using System.Text;
 
 namespace Server.Game
 {
-    class Room
+
+    class GameRoom
     {
         object _lock = new object();
-        public List<Player> _playerDic = new List<Player>();
 
-        public int GetPlayerCount()
-        {
-            return _playerDic.Count;
-        }
-
-        public void Broadcast(ArraySegment<byte> packet)
-        {
-        	//jobQueue를 사용시
-        	//_pendingList.Add(segment);		
-        	lock(_lock)
-        	{
-        		foreach(Player player in _playerDic)
-        		{
-        			player.Session.Send(packet);
-        		}
-        	}
-        }
-    }
-
-    class GameRoom : Room
-    {
         public int roomOwner;   //CGUID
         public int roomId;
         public int _readyCnt = 0;
         public Define.MapType _mapType;
         public Define.GameMode _gameMode;
 
+        public List<Player> _playerList = new List<Player>();
+
+        public int GetPlayerCount()
+        {
+            return _playerList.Count;
+        }
+
+        public void Broadcast(ArraySegment<byte> packet)
+        {
+            //jobQueue를 사용시
+            //_pendingList.Add(segment);		
+            lock (_lock)
+            {
+                foreach (Player player in _playerList)
+                {
+                    player.Session.Send(packet);
+                }
+            }
+        }
+
         //처음 들어올때(방읆 만든사람도 이 함수를 통해서 들어옴)
         public void EnterGameRoom(int CGUID)
         {
-            _playerDic.Add(CGUID, PlayerManager.Instance.GetPlayer(CGUID));
+            _playerList.Add(PlayerManager.Instance.GetPlayer(CGUID));
         }
 
         public void LeaveGameRoom(int CGUID)
         {
-            _playerDic.Remove(CGUID);
+            Player player = _playerList.Find(x => x.Session.SessionId == CGUID);
+            _playerList.Remove(player);
         }
 
         public void SetGameRoom(Define.GameMode gameMode, Define.MapType mapType)
@@ -55,8 +55,10 @@ namespace Server.Game
 
         public int SetNewOwner()
         {
+            Random rand = new Random();
+            int ownerIndex = rand.Next(0, GetPlayerCount());
 
-            return -1;
+            return _playerList[ownerIndex].Session.SessionId;
         }
 
         public void SetReady(bool isReady)
@@ -79,8 +81,30 @@ namespace Server.Game
 
     }
 
-    class LobbyRoom : Room
+    class LobbyRoom
     {
+        object _lock = new object();
+
+        public Dictionary<int, Player> _playerDic = new Dictionary<int, Player>();
+
+        public int GetPlayerCount()
+        {
+            return _playerDic.Count;
+        }
+
+        public void Broadcast(ArraySegment<byte> packet)
+        {
+            //jobQueue를 사용시
+            //_pendingList.Add(segment);		
+            lock (_lock)
+            {
+                foreach (Player player in _playerDic.Values)
+                {
+                    player.Session.Send(packet);
+                }
+            }
+        }
+
         public void EnterLobbyRoom(int CGUID)
         {
             _playerDic.Add(CGUID, PlayerManager.Instance.GetPlayer(CGUID));
@@ -234,10 +258,10 @@ namespace Server.Game
                     tempRoom.MapType = (int)gameRoom.Value._mapType;
                     tempRoom.RoomId = gameRoom.Key;
                     tempRoom.RoomOwner = gameRoom.Value.roomOwner;
-                    foreach (KeyValuePair<int, Player> player in gameRoom.Value._playerDic)
+                    foreach (Player player in gameRoom.Value._playerList)
                     {
                         S_GetGameRooms.GameRoomlist.PlayerList tempPlayer = new S_GetGameRooms.GameRoomlist.PlayerList();
-                        tempPlayer.CGUID = player.Key;
+                        tempPlayer.CGUID = player.Session.SessionId;
                         tempRoom.playerLists.Add(tempPlayer);
                     }
 

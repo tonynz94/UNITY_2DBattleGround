@@ -7,6 +7,7 @@ public class UI_CharacterItem : UI_Base
     public bool _ready { get; private set; } = false;
     public bool _isOwner { get; private set; } = false;
     public bool _isSlotEmpty { get; private set; } = true;
+    public int _CGUID { get; private set; } = 0;
 
     enum Texts
     {
@@ -37,6 +38,7 @@ public class UI_CharacterItem : UI_Base
     {
         _isOwner = isOwner;
         _isSlotEmpty = false;
+        _CGUID = CGUID;
 
         GetObject((int)Objects.MeObject).SetActive(isMe);
         GetObject((int)Objects.ReadyObject).SetActive(isPlayerReady);
@@ -49,17 +51,23 @@ public class UI_CharacterItem : UI_Base
 
     public void PlayerLeave()
     {
+        GetObject((int)Objects.OnCharacterObject).SetActive(false);
+        GetObject((int)Objects.OffCharacterObject).SetActive(true);
+
         _isSlotEmpty = true;
         _ready = false;
         _isOwner = false;
-        GetObject((int)Objects.OnCharacterObject).SetActive(false);
-        GetObject((int)Objects.OffCharacterObject).SetActive(true);
+        _CGUID = 0;
     }
 
     public bool ReadyOn()
     {
         //서버로 보내야됨
         _ready = true;
+
+        if (_isSlotEmpty == false)
+            Managers.Player.GetPlayer(_CGUID)._isPlayerReady = _ready;
+
         GetObject((int)Objects.ReadyObject).SetActive(true);
         return true;
     }
@@ -68,6 +76,10 @@ public class UI_CharacterItem : UI_Base
     {
         //서버로 보내야됨
         _ready = false;
+
+        if (_isSlotEmpty == false)
+            Managers.Player.GetPlayer(_CGUID)._isPlayerReady = _ready;
+
         GetObject((int)Objects.ReadyObject).SetActive(false);
         return false;
     }

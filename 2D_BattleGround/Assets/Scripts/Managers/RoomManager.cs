@@ -17,7 +17,10 @@ public class GameRoom
 
     public void LeaveGameRoom(int CGUID)
     {
-        _playerDic.Remove(CGUID);
+        if (_playerDic.ContainsKey(CGUID))
+            _playerDic.Remove(CGUID);
+        else
+            Debug.LogError("Theres no such player in this Room");
     }
 
     public void SetGameRoom(Define.GameMode gameMode, Define.MapType mapType)
@@ -95,24 +98,60 @@ public class RoomManager
         room.CreateRoom(gameRoom.roomId, Managers.Player.MyPlayer);
     }
 
-    public void HandleLobbyToGameRoom(S_LobbyToGame rPkt)
+    public void HandleLobbyToGameRoom(S_LobbyToGame sPkt)
     {
-        GameRoom room = Managers.Room.GetGameRoom(rPkt.roomId);
-
-        //만약 내가 로비에서 새로운 방에 들어간거라면
-        if (Managers.Player.GetMyCGUID() == rPkt.CGUID)
+        if (sPkt.IsPlayerEntered)
         {
-            Managers.UI.ClosePopupUI();
-            UI_GameRoom roomScript = Managers.UI.ShowPopupUI<UI_GameRoom>();
-            roomScript.EnterRoom(rPkt.roomId, rPkt.CGUID);
+            GameRoom room = Managers.Room.GetGameRoom(sPkt.roomId);
+
+            //만약 내가 로비에서 새로운 방에 들어간거라면
+            if (Managers.Player.GetMyCGUID() == sPkt.CGUID)
+            {
+                Managers.UI.ClosePopupUI();
+                UI_GameRoom roomScript = Managers.UI.ShowPopupUI<UI_GameRoom>();
+                roomScript.EnterRoom(sPkt.roomId, sPkt.CGUID);
+            }
+            //만약 내가 속한 방에 한 유저가 입장했을 때
+            else
+            {
+                UI_GameRoom roomScript = Managers.UI.PeekPopupUI<UI_GameRoom>();
+                roomScript.EnterRoom(sPkt.roomId, sPkt.CGUID);
+            }
         }
-        //만약 내가 속한 방에 한 유저가 입장했을 때
         else
         {
+            //방 꽉찼다고 팝업창 뛰우기.
+            Debug.Log("This Room is Full");
+        }
+    }
+
+    //누군가 나갔을 때 (나 일수도있고 방안에 다른 플레이어 일 수도 있음.)
+    public void HandleGameToLobby(S_GameToLobby sPkt)
+    {
+        GameRoom room = Managers.Room.GetGameRoom(sPkt.roomId);
+
+        //내가 나갔을때.
+        if(sPkt.CGUID == Managers.Player.GetMyCGUID())
+        {
+            Managers.UI.ClosePopupUI();
+            //방 리스트 들어갈때 다시 가져와야 하기 떄문에 비워주기
+            Managers.Room.GameRoomAllClear();   
+        }
+        //누군가 나갔을때.
+        else
+        {
+            room.LeaveGameRoom(sPkt.CGUID);
+
+            if (room.roomOwner == sPkt.CGUID)
+                room.roomOwner = sPkt.newOwner;
+            
             UI_GameRoom roomScript = Managers.UI.PeekPopupUI<UI_GameRoom>();
-            roomScript.EnterRoom(rPkt.roomId, rPkt.CGUID);
+
+            roomScript.RefreashSlot();
+            roomScript.RefreashTitle();
         }
 
+        Managers.Player.GetPlayer(sPkt.CGUID).LeaveFromGameRoom();
     }
 
     public void HandleGetAllGameRooms(S_GetGameRooms sPkt)

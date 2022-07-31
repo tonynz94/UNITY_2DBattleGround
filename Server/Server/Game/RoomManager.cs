@@ -7,7 +7,7 @@ namespace Server.Game
     class Room
     {
         object _lock = new object();
-        public Dictionary<int, Player> _playerDic = new Dictionary<int, Player>();
+        public List<Player> _playerDic = new List<Player>();
 
         public int GetPlayerCount()
         {
@@ -20,7 +20,7 @@ namespace Server.Game
         	//_pendingList.Add(segment);		
         	lock(_lock)
         	{
-        		foreach(Player player in _playerDic.Values)
+        		foreach(Player player in _playerDic)
         		{
         			player.Session.Send(packet);
         		}
@@ -53,6 +53,12 @@ namespace Server.Game
             _mapType = mapType;
         }
 
+        public int SetNewOwner()
+        {
+
+            return -1;
+        }
+
         public void SetReady(bool isReady)
         {
             if (isReady)
@@ -62,6 +68,7 @@ namespace Server.Game
 
             if (_readyCnt < 0 || _readyCnt > 4)
                 Console.WriteLine("Ready < 0 or Ready > 4 it can't be");
+
         }
 
         public void Clear()
@@ -145,45 +152,48 @@ namespace Server.Game
             }
         }
 
-        public void MoveLobbytToGameRoom(int CGUID, int roomId)
+        public void HandleLobbytToGameRoom(int CGUID, int roomId)
         {
             lock (_lock)
             {
-                bool isNoSlotLeft = false;
-                GameRoom gameRoom = GetGameRoom(roomId);
+                bool isPlayerEntered = MoveLobbyToGameRoom(CGUID, roomId);
 
-                if (gameRoom.GetPlayerCount() < 4)
-                {
-                    _lobbyRoom.LeaveLobbyRoom(CGUID);
-                    gameRoom.EnterGameRoom(CGUID);
-                }
-                
                 S_LobbyToGame sPkt = new S_LobbyToGame();
+                sPkt.IsPlayerEntered = isPlayerEntered;
                 sPkt.CGUID = CGUID;
                 sPkt.roomId = roomId;
-                sPkt.IsNoSlot = false;
 
-                //게임 룸 안에 있는 플레이어에게만 보내 줌
-                gameRoom.Broadcast(sPkt.Write());
+                //게임 룸 안에 있는 플레이어에게만 보내 줌(방근 들어간 플레이어 포함)
+                if (isPlayerEntered)
+                    RoomManager.Instance.GetGameRoom(roomId).Broadcast(sPkt.Write());
+                else
+                {
+                    //입장을 시도한 셰션에게만 보내줌
+                    ClientSession session = SessionManager.Instance.Find(CGUID);
+                    session.Send(sPkt.Write());
+                }
             }
         }
 
-        public void MoveGameToLobbyRoom(int CGUID, int roomId)
+        public void HandleGameRoomToLobby(C_GameToLobby cPkt)
         {
             lock (_lock)
             {
-                GameRoom gameRoom = GetGameRoom(roomId);
-                gameRoom.LeaveGameRoom(CGUID);
-                if (gameRoom.GetPlayerCount() == 0)
-                    RemoveGameRoom(roomId);
+                GameRoom gameRoom = GetGameRoom(cPkt.roomId);
+                int Owner = MoveGameRoomToLobby(cPkt.CGUID, cPkt.roomId);
 
-                S_LobbyToGame sPkt = new S_LobbyToGame();
-                sPkt.CGUID = CGUID;
-                gameRoom.Broadcast(sPkt.Write());
+                S_GameToLobby sPkt = new S_GameToLobby();
+                sPkt.CGUID = cPkt.CGUID;
+                sPkt.roomId = cPkt.roomId;
 
-                _lobbyRoom.EnterLobbyRoom(CGUID);
+                if (Owner != -1)
+                {
+                    sPkt.newOwner = Owner;
+                    gameRoom.Broadcast(sPkt.Write());
+                }
 
-            
+                ClientSession session = SessionManager.Instance.Find(sPkt.CGUID);
+                session.Send(sPkt.Write());
             }
         }
 
@@ -241,25 +251,81 @@ namespace Server.Game
 
         public void HandleReadyInGameRoom(C_ClickReadyOnOff cPkt)
         {
-            GameRoom room = GetGameRoom(cPkt.roomId) ;
-            if (room == null)
-                Console.WriteLine("there is no such a room");
+            lock (_lock)
+            {
+                GameRoom room = GetGameRoom(cPkt.roomId);
+                if (room == null)
+                    Console.WriteLine("there is no such a room");
 
-            room.SetReady(cPkt.isReady);
+                room.SetReady(cPkt.isReady);
 
-            S_ClickReadyOnOff sPkt = new S_ClickReadyOnOff();
-            sPkt.roomId = cPkt.roomId;
-            sPkt.isReady = cPkt.isReady;
-            sPkt.CGUID = cPkt.CGUID;
+                S_ClickReadyOnOff sPkt = new S_ClickReadyOnOff();
+                sPkt.roomId = cPkt.roomId;
+                sPkt.isReady = cPkt.isReady;
+                sPkt.CGUID = cPkt.CGUID;
 
-            room.Broadcast(sPkt.Write());
+                room.Broadcast(sPkt.Write());
+            }
+        }
+
+        //게임 룸에서 로비로 나옴
+        //방에 정상적으로 입장헀다면 true
+        //방 안이 꽉찼다면 false 
+        public bool MoveLobbyToGameRoom(int CGUID, int roomId)
+        {
+            lock (_lock)
+            {
+                GameRoom gameRoom = GetGameRoom(roomId);
+                _lobbyRoom.LeaveLobbyRoom(CGUID);
+
+                if (gameRoom.GetPlayerCount() < 4)
+                {
+                    gameRoom.EnterGameRoom(CGUID);
+                    return true;
+                }
+                else
+                    return false;
+            }
+        }
+
+        //로비 -> 게임 룸 입장   
+        //나온 룸에서 내가 마지막이였다면 : true
+        //누군가 안에 있다면 false
+        public int MoveGameRoomToLobby(int CGUID, int roomId)
+        {
+            lock (_lock)
+            {
+                GameRoom gameRoom = GetGameRoom(roomId);
+
+                gameRoom.LeaveGameRoom(CGUID);
+                _lobbyRoom.EnterLobbyRoom(CGUID);
+
+                if (gameRoom.GetPlayerCount() == 0)
+                {
+                    RemoveGameRoom(roomId);
+                    return -1;
+                }
+                else
+                {
+                    if (CGUID == gameRoom.roomOwner)
+                        return gameRoom.SetNewOwner();
+                    else
+                        return gameRoom.roomOwner;
+                }
+            }
         }
 
         public void RemoveGameRoom(int roomId)
         {
-            _gameRooms.Remove(roomId);
+            lock (_lock)
+            {
+                GameRoom room = GetGameRoom(roomId);
+                if (room.GetPlayerCount() == 0)
+                    _gameRooms.Remove(roomId);
+                else
+                    Console.WriteLine("Someone is in the gameRoom... cant remove it");
+            }
         }
-
 
         public void RoomAllClear()
         {

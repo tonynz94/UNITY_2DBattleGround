@@ -43,6 +43,12 @@ public class PacketManager
 		_handler.Add((ushort)PacketID.S_BroadcastEnterGame, PacketHandler.S_BroadcastEnterGameHandler);
 		_makeFunc.Add((ushort)PacketID.S_BroadcastLeaveGame, MakePacket<S_BroadcastLeaveGame>);
 		_handler.Add((ushort)PacketID.S_BroadcastLeaveGame, PacketHandler.S_BroadcastLeaveGameHandler);
+		_makeFunc.Add((ushort)PacketID.S_GameRoomCountDownStart, MakePacket<S_GameRoomCountDownStart>);
+		_handler.Add((ushort)PacketID.S_GameRoomCountDownStart, PacketHandler.S_GameRoomCountDownStartHandler);
+		_makeFunc.Add((ushort)PacketID.S_GameStart, MakePacket<S_GameStart>);
+		_handler.Add((ushort)PacketID.S_GameStart, PacketHandler.S_GameStartHandler);
+		_makeFunc.Add((ushort)PacketID.S_EnterFieldWorld, MakePacket<S_EnterFieldWorld>);
+		_handler.Add((ushort)PacketID.S_EnterFieldWorld, PacketHandler.S_EnterFieldWorldHandler);
 		_makeFunc.Add((ushort)PacketID.S_PlayerList, MakePacket<S_PlayerList>);
 		_handler.Add((ushort)PacketID.S_PlayerList, PacketHandler.S_PlayerListHandler);
 		_makeFunc.Add((ushort)PacketID.S_BroadcastMove, MakePacket<S_BroadcastMove>);

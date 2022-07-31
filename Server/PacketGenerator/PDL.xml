@@ -77,7 +77,7 @@
   <packet name="S_LobbyToGame">
     <int name="CGUID"/>
     <int name="roomId"/>
-    <bool name="IsNoSlot"/>
+    <bool name="IsPlayerEntered"/>
   </packet>
 
   <packet name="C_GameToLobby">
@@ -87,6 +87,8 @@
 
   <packet name="S_GameToLobby">
     <int name="CGUID"/>
+    <int name="roomId"/>
+    <int name="newOwner"/>
   </packet>
 
   <packet name="C_SendChat">
@@ -111,12 +113,25 @@
 	<float name="posY"/>
 	<float name="posZ"/>
   </packet>
+
+  <packet name="S_BroadcastLeaveGame">
+    <int name="playerId"/>
+  </packet>
   
   <packet name="C_LeaveGame">
   </packet>
+
+  <packet name="S_GameRoomCountDownStart">
+  </packet>
+
+  <packet name="S_GameStart">
+  </packet>
+ 
+
+  <packet name="C_EnterFieldWorld">
+  </packet>
   
-  <packet name="S_BroadcastLeaveGame">
-	<int name="playerId"/>
+  <packet name="S_EnterFieldWorld">
   </packet>
   
   <packet name="S_PlayerList">

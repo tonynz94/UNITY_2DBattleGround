@@ -95,7 +95,7 @@ class PacketHandler
 		Debug.Log("[NetworkManager] @>> RECV : S_GetGameRooms ");
 		S_GameToLobby sPkt = packet as S_GameToLobby;
 
-
+		Managers.Room.HandleGameToLobby(sPkt);
 	}
 
 	//상대방의 채팅을 받았을때
@@ -128,6 +128,32 @@ class PacketHandler
 		ServerSession serverSession = session as ServerSession;
 
 	}
+
+	public static void S_GameRoomCountDownStartHandler(PacketSession session, IPacket packet)
+	{
+		Debug.Log("[NetworkManager] @>> RECV : S_GameRoomCountDownStart");
+		S_GameRoomCountDownStart pkt = packet as S_GameRoomCountDownStart;
+
+
+	}
+
+	public static void S_GameStartHandler(PacketSession session, IPacket packet)
+	{
+		Debug.Log("[NetworkManager] @>> RECV : S_GameStart");
+		S_GameStart pkt = packet as S_GameStart;
+
+	}
+
+
+	public static void S_EnterFieldWorldHandler(PacketSession session, IPacket packet)
+	{
+		Debug.Log("[NetworkManager] @>> RECV : S_EnterFieldWorld");
+		S_EnterFieldWorld pkt = packet as S_EnterFieldWorld;
+
+	}
+
+
+
 
 	public static void S_PlayerListHandler(PacketSession session, IPacket packet)
 	{

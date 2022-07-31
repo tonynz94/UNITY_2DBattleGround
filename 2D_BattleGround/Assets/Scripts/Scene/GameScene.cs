@@ -11,7 +11,7 @@ public class GameScene : BaseScene
 
         Managers.Map.LoadMap(1);
         Managers.Sound.Play(Define.Sound.Bgm, "Sound_IngameBGM");
-        GameObject player =Managers.Game.Spawn(Define.WorldObject.Player, "Objects/Player");
+        GameObject player =Managers.Game.Spawn(Define.WorldObject.Player, "Objects/MyPlayer");
         Camera.main.gameObject.AddComponent<CameraController>().TargetPoint(player);
 
         return true;

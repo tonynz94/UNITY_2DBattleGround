@@ -7,9 +7,6 @@ public class UI_GameRoom : UI_Popup
 {
     //방 ID
     int _roomID;
-
-    //방 안에 플레이어
-    Dictionary<int, Player> playerList = new Dictionary<int, Player>();
     Dictionary<int, UI_CharacterItem> slot = new Dictionary<int, UI_CharacterItem>();
 
     Color _readyColor = new Color(239 / 255f, 88 / 255f, 80 / 255f, 1f);
@@ -25,6 +22,7 @@ public class UI_GameRoom : UI_Popup
 
     enum Buttons
     {
+        StartButton,
         ReadyButton,
         BackButton,
     }
@@ -52,6 +50,7 @@ public class UI_GameRoom : UI_Popup
         BindButton(typeof(Buttons));
 
         BindEvent(GetButton((int)Buttons.ReadyButton).gameObject, OnReadyButton);
+        BindEvent(GetButton((int)Buttons.ReadyButton).gameObject, OnStartButton);
         BindEvent(GetButton((int)Buttons.BackButton).gameObject, OnBackButton);
 
         return true;
@@ -61,7 +60,6 @@ public class UI_GameRoom : UI_Popup
     public void CreateRoom(int roomID, Player ownerPlayer)
     {
         _roomID = roomID;
-        playerList.Add(ownerPlayer._CGUID, ownerPlayer);
         GameRoom room = Managers.Room.GetGameRoom(_roomID);
         room.AddPlayer(ownerPlayer._CGUID);
 
@@ -77,8 +75,6 @@ public class UI_GameRoom : UI_Popup
 
         GameRoom room = Managers.Room.GetGameRoom(_roomID);
         room.AddPlayer(CGUID);
-        playerList.Add(CGUID, Managers.Player.GetPlayer(CGUID));
-        
 
         RefreashSlot();
         RefreashTitle();
@@ -86,17 +82,17 @@ public class UI_GameRoom : UI_Popup
     }
 
     
-    public void OnHandleReadyActiive(S_ClickReadyOnOff rPkt)
+    public void OnHandleReadyActiive(S_ClickReadyOnOff sPkt)
     {
         UI_CharacterItem item;
-        slot.TryGetValue(rPkt.CGUID, out item);
+        slot.TryGetValue(sPkt.CGUID, out item);
         if (item == null)
             Debug.LogError("해당 CGUID는 방에 없어요.");
         
-        if (rPkt.isReady)  //true
+        if (sPkt.isReady)  //true
         {
             item.ReadyOn();
-            if (rPkt.CGUID == Managers.Player.GetMyCGUID())
+            if (sPkt.CGUID == Managers.Player.GetMyCGUID())
             {
                 GetText((int)Texts.ReadyButtonText).text = "CANCEL";
                 GetButton((int)Buttons.ReadyButton).GetComponent<Image>().color = _cancelColor;
@@ -105,12 +101,18 @@ public class UI_GameRoom : UI_Popup
         else
         {
             item.ReadyOff();
-            if (rPkt.CGUID == Managers.Player.GetMyCGUID())
+            if (sPkt.CGUID == Managers.Player.GetMyCGUID())
             {
                 GetText((int)Texts.ReadyButtonText).text = "READY";
                 GetButton((int)Buttons.ReadyButton).GetComponent<Image>().color = _readyColor;
             }    
         }
+    }
+
+    //방장 일때.
+    public void OnStartButton()
+    {
+        Debug.Log("게임 시작");
     }
 
     //이 레디함수는 내가 누를때만 실행됨.
@@ -127,19 +129,17 @@ public class UI_GameRoom : UI_Popup
         sPkt.CGUID = Managers.Player.GetMyCGUID();
         sPkt.roomId = _roomID;
         sPkt.isReady = !item._ready;
+        Managers.Net.Send(sPkt.Write());
     }
 
     public void OnBackButton()
     {
-        Managers.UI.ClosePopupUI();
         C_GameToLobby cPkt = new C_GameToLobby();
         cPkt.CGUID = Managers.Player.GetMyCGUID();
         cPkt.roomId = _roomID;
 
         Debug.Log("[NetworkManager] SEND : C_GameToLobby");
         Managers.Net.Send(cPkt.Write());
-        Managers.Room.GameRoomAllClear();
-        Debug.Log("Back Clicked");
     }
 
     public void RefreashSlot()
@@ -148,6 +148,10 @@ public class UI_GameRoom : UI_Popup
         slot.Clear();
 
         GameRoom room = Managers.Room.GetGameRoom(_roomID);
+
+        GetObject((int)Buttons.StartButton).SetActive(Managers.Player.GetMyCGUID() == room.roomOwner);
+        GetObject((int)Buttons.ReadyButton).SetActive(Managers.Player.GetMyCGUID() != room.roomOwner);
+
         foreach(Player player in room._playerDic.Values)
         {
             UI_CharacterItem item = Get<UI_CharacterItem>((int)System.Enum.Parse(typeof(CharacterItem), $"UI_CharacterItem_{i}"));

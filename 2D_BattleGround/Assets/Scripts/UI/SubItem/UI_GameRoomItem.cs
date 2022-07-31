@@ -49,7 +49,7 @@ public class UI_GameRoomItem : UI_Base
         _roomId = roomId;
         GetText((int)Texts.OwnerText).text = Managers.Player.GetPlayerNick(Owner);
         GetText((int)Texts.MapText).text = System.Enum.GetName(typeof(MapType), (int)mapType);
-        GetText((int)Texts.PlayersText).text = "(1/4)";
+        GetText((int)Texts.PlayersText).text = $"({playersCount}/4)";
         GetText((int)Texts.StateText).text = System.Enum.GetName(typeof(GameState), (int)state);
     }
 

@@ -5,69 +5,13 @@ using static Define;
 
 public class PlayerController : BaseController
 {
-    [SerializeField]
-    ObjectState _state = Define.ObjectState.Idle;
-    [SerializeField]
-    protected MoveDir _dir = Define.MoveDir.Down;
-    [SerializeField]
-    protected MoveDir _lastDir = Define.MoveDir.Down;
-    [SerializeField]
-    protected string currentAni = "";
-
-    [SerializeField]
-    public Vector3Int _cellPos = Vector3Int.zero;
-    public Vector3Int CellPos 
-    { 
-        get { return _cellPos; }  
-        set { _cellPos = value; } 
+    protected override void Init()
+    {
+        base.Init();
     }
 
-    Animator _anim;
-
-    protected MoveDir Dir
+    protected override void UpdateController()
     {
-        get { return _dir; }
-        set {
-            if (_dir == value)
-                return;
-
-            _dir = value;
-            if (value != MoveDir.None)
-                _lastDir = value;
-
-            UpdateAnimation();
-        }
-    }
-
-
-    [SerializeField]
-    float _speed = 5f;
-
-    protected Define.ObjectState State
-    {
-        get{
-            return _state;
-        }
-        set
-        {
-            if (_state == value)
-                return;
-
-            _state = value;
-            UpdateAnimation();
-        }
-    }
-    // Start is called before the first frame update
-    void Start()
-    {
-        _anim = GetComponent<Animator>();
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        GetDirInput();
-
         switch (State)
         {
             case ObjectState.Idle:
@@ -82,41 +26,13 @@ public class PlayerController : BaseController
         }
     }
 
-    void GetDirInput()
-    {
-#if UNITY_EDITOR
-        if (Input.GetKey(KeyCode.W))
-        {
-            Dir = MoveDir.Up;
-        }
-        else if (Input.GetKey(KeyCode.S))
-        {
-            Dir = MoveDir.Down;
-        }
-        else if (Input.GetKey(KeyCode.A))
-        {
-            Dir = MoveDir.Left;
-        }
-        else if (Input.GetKey(KeyCode.D))
-        {
-            Dir = MoveDir.Right;
-        }
-        else
-        {
-            Dir = MoveDir.None;
-        }
-#else
-
-#endif
-    }
-
-    void UpdateIdle()
+    protected override void UpdateIdle()
     {
         if(Dir != MoveDir.None)
             State = ObjectState.Moving;
     }
 
-    void UpdateMoving()
+    protected override void UpdateMoving()
     {
 
         if (Dir == MoveDir.None)
@@ -152,13 +68,12 @@ public class PlayerController : BaseController
         }
     }
 
-    void UpdateDead()
+    protected override void UpdateDead()
     {
         Debug.Log("Player Dead");
     }
 
-
-    public void UpdateAnimation()
+    protected override void UpdateAnimation()
     {
         if(State == ObjectState.Idle)
         {

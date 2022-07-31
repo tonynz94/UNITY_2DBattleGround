@@ -7,7 +7,6 @@ public class UIManager
 {
     int _order = -20;
 
-
     Stack<UI_Popup> _popupStack = new Stack<UI_Popup>();
 
     public UI_Scene SceneUI { get; private set; }

@@ -56,7 +56,7 @@ class PacketHandler
 		C_LobbyToGame cPkt = packet as C_LobbyToGame;
 		ClientSession clientSession = session as ClientSession;
 
-		RoomManager.Instance.MoveLobbytToGameRoom(clientSession.SessionId, cPkt.roomId);
+		RoomManager.Instance.HandleLobbytToGameRoom(clientSession.SessionId, cPkt.roomId);
 
 	}
 
@@ -72,8 +72,8 @@ class PacketHandler
 	{
 		Console.WriteLine("[Server] @>> RECV : C_GameToLobby");
 		C_GameToLobby cPkt = packet as C_GameToLobby;
-		ClientSession clientSession = session as ClientSession;
-		RoomManager.Instance.MoveGameToLobbyRoom(clientSession.SessionId, cPkt.roomId);
+
+		RoomManager.Instance.HandleGameRoomToLobby(cPkt);
 	}
 
 	public static void C_SendChatHandler(PacketSession session, IPacket packet)

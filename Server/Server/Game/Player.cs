@@ -15,11 +15,9 @@ namespace Server.Game
         public Define.ObjectState State;
         public Define.MoveDir Dir;
 
-        public bool isInGame = false;
         public bool isInGameRoom = false;
         public bool isGameOwner = false;
         public bool isPlayerReady = false;
-
     }
 
     class Player

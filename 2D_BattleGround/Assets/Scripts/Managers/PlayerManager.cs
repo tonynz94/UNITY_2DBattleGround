@@ -18,7 +18,19 @@ public class Player
 
     public bool _isInGameRoom;
     public bool _isGameOwner;
-    public bool _isPlayerReady;
+    public bool IsPlayerReady;
+
+    public bool _isPlayerReady
+    {
+        get
+        {
+            return IsPlayerReady;
+        }
+        set
+        {
+            IsPlayerReady = value;
+        }
+    }
 
     public Player(int CGUID, string nickName)
     {
@@ -27,13 +39,20 @@ public class Player
 
         _level = 1;
         _totalExp = 0;
-        _currentExp = 0;   
+        _currentExp = 0;
         _profileImage = 1;
         _maxHP = 300;
 
         _gameMoney = 10000;
         _gameDiamond = 300;
 
+        _isInGameRoom = false;
+        _isGameOwner = false;
+        _isPlayerReady = false;
+    }
+
+    public void LeaveFromGameRoom()
+    {
         _isInGameRoom = false;
         _isGameOwner = false;
         _isPlayerReady = false;

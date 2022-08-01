@@ -15,12 +15,21 @@ public class GameRoom
         _playerDic.Add(CGUID, Managers.Player.GetPlayer(CGUID));
     }
 
-    public void LeaveGameRoom(int CGUID)
+    public void LeaveGameRoom(int leavePlayerCGUID)
     {
-        if (_playerDic.ContainsKey(CGUID))
-            _playerDic.Remove(CGUID);
+        if (_playerDic.ContainsKey(leavePlayerCGUID))
+        {
+            _playerDic[leavePlayerCGUID].LeaveFromGameRoom();
+            _playerDic.Remove(leavePlayerCGUID);     
+        }
         else
             Debug.LogError("Theres no such player in this Room");
+    }
+
+    public void SetNewOwner(int newOwnerCGUID)
+    {
+        roomOwner = newOwnerCGUID;
+        _playerDic[newOwnerCGUID].IsPlayerReady = false;
     }
 
     public void SetGameRoom(Define.GameMode gameMode, Define.MapType mapType)
@@ -129,29 +138,28 @@ public class RoomManager
     public void HandleGameToLobby(S_GameToLobby sPkt)
     {
         GameRoom room = Managers.Room.GetGameRoom(sPkt.roomId);
+        int leavePlayerCGUID = sPkt.CGUID;
+
+        room.LeaveGameRoom(leavePlayerCGUID);
 
         //내가 나갔을때.
-        if(sPkt.CGUID == Managers.Player.GetMyCGUID())
-        {
+        if (leavePlayerCGUID == Managers.Player.GetMyCGUID())
+        {  
             Managers.UI.ClosePopupUI();
-            //방 리스트 들어갈때 다시 가져와야 하기 떄문에 비워주기
             Managers.Room.GameRoomAllClear();   
         }
         //누군가 나갔을때.
         else
         {
-            room.LeaveGameRoom(sPkt.CGUID);
-
-            if (room.roomOwner == sPkt.CGUID)
-                room.roomOwner = sPkt.newOwner;
-            
+            //나간사람이 방장이면. 
+            if (room.roomOwner == leavePlayerCGUID)
+                room.SetNewOwner(sPkt.newOwner);
+                
             UI_GameRoom roomScript = Managers.UI.PeekPopupUI<UI_GameRoom>();
 
             roomScript.RefreashSlot();
             roomScript.RefreashTitle();
         }
-
-        Managers.Player.GetPlayer(sPkt.CGUID).LeaveFromGameRoom();
     }
 
     public void HandleGetAllGameRooms(S_GetGameRooms sPkt)

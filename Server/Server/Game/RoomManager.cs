@@ -44,6 +44,7 @@ namespace Server.Game
         public void LeaveGameRoom(int CGUID)
         {
             Player player = _playerList.Find(x => x.Session.SessionId == CGUID);
+            player.LeaveFromGameRoom();
             _playerList.Remove(player);
         }
 
@@ -57,6 +58,10 @@ namespace Server.Game
         {
             Random rand = new Random();
             int ownerIndex = rand.Next(0, GetPlayerCount());
+
+            //방장이 되었기 때문에 Ready를 False로 바꿔준다.
+            roomOwner = _playerList[ownerIndex].Session.SessionId;
+            _playerList[ownerIndex].Info.isPlayerReady = false;
 
             return _playerList[ownerIndex].Session.SessionId;
         }
@@ -192,7 +197,7 @@ namespace Server.Game
                     RoomManager.Instance.GetGameRoom(roomId).Broadcast(sPkt.Write());
                 else
                 {
-                    //입장을 시도한 셰션에게만 보내줌
+                    //못들어갔을때 입장을 시도한 셰션에게만 보내줌
                     ClientSession session = SessionManager.Instance.Find(CGUID);
                     session.Send(sPkt.Write());
                 }
@@ -315,14 +320,14 @@ namespace Server.Game
         //로비 -> 게임 룸 입장   
         //나온 룸에서 내가 마지막이였다면 : true
         //누군가 안에 있다면 false
-        public int MoveGameRoomToLobby(int CGUID, int roomId)
+        public int MoveGameRoomToLobby(int leavePlayerCGUID, int roomId)
         {
             lock (_lock)
             {
                 GameRoom gameRoom = GetGameRoom(roomId);
 
-                gameRoom.LeaveGameRoom(CGUID);
-                _lobbyRoom.EnterLobbyRoom(CGUID);
+                gameRoom.LeaveGameRoom(leavePlayerCGUID);
+                _lobbyRoom.EnterLobbyRoom(leavePlayerCGUID);
 
                 if (gameRoom.GetPlayerCount() == 0)
                 {
@@ -331,7 +336,7 @@ namespace Server.Game
                 }
                 else
                 {
-                    if (CGUID == gameRoom.roomOwner)
+                    if (leavePlayerCGUID == gameRoom.roomOwner)
                         return gameRoom.SetNewOwner();
                     else
                         return gameRoom.roomOwner;

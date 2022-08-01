@@ -25,5 +25,12 @@ namespace Server.Game
         public PlayerInfo Info { get; set; } = new PlayerInfo(); 
         public ClientSession Session { get; set; }
         public GameRoom Room { get; set; }
+
+        public void LeaveFromGameRoom()
+        {
+            Info.isInGameRoom = false;
+            Info.isGameOwner = false;
+            Info.isPlayerReady = false;
+        }
     }
 }

@@ -78,6 +78,27 @@ namespace Server.Game
 
         }
 
+        public bool GameStart()
+        {
+            int cnt = 0;
+
+            foreach(var player in _playerList)
+            {
+                if (player.Info.isPlayerReady)
+                    cnt++;
+            }
+
+            if(GetPlayerCount() - 1 == cnt)
+            {
+                return true;
+            }
+            else
+            {
+                //시작 불가
+                return false;
+            }
+        }
+
         public void Clear()
         {
             _mapType = Define.MapType.None;
@@ -267,6 +288,7 @@ namespace Server.Game
                     {
                         S_GetGameRooms.GameRoomlist.PlayerList tempPlayer = new S_GetGameRooms.GameRoomlist.PlayerList();
                         tempPlayer.CGUID = player.Session.SessionId;
+                        tempPlayer.isReady = player.Info.isPlayerReady;
                         tempRoom.playerLists.Add(tempPlayer);
                     }
 
@@ -286,6 +308,9 @@ namespace Server.Game
                 if (room == null)
                     Console.WriteLine("there is no such a room");
 
+                Player player = PlayerManager.Instance.GetPlayer(cPkt.CGUID);
+
+                player.Info.isPlayerReady = cPkt.isReady;
                 room.SetReady(cPkt.isReady);
 
                 S_ClickReadyOnOff sPkt = new S_ClickReadyOnOff();
@@ -296,6 +321,30 @@ namespace Server.Game
                 room.Broadcast(sPkt.Write());
             }
         }
+
+        public void HandleGameStart(int roomID)
+        {
+            lock(_lock)
+            {
+                GameRoom room = GetGameRoom(roomID);
+                bool start = room.GameStart();
+
+                S_GameStart sPkt = new S_GameStart();
+                sPkt.isStart = start;
+                sPkt.roomID = roomID;
+
+                if (start)
+                {
+                    room.Broadcast(sPkt.Write());
+                }
+                else
+                {
+                    ClientSession session = SessionManager.Instance.Find(room.roomOwner);
+                    session.Send(sPkt.Write());
+                }
+            }
+        }
+
 
         //게임 룸에서 로비로 나옴
         //방에 정상적으로 입장헀다면 true

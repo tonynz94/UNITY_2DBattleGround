@@ -47,10 +47,10 @@
       <int name="GameMode"/>
       <list name="PlayerList">
         <int name="CGUID"/>
+        <bool name="isReady"/>
       </list>
     </list>
   </packet>
-
 
   <packet name="C_IntroToLobby">
     <int name="CGUID"/>
@@ -72,7 +72,6 @@
     <int name="roomId"/>
     <int name="CGUID"/>
   </packet>
-
 
   <packet name="S_LobbyToGame">
     <int name="CGUID"/>
@@ -121,13 +120,16 @@
   <packet name="C_LeaveGame">
   </packet>
 
-  <packet name="S_GameRoomCountDownStart">
+  <packet name="C_GameStart">
+    <int name="CGUID"/>
+    <int name="roomID"/>
   </packet>
 
   <packet name="S_GameStart">
+    <bool name="isStart"/>
+    <int name="roomID"/>
   </packet>
  
-
   <packet name="C_EnterFieldWorld">
   </packet>
   

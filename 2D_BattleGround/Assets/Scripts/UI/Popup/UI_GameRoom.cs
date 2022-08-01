@@ -112,7 +112,18 @@ public class UI_GameRoom : UI_Popup
     //방장 일때.
     public void OnStartButton()
     {
-        Debug.Log("게임 시작");
+        C_GameStart cPkt = new C_GameStart();
+        if(Managers.Player.GetMyCGUID() == Managers.Room.GetGameRoom(_roomID).roomOwner)
+        {
+            cPkt.CGUID = Managers.Player.GetMyCGUID();
+            cPkt.roomID = _roomID;
+
+            Managers.Net.Send(cPkt.Write());
+        }
+        else
+        {
+            Debug.LogError("You'r not owner... how did you press start button...");
+        }
     }
 
     //이 레디함수는 내가 누를때만 실행됨.
@@ -152,7 +163,7 @@ public class UI_GameRoom : UI_Popup
         GetButton((int)Buttons.StartButton).gameObject.SetActive(Managers.Player.GetMyCGUID() == room.roomOwner);
         GetButton((int)Buttons.ReadyButton).gameObject.SetActive(Managers.Player.GetMyCGUID() != room.roomOwner);
 
-        foreach(Player player in room._playerDic.Values)
+        foreach(Player player in room._playerList)
         {
             UI_CharacterItem item = Get<UI_CharacterItem>((int)System.Enum.Parse(typeof(CharacterItem), $"UI_CharacterItem_{i}"));
             slot.Add( player._CGUID, item);

@@ -100,6 +100,14 @@ class PacketHandler
 		//room.LeaveLobby(clientSession);
 	}
 
+	
+	public static void C_GameStartHandler(PacketSession session, IPacket packet)
+	{
+		Console.WriteLine("[Server] @>> RECV : C_GameStart");
+		C_GameStart cPkt = packet as C_GameStart;
+
+		RoomManager.Instance.HandleGameStart(cPkt.roomID);
+	}
 	public static void C_EnterFieldWorldHandler(PacketSession session, IPacket packet)
 	{
 		Console.WriteLine("[Server] @>> RECV : C_EnterFieldWorld");

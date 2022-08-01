@@ -129,19 +129,12 @@ class PacketHandler
 
 	}
 
-	public static void S_GameRoomCountDownStartHandler(PacketSession session, IPacket packet)
-	{
-		Debug.Log("[NetworkManager] @>> RECV : S_GameRoomCountDownStart");
-		S_GameRoomCountDownStart pkt = packet as S_GameRoomCountDownStart;
-
-
-	}
-
 	public static void S_GameStartHandler(PacketSession session, IPacket packet)
 	{
 		Debug.Log("[NetworkManager] @>> RECV : S_GameStart");
-		S_GameStart pkt = packet as S_GameStart;
+		S_GameStart sPkt = packet as S_GameStart;
 
+		Managers.Room.HandleGameStart(sPkt);
 	}
 
 
@@ -151,9 +144,6 @@ class PacketHandler
 		S_EnterFieldWorld pkt = packet as S_EnterFieldWorld;
 
 	}
-
-
-
 
 	public static void S_PlayerListHandler(PacketSession session, IPacket packet)
 	{

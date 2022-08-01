@@ -8,28 +8,38 @@ public class GameRoom
     public int roomId;
     public Define.MapType _mapType;
     public Define.GameMode _gameMode;
-    public Dictionary<int, Player> _playerDic = new Dictionary<int, Player>();
+    public List<Player> _playerList = new List<Player>();
 
     public void AddPlayer(int CGUID)
     {
-        _playerDic.Add(CGUID, Managers.Player.GetPlayer(CGUID));
+        _playerList.Add(Managers.Player.GetPlayer(CGUID));
+    }
+    public void AddPlayer(Player player)
+    {
+        _playerList.Add(player);
     }
 
     public void LeaveGameRoom(int leavePlayerCGUID)
     {
-        if (_playerDic.ContainsKey(leavePlayerCGUID))
+        Player player = _playerList.Find(x => x._CGUID == leavePlayerCGUID);
+        if (player == null)
         {
-            _playerDic[leavePlayerCGUID].LeaveFromGameRoom();
-            _playerDic.Remove(leavePlayerCGUID);     
+            Debug.LogError("Theres no such player in this Room");
+            return;
         }
         else
-            Debug.LogError("Theres no such player in this Room");
+        {
+            player.LeaveFromGameRoom();
+            _playerList.Remove(player);
+        }
     }
 
     public void SetNewOwner(int newOwnerCGUID)
     {
         roomOwner = newOwnerCGUID;
-        _playerDic[newOwnerCGUID].IsPlayerReady = false;
+
+        Player player = _playerList.Find(x => x._CGUID == newOwnerCGUID);
+        player.IsPlayerReady = false;
     }
 
     public void SetGameRoom(Define.GameMode gameMode, Define.MapType mapType)
@@ -38,9 +48,15 @@ public class GameRoom
         _mapType = mapType;
     }
 
+    public void GameStart()
+    {
+        //로딩화면 나오게 하면 좋음.
+        Managers.Scene.ChangeScene(Define.Scene.GameScene);
+    }
+
     public int GetPlayerCount()
     {
-        return _playerDic.Count;
+        return _playerList.Count;
     }
 
     public void Clear()
@@ -130,7 +146,7 @@ public class RoomManager
         else
         {
             //방 꽉찼다고 팝업창 뛰우기.
-            Debug.Log("This Room is Full");
+            Debug.Log("popup : This Room is Full");
         }
     }
 
@@ -168,18 +184,33 @@ public class RoomManager
         {
             GameRoom gameRoom = new GameRoom();
             gameRoom.SetGameRoom((Define.GameMode)temp.GameMode, (Define.MapType)temp.MapType);
-            gameRoom.roomId =temp.RoomId;
-            gameRoom.roomOwner =temp.RoomOwner;
+            gameRoom.roomId = temp.RoomId;
+            gameRoom.roomOwner = temp.RoomOwner;
             
             foreach(S_GetGameRooms.GameRoomlist.PlayerList tempPlayer in temp.playerLists)
             {
-                gameRoom.AddPlayer(tempPlayer.CGUID);
+                Player player = Managers.Player.GetPlayer(tempPlayer.CGUID);
+
+                player.IsPlayerReady = tempPlayer.isReady;
+                gameRoom.AddPlayer(player);
             }
             _gameRooms.Add(gameRoom.roomId, gameRoom);
         }
 
         UI_RoomList roomlist = Managers.UI.ShowPopupUI<UI_RoomList>();
         roomlist.RefreshGameRoom();
+    }
+
+    public void HandleGameStart(S_GameStart sPkt)
+    {
+        if(sPkt.isStart == true)
+        {
+            GetGameRoom(sPkt.roomID).GameStart();
+        }
+        else
+        {
+            Debug.Log("popup : Everyone has to be Ready");
+        }
     }
 
     public void RemoveGameRoom(int roomId)

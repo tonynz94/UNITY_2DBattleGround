@@ -16,8 +16,6 @@ public class Player
     public int _gameMoney;
     public int _gameDiamond;
 
-    public bool _isInGameRoom;
-    public bool _isGameOwner;
     public bool IsPlayerReady;
 
     public bool _isPlayerReady
@@ -46,15 +44,11 @@ public class Player
         _gameMoney = 10000;
         _gameDiamond = 300;
 
-        _isInGameRoom = false;
-        _isGameOwner = false;
         _isPlayerReady = false;
     }
 
     public void LeaveFromGameRoom()
     {
-        _isInGameRoom = false;
-        _isGameOwner = false;
         _isPlayerReady = false;
     }
 

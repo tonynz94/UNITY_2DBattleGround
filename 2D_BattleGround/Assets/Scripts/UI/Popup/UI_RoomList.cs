@@ -140,7 +140,7 @@ public class UI_RoomList : UI_Popup
         GetText((int)Texts.GameTypeText).text = System.Enum.GetName(typeof(Define.GameMode), (int)room._gameMode);
         int i = 1;
 
-        foreach(var player in room._playerDic.Values)
+        foreach(var player in room._playerList)
         {
             GetObject((int)System.Enum.Parse(typeof(Objects), $"Slot{i}OffObject")).SetActive(false);
             GetObject((int)System.Enum.Parse(typeof(Objects), $"Slot{i}OnObject")).SetActive(true);

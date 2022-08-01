@@ -27,7 +27,7 @@ public enum PacketID
 	S_BroadcastEnterGame = 19,
 	S_BroadcastLeaveGame = 20,
 	C_LeaveGame = 21,
-	S_GameRoomCountDownStart = 22,
+	C_GameStart = 22,
 	S_GameStart = 23,
 	C_EnterFieldWorld = 24,
 	S_EnterFieldWorld = 25,
@@ -359,11 +359,14 @@ public class S_GetGameRooms : IPacket
 		public class PlayerList
 		{
 			public int CGUID;
+			public bool isReady;
 		
 			public void Read(ArraySegment<byte> segment, ref ushort count)
 			{
 				this.CGUID = BitConverter.ToInt32(segment.Array, segment.Offset + count);
 				count += sizeof(int);
+				this.isReady = BitConverter.ToBoolean(segment.Array, segment.Offset + count);
+				count += sizeof(bool);
 			}
 		
 			public bool Write(ArraySegment<byte> segment, ref ushort count)
@@ -371,6 +374,8 @@ public class S_GetGameRooms : IPacket
 				bool success = true;
 				Array.Copy(BitConverter.GetBytes(this.CGUID), 0, segment.Array, segment.Offset + count, sizeof(int));
 				count += sizeof(int);
+				Array.Copy(BitConverter.GetBytes(this.isReady), 0, segment.Array, segment.Offset + count, sizeof(bool));
+				count += sizeof(bool);
 				return success;
 			}	
 		}
@@ -973,18 +978,22 @@ public class C_LeaveGame : IPacket
 	}
 }
 
-public class S_GameRoomCountDownStart : IPacket
+public class C_GameStart : IPacket
 {
-	
+	public int CGUID;
+	public int roomID;
 
-	public ushort Protocol { get { return (ushort)PacketID.S_GameRoomCountDownStart; } }
+	public ushort Protocol { get { return (ushort)PacketID.C_GameStart; } }
 
 	public void Read(ArraySegment<byte> segment)
 	{
 		ushort count = 0;
 		count += sizeof(ushort);
 		count += sizeof(ushort);
-		
+		this.CGUID = BitConverter.ToInt32(segment.Array, segment.Offset + count);
+		count += sizeof(int);
+		this.roomID = BitConverter.ToInt32(segment.Array, segment.Offset + count);
+		count += sizeof(int);
 	}
 
 	public ArraySegment<byte> Write()
@@ -993,9 +1002,12 @@ public class S_GameRoomCountDownStart : IPacket
 		ushort count = 0;
 
 		count += sizeof(ushort);
-		Array.Copy(BitConverter.GetBytes((ushort)PacketID.S_GameRoomCountDownStart), 0, segment.Array, segment.Offset + count, sizeof(ushort));
+		Array.Copy(BitConverter.GetBytes((ushort)PacketID.C_GameStart), 0, segment.Array, segment.Offset + count, sizeof(ushort));
 		count += sizeof(ushort);
-		
+		Array.Copy(BitConverter.GetBytes(this.CGUID), 0, segment.Array, segment.Offset + count, sizeof(int));
+		count += sizeof(int);
+		Array.Copy(BitConverter.GetBytes(this.roomID), 0, segment.Array, segment.Offset + count, sizeof(int));
+		count += sizeof(int);
 
 		Array.Copy(BitConverter.GetBytes(count), 0, segment.Array, segment.Offset, sizeof(ushort));
 
@@ -1005,7 +1017,8 @@ public class S_GameRoomCountDownStart : IPacket
 
 public class S_GameStart : IPacket
 {
-	
+	public bool isStart;
+	public int roomID;
 
 	public ushort Protocol { get { return (ushort)PacketID.S_GameStart; } }
 
@@ -1014,7 +1027,10 @@ public class S_GameStart : IPacket
 		ushort count = 0;
 		count += sizeof(ushort);
 		count += sizeof(ushort);
-		
+		this.isStart = BitConverter.ToBoolean(segment.Array, segment.Offset + count);
+		count += sizeof(bool);
+		this.roomID = BitConverter.ToInt32(segment.Array, segment.Offset + count);
+		count += sizeof(int);
 	}
 
 	public ArraySegment<byte> Write()
@@ -1025,7 +1041,10 @@ public class S_GameStart : IPacket
 		count += sizeof(ushort);
 		Array.Copy(BitConverter.GetBytes((ushort)PacketID.S_GameStart), 0, segment.Array, segment.Offset + count, sizeof(ushort));
 		count += sizeof(ushort);
-		
+		Array.Copy(BitConverter.GetBytes(this.isStart), 0, segment.Array, segment.Offset + count, sizeof(bool));
+		count += sizeof(bool);
+		Array.Copy(BitConverter.GetBytes(this.roomID), 0, segment.Array, segment.Offset + count, sizeof(int));
+		count += sizeof(int);
 
 		Array.Copy(BitConverter.GetBytes(count), 0, segment.Array, segment.Offset, sizeof(ushort));
 

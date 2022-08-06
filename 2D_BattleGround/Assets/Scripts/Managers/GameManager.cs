@@ -12,6 +12,7 @@ public class GameManager
     //게임내에 있는 모든 움직이는 오브젝트들
     HashSet<GameObject> _playerList = new HashSet<GameObject>();
     HashSet<GameObject> _monsterList = new HashSet<GameObject>();
+    int _roomID;
     public GameLobbyRoom gameSetting { get; set; } = new GameLobbyRoom();
 
     //게임에 입장한다.

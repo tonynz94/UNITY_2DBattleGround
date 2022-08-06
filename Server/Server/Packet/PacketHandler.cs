@@ -113,6 +113,10 @@ class PacketHandler
 		Console.WriteLine("[Server] @>> RECV : C_EnterFieldWorld");
 		ClientSession clientSession = session as ClientSession;
 
+		C_EnterFieldWorld cPkt = packet as C_EnterFieldWorld;
+		Console.WriteLine($"{cPkt.CGUID} 입장");
+
+		여기
 	}
 
 	public static void C_MoveHandler(PacketSession session, IPacket packet)

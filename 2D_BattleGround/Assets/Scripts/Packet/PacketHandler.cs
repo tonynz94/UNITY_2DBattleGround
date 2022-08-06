@@ -143,6 +143,8 @@ class PacketHandler
 		Debug.Log("[NetworkManager] @>> RECV : S_EnterFieldWorld");
 		S_EnterFieldWorld pkt = packet as S_EnterFieldWorld;
 
+		Managers.s_Object
+
 	}
 
 	public static void S_PlayerListHandler(PacketSession session, IPacket packet)

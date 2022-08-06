@@ -12,6 +12,7 @@ namespace Server.Game
         public int roomOwner;   //CGUID
         public int roomId;
         public int _readyCnt = 0;
+        public bool _isStarted = false;
         public Define.MapType _mapType;
         public Define.GameMode _gameMode;
 
@@ -90,11 +91,13 @@ namespace Server.Game
 
             if(GetPlayerCount() - 1 == cnt)
             {
+                _isStarted = true;
                 return true;
             }
             else
             {
                 //시작 불가
+                _isStarted = false;
                 return false;
             }
         }
@@ -284,6 +287,7 @@ namespace Server.Game
                     tempRoom.MapType = (int)gameRoom.Value._mapType;
                     tempRoom.RoomId = gameRoom.Key;
                     tempRoom.RoomOwner = gameRoom.Value.roomOwner;
+                    tempRoom.isStarted = gameRoom.Value._isStarted;
                     foreach (Player player in gameRoom.Value._playerList)
                     {
                         S_GetGameRooms.GameRoomlist.PlayerList tempPlayer = new S_GetGameRooms.GameRoomlist.PlayerList();

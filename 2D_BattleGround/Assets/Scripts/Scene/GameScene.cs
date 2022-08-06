@@ -11,8 +11,14 @@ public class GameScene : BaseScene
 
         Managers.Map.LoadMap(1);
         Managers.Sound.Play(Define.Sound.Bgm, "Sound_IngameBGM");
-        GameObject player =Managers.Game.Spawn(Define.WorldObject.Player, "Objects/MyPlayer");
-        Camera.main.gameObject.AddComponent<CameraController>().TargetPoint(player);
+
+        C_EnterFieldWorld cPkt = new C_EnterFieldWorld();
+        cPkt.CGUID = Managers.Player.GetMyCGUID();
+
+        Managers.Net.Send(cPkt.Write());
+
+        //GameObject player =Managers.Game.Spawn(Define.WorldObject.Player, "Objects/MyPlayer");
+        //Camera.main.gameObject.AddComponent<CameraController>().TargetPoint(player);
 
         return true;
     }

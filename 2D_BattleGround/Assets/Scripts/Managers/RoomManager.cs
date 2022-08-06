@@ -79,32 +79,12 @@ public class LobbyRoom
     {
         _playerDic.Remove(CGUID);
     }
-
 }
 
 public class RoomManager
 {
     public Dictionary<int, GameRoom> _gameRooms { get; private set; } = new Dictionary<int, GameRoom>();
     public LobbyRoom _lobbyRoom { get; private set; } = new LobbyRoom();
-
-    //public void MoveIntroToLobbyRoom(int CGUID)
-    //{
-    //    _lobbyRoom.EnterLobbyRoom(CGUID);
-    //}
-
-    //public void MoveLobbytToGameRoom(int CGUID, int roomId)
-    //{
-    //    _lobbyRoom.LeaveLobbyRoom(CGUID);
-    //    GameRoom gameRoom = GetGameRoom(roomId);
-    //    gameRoom.AddPlayer(CGUID);
-    //}
-
-    //public void MoveGameToLobbyRoom(int CGUID, int roomId)
-    //{
-    //    GameRoom gameRoom = GetGameRoom(roomId);
-    //    gameRoom.LeaveGameRoom(CGUID);
-    //    _lobbyRoom.EnterLobbyRoom(CGUID);
-    //}
 
     public void HandleCreateGameRoom(S_CreateGameRoom sPkt)
     {
@@ -203,6 +183,7 @@ public class RoomManager
 
     public void HandleGameStart(S_GameStart sPkt)
     {
+        //게임이 정상적으로 스타트 됐다면\
         if(sPkt.isStart == true)
         {
             GetGameRoom(sPkt.roomID).GameStart();

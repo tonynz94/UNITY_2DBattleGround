@@ -21,6 +21,7 @@ public class Managers : MonoBehaviour
     public static Managers Instance { get { return s_instance; } }
 
     public static DataManager Data { get { Init(); return s_Data; } }
+    public static ObjectManager Object { get { Init(); return s_Object; } }
     public static ResourceManager Resource { get { Init();  return s_Resource; } }
     public static SoundManager Sound { get { Init(); return s_Sound; } }
     public static UIManager UI { get { Init(); return s_ui; } }

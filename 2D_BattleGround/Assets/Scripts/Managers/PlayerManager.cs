@@ -105,11 +105,21 @@ public class PlayerManager
         return MyPlayer.NickName;
     }
 
+    public Player GetMyPlayer()
+    {
+        return GetPlayer(GetMyCGUID());
+    }
+
     public Player GetPlayer(int CGUID)
     {
         Player player;
         _players.TryGetValue(CGUID, out player);
         return player;
+    }
+
+    public Player GetMyRoomID()
+    {
+        GetMyPlayer().ro
     }
 
     public string GetPlayerNick(int CGUID)
@@ -118,6 +128,7 @@ public class PlayerManager
         _players.TryGetValue(CGUID, out player);
         return player.NickName;
     }
+
 
 
 

@@ -110,7 +110,6 @@ public class UI_RoomList : UI_Popup
             return;
         }
 
-
         C_LobbyToGame sPkt = new C_LobbyToGame();
 
         sPkt.CGUID = Managers.Player.GetMyCGUID();

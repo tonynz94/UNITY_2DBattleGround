@@ -45,6 +45,7 @@
       <int name="RoomOwner"/>
       <int name="MapType"/>
       <int name="GameMode"/>
+      <bool name ="isStarted"/>
       <list name="PlayerList">
         <int name="CGUID"/>
         <bool name="isReady"/>
@@ -131,9 +132,15 @@
   </packet>
  
   <packet name="C_EnterFieldWorld">
+    <int name ="CGUID"/>
   </packet>
   
   <packet name="S_EnterFieldWorld">
+    <int name ="CGUID"/>
+    <list name="SpownPos">
+      <int name="x"/>
+      <int name="z"/>
+    </list>
   </packet>
   
   <packet name="S_PlayerList">

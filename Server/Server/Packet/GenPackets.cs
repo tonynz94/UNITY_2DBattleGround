@@ -1060,6 +1060,7 @@ public class S_GameStart : IPacket
 public class C_EnterFieldWorld : IPacket
 {
 	public int CGUID;
+	public int roomID;
 
 	public ushort Protocol { get { return (ushort)PacketID.C_EnterFieldWorld; } }
 
@@ -1069,6 +1070,8 @@ public class C_EnterFieldWorld : IPacket
 		count += sizeof(ushort);
 		count += sizeof(ushort);
 		this.CGUID = BitConverter.ToInt32(segment.Array, segment.Offset + count);
+		count += sizeof(int);
+		this.roomID = BitConverter.ToInt32(segment.Array, segment.Offset + count);
 		count += sizeof(int);
 	}
 
@@ -1082,6 +1085,8 @@ public class C_EnterFieldWorld : IPacket
 		count += sizeof(ushort);
 		Array.Copy(BitConverter.GetBytes(this.CGUID), 0, segment.Array, segment.Offset + count, sizeof(int));
 		count += sizeof(int);
+		Array.Copy(BitConverter.GetBytes(this.roomID), 0, segment.Array, segment.Offset + count, sizeof(int));
+		count += sizeof(int);
 
 		Array.Copy(BitConverter.GetBytes(count), 0, segment.Array, segment.Offset, sizeof(ushort));
 
@@ -1092,30 +1097,9 @@ public class C_EnterFieldWorld : IPacket
 public class S_EnterFieldWorld : IPacket
 {
 	public int CGUID;
-	public class SpownPos
-	{
-		public int x;
-		public int z;
-	
-		public void Read(ArraySegment<byte> segment, ref ushort count)
-		{
-			this.x = BitConverter.ToInt32(segment.Array, segment.Offset + count);
-			count += sizeof(int);
-			this.z = BitConverter.ToInt32(segment.Array, segment.Offset + count);
-			count += sizeof(int);
-		}
-	
-		public bool Write(ArraySegment<byte> segment, ref ushort count)
-		{
-			bool success = true;
-			Array.Copy(BitConverter.GetBytes(this.x), 0, segment.Array, segment.Offset + count, sizeof(int));
-			count += sizeof(int);
-			Array.Copy(BitConverter.GetBytes(this.z), 0, segment.Array, segment.Offset + count, sizeof(int));
-			count += sizeof(int);
-			return success;
-		}	
-	}
-	public List<SpownPos> spownPoss = new List<SpownPos>();
+	public int posX;
+	public int posY;
+	public int posZ;
 
 	public ushort Protocol { get { return (ushort)PacketID.S_EnterFieldWorld; } }
 
@@ -1126,15 +1110,12 @@ public class S_EnterFieldWorld : IPacket
 		count += sizeof(ushort);
 		this.CGUID = BitConverter.ToInt32(segment.Array, segment.Offset + count);
 		count += sizeof(int);
-		this.spownPoss.Clear();
-		ushort spownPosLen = BitConverter.ToUInt16(segment.Array, segment.Offset + count);
-		count += sizeof(ushort);
-		for (int i = 0; i < spownPosLen; i++)
-		{
-			SpownPos spownPos = new SpownPos();
-			spownPos.Read(segment, ref count);
-			spownPoss.Add(spownPos);
-		}
+		this.posX = BitConverter.ToInt32(segment.Array, segment.Offset + count);
+		count += sizeof(int);
+		this.posY = BitConverter.ToInt32(segment.Array, segment.Offset + count);
+		count += sizeof(int);
+		this.posZ = BitConverter.ToInt32(segment.Array, segment.Offset + count);
+		count += sizeof(int);
 	}
 
 	public ArraySegment<byte> Write()
@@ -1147,10 +1128,12 @@ public class S_EnterFieldWorld : IPacket
 		count += sizeof(ushort);
 		Array.Copy(BitConverter.GetBytes(this.CGUID), 0, segment.Array, segment.Offset + count, sizeof(int));
 		count += sizeof(int);
-		Array.Copy(BitConverter.GetBytes((ushort)this.spownPoss.Count), 0, segment.Array, segment.Offset + count, sizeof(ushort));
-		count += sizeof(ushort);
-		foreach (SpownPos spownPos in this.spownPoss)
-			spownPos.Write(segment, ref count);
+		Array.Copy(BitConverter.GetBytes(this.posX), 0, segment.Array, segment.Offset + count, sizeof(int));
+		count += sizeof(int);
+		Array.Copy(BitConverter.GetBytes(this.posY), 0, segment.Array, segment.Offset + count, sizeof(int));
+		count += sizeof(int);
+		Array.Copy(BitConverter.GetBytes(this.posZ), 0, segment.Array, segment.Offset + count, sizeof(int));
+		count += sizeof(int);
 
 		Array.Copy(BitConverter.GetBytes(count), 0, segment.Array, segment.Offset, sizeof(ushort));
 

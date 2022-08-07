@@ -117,10 +117,10 @@ public class PlayerManager
         return player;
     }
 
-    public Player GetMyRoomID()
-    {
-        GetMyPlayer().ro
-    }
+    //public Player GetMyRoomID()
+    //{
+    //    //GetMyPlayer().ro
+    //}
 
     public string GetPlayerNick(int CGUID)
     {

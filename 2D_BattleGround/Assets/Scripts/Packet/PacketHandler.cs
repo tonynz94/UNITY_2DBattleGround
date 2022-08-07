@@ -141,9 +141,12 @@ class PacketHandler
 	public static void S_EnterFieldWorldHandler(PacketSession session, IPacket packet)
 	{
 		Debug.Log("[NetworkManager] @>> RECV : S_EnterFieldWorld");
-		S_EnterFieldWorld pkt = packet as S_EnterFieldWorld;
+		S_EnterFieldWorld sPkt = packet as S_EnterFieldWorld;
 
-		Managers.s_Object
+		bool isMyPlayer = Managers.Player.GetMyCGUID() == sPkt.CGUID;
+		Vector3 spawnPos = new Vector3(sPkt.posX, sPkt.posY, sPkt.posZ);
+
+		Managers.Game.SpawnWorldObject(Define.WorldObject.Player, isMyPlayer, spawnPos);
 
 	}
 

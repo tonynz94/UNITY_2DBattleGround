@@ -108,15 +108,17 @@ class PacketHandler
 
 		RoomManager.Instance.HandleGameStart(cPkt.roomID);
 	}
+
+
 	public static void C_EnterFieldWorldHandler(PacketSession session, IPacket packet)
 	{
 		Console.WriteLine("[Server] @>> RECV : C_EnterFieldWorld");
 		ClientSession clientSession = session as ClientSession;
 
 		C_EnterFieldWorld cPkt = packet as C_EnterFieldWorld;
-		Console.WriteLine($"{cPkt.CGUID} 입장");
+		Console.WriteLine($"{cPkt.CGUID} Entered in {cPkt.roomID}");
 
-		여기
+		GameManager.Instance.HandlePlayerEnterToField(cPkt.roomID, cPkt.CGUID);
 	}
 
 	public static void C_MoveHandler(PacketSession session, IPacket packet)

@@ -2,23 +2,28 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GameLobbyRoom
-{
-
-}
-
 public class GameManager
 {
-    //게임내에 있는 모든 움직이는 오브젝트들
     HashSet<GameObject> _playerList = new HashSet<GameObject>();
     HashSet<GameObject> _monsterList = new HashSet<GameObject>();
+
+    Define.MapType _mapType;
+    Define.GameMode _gameMode;
+
     int _roomID;
-    public GameLobbyRoom gameSetting { get; set; } = new GameLobbyRoom();
 
-    //게임에 입장한다.
-    public void EnterGame()
+    public int GetCurrentRoomID()
     {
+        return _roomID;
+    }
+    
+    public void GameStart(int roomID, Define.MapType mapType, Define.GameMode gameMode)
+    {
+        _roomID = roomID;
+        _mapType = mapType;
+        _gameMode = gameMode;
 
+        ClearAll();
     }
 
     public Define.WorldObject GetWorldObjectType(GameObject go)
@@ -31,10 +36,23 @@ public class GameManager
         return bc.WorldObjectType;
     }
 
-    public GameObject Spawn(Define.WorldObject type, string path, Transform parent = null)
+    public void SpawnWorldObject(Define.WorldObject type, bool isMyPlayer, Vector3 spawnPos ,Transform parent = null)
     {
-        GameObject go = Managers.Resource.Instantiate(path, parent);
-        switch(type)
+        GameObject go = null;
+        if (isMyPlayer)
+        {
+            go = Managers.Resource.Instantiate("Objects/MyPlayer");
+            Camera.main.GetComponent<CameraController>().TargetPoint(go);
+        }
+        else
+        {
+            go = Managers.Resource.Instantiate("Objects/Player");
+        }
+
+        go.name = 
+        go.transform.localPosition = spawnPos;
+
+        switch (type)
         {
             case Define.WorldObject.Player:
                 _playerList.Add(go);
@@ -45,12 +63,11 @@ public class GameManager
             case Define.WorldObject.Boss:
                 break;
         }
-        return go;
     }
 
     public void Despawn(GameObject go)
     {
-       // if(go)
+       
     }
 
     public int GetPlayerCount()
@@ -72,5 +89,6 @@ public class GameManager
     public void ClearAll()
     {
         _playerList.Clear();
+        _monsterList.Clear();
     }
 }

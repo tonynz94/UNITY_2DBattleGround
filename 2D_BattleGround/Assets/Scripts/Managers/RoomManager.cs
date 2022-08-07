@@ -50,7 +50,7 @@ public class GameRoom
 
     public void GameStart()
     {
-        //로딩화면 나오게 하면 좋음.
+        Managers.Game.GameStart(roomID : roomId, mapType : _mapType ,gameMode: _gameMode);
         Managers.Scene.ChangeScene(Define.Scene.GameScene);
     }
 
@@ -109,14 +109,14 @@ public class RoomManager
         {
             GameRoom room = Managers.Room.GetGameRoom(sPkt.roomId);
 
-            //만약 내가 로비에서 새로운 방에 들어간거라면
+            //???? ???? ???????? ?????? ???? ????????????
             if (Managers.Player.GetMyCGUID() == sPkt.CGUID)
             {
                 Managers.UI.ClosePopupUI();
                 UI_GameRoom roomScript = Managers.UI.ShowPopupUI<UI_GameRoom>();
                 roomScript.EnterRoom(sPkt.roomId, sPkt.CGUID);
             }
-            //만약 내가 속한 방에 한 유저가 입장했을 때
+            //???? ???? ???? ???? ?? ?????? ???????? ??
             else
             {
                 UI_GameRoom roomScript = Managers.UI.PeekPopupUI<UI_GameRoom>();
@@ -125,12 +125,12 @@ public class RoomManager
         }
         else
         {
-            //방 꽉찼다고 팝업창 뛰우기.
+            //?? ???????? ?????? ??????.
             Debug.Log("popup : This Room is Full");
         }
     }
 
-    //누군가 나갔을 때 (나 일수도있고 방안에 다른 플레이어 일 수도 있음.)
+    //?????? ?????? ?? (?? ?????????? ?????? ???? ???????? ?? ???? ????.)
     public void HandleGameToLobby(S_GameToLobby sPkt)
     {
         GameRoom room = Managers.Room.GetGameRoom(sPkt.roomId);
@@ -138,16 +138,16 @@ public class RoomManager
 
         room.LeaveGameRoom(leavePlayerCGUID);
 
-        //내가 나갔을때.
+        //???? ????????.
         if (leavePlayerCGUID == Managers.Player.GetMyCGUID())
         {  
             Managers.UI.ClosePopupUI();
             Managers.Room.GameRoomAllClear();   
         }
-        //누군가 나갔을때.
+        //?????? ????????.
         else
         {
-            //나간사람이 방장이면. 
+            //?????????? ????????. 
             if (room.roomOwner == leavePlayerCGUID)
                 room.SetNewOwner(sPkt.newOwner);
                 
@@ -183,7 +183,7 @@ public class RoomManager
 
     public void HandleGameStart(S_GameStart sPkt)
     {
-        //게임이 정상적으로 스타트 됐다면\
+        //?????? ?????????? ?????? ??????\
         if(sPkt.isStart == true)
         {
             GetGameRoom(sPkt.roomID).GameStart();

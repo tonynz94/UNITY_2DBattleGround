@@ -19,7 +19,6 @@ public class MyPlayerController : PlayerController
 
     void GetDirInput()
     {
-#if UNITY_EDITOR
         if (Input.GetKey(KeyCode.W))
         {
             Dir = MoveDir.Up;
@@ -45,9 +44,16 @@ public class MyPlayerController : PlayerController
         {
 
         }
+    }
 
-#else
-
-#endif
+    protected void CheckUpdatedFlag()
+    {
+        if (_isUpdated)
+        {
+            C_Move movePacket = new C_Move();
+            //movePacket.PosInfo = PosInfo;
+            Managers.Net.Send(movePacket.Write());
+            _isUpdated = false;
+        }
     }
 }

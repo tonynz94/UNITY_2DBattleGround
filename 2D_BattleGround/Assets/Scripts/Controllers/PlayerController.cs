@@ -57,9 +57,9 @@ public class PlayerController : BaseController
                 break;
         }
 
-        Debug.Log($"목적지 : {destPos}");
-        //음수일때는 -0.5 -> -1로 설정되야하고
-        //양수일때는 0.5 -> 0로 되어야함 
+        //Debug.Log($"?????? : {destPos}");
+        //?????????? -0.5 -> -1?? ????????????
+        //?????????? 0.5 -> 0?? ???????? 
         Vector3Int destPosInt = new Vector3Int((int)Mathf.Ceil(destPos.x)-1, (int)Mathf.Floor(destPos.y), 0);
         if(Managers.Map.CanGo(destPosInt))
         {

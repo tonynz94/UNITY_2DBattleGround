@@ -3,6 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using static Define;
 
+public class PositionInfo
+{
+    public ObjectState State;
+    public MoveDir Dir;
+    public MoveDir LastDir;
+}
+
 public class BaseController : MonoBehaviour
 {
     protected Animator _anim;
@@ -18,11 +25,30 @@ public class BaseController : MonoBehaviour
     [SerializeField]
     protected string currentAni = "";
 
+    protected bool _isUpdated = false;
+
+    
+    PositionInfo _positionInfo = new PositionInfo();
+    public PositionInfo PosInfo
+    {
+        get { return _positionInfo; }
+        set
+        {
+            if (_positionInfo.Equals(value))
+                return;
+
+            //CellPos = new Vector3(value.PosX, value.PosY, 0);
+            State = value.State;
+            Dir = value.Dir;
+        }
+    }
+    
+
     [SerializeField]
     public Vector3Int _cellPos = Vector3Int.zero;
     public Vector3Int CellPos
     {
-        get { return _cellPos; }
+        get { return _cellPos; } 
         set { _cellPos = value; }
     }
 
@@ -39,6 +65,7 @@ public class BaseController : MonoBehaviour
                 _lastDir = value;
 
             UpdateAnimation();
+            _isUpdated = true;
         }
     }
 
@@ -59,6 +86,7 @@ public class BaseController : MonoBehaviour
 
             _state = value;
             UpdateAnimation();
+            _isUpdated = true;
         }
     }
     // Start is called before the first frame update

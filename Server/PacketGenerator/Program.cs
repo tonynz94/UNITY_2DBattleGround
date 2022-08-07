@@ -6,6 +6,8 @@ namespace PacketGenerator
 {
 	class Program
 	{
+		static bool IS_WINDOW = false;
+
 		static string genPackets;
 		static ushort packetId;
 		static string packetEnums;
@@ -15,7 +17,15 @@ namespace PacketGenerator
 
 		static void Main(string[] args)
 		{
-			string pdlPath = "../PDL.xml";
+			string pdlPath;
+			if (IS_WINDOW)
+			{
+				pdlPath = "../PDL.xml";
+			}
+			else
+			{
+				pdlPath = "/Users/yunsuggyeong/Documents/LastTony/UNITY_2DBattleGround/Server/PacketGenerator/PDL.xml";
+			}
 
 			XmlReaderSettings settings = new XmlReaderSettings()
 			{
@@ -38,11 +48,31 @@ namespace PacketGenerator
 				}
 
 				string fileText = string.Format(PacketFormat.fileFormat, packetEnums, genPackets);
-				File.WriteAllText("GenPackets.cs", fileText);
+
+				if (IS_WINDOW)
+				{
+					File.WriteAllText("../../Server/Packet/GenPackets.cs", fileText); //
+					File.WriteAllText("../../../2D_BattleGround/Assets/Scripts/Packet/GenPackets.cs/Server/Packet/GenPackets.cs", fileText);                                                             //
+				}
+				else
+				{
+					File.WriteAllText("//Users//yunsuggyeong//Documents//LastTony//UNITY_2DBattleGround//Server//Server//Packet//GenPackets.cs", fileText); //server
+					File.WriteAllText("//Users//yunsuggyeong//Documents//LastTony//UNITY_2DBattleGround//2D_BattleGround//Assets//Scripts//Packet//GenPackets.cs", fileText);  //client
+				}
+				//성공
 				string clientManagerText = string.Format(PacketFormat.managerFormat, clientRegister);
-				File.WriteAllText("ClientPacketManager.cs", clientManagerText);
-				string serverManagerText = string.Format(PacketFormat.managerFormat,serverRegister);
-				File.WriteAllText("ServerPacketManager.cs", serverManagerText);
+
+				if (IS_WINDOW)
+					File.WriteAllText("../../../2D_BattleGround/Assets/Scripts/Packet/GenPackets.cs/Server/Packet/ClientPacketManager.cs", clientManagerText);
+				else
+					File.WriteAllText("//Users//yunsuggyeong//Documents//LastTony//UNITY_2DBattleGround//2D_BattleGround//Assets//Scripts//Packet//ClientPacketManager.cs", clientManagerText);
+
+				string serverManagerText = string.Format(PacketFormat.managerFormat, serverRegister);
+
+				if (IS_WINDOW)
+					File.WriteAllText("../../Server/Packet/ServerPacketManager.cs", serverManagerText);
+				else
+					File.WriteAllText("//Users//yunsuggyeong//Documents//LastTony//UNITY_2DBattleGround//Server//Server//Packet//ServerPacketManager.cs", serverManagerText);
 			}
 		}
 

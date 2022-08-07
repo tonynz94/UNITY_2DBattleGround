@@ -133,14 +133,14 @@
  
   <packet name="C_EnterFieldWorld">
     <int name ="CGUID"/>
+    <int name ="roomID"/>
   </packet>
   
   <packet name="S_EnterFieldWorld">
     <int name ="CGUID"/>
-    <list name="SpownPos">
-      <int name="x"/>
-      <int name="z"/>
-    </list>
+    <int name="posX"/>
+    <int name="posY"/>
+    <int name="posZ"/>
   </packet>
   
   <packet name="S_PlayerList">
@@ -151,8 +151,8 @@
 	  <float name="posY"/>
 	  <float name="posZ"/>
 	</list>
-    
   </packet>
+
   <packet name="C_Move">
 	<float name="posX"/>
 	<float name="posY"/>
@@ -164,6 +164,5 @@
 	<float name="posX"/>
 	<float name="posY"/>
 	<float name="posZ"/>
-  </packet>
-  
+  </packet>  
 </PDL>

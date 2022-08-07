@@ -92,6 +92,7 @@ namespace Server.Game
             if(GetPlayerCount() - 1 == cnt)
             {
                 _isStarted = true;
+                GameManager.Instance.NewGameStart(roomId);
                 return true;
             }
             else
@@ -302,7 +303,6 @@ namespace Server.Game
                 session.Send(sPkt.Write());
             }
         }
-
 
         public void HandleReadyInGameRoom(C_ClickReadyOnOff cPkt)
         {

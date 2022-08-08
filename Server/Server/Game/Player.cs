@@ -10,8 +10,8 @@ namespace Server.Game
         public String NickName;
 
         public int Level;
-        public float PosX;
-        public float PosY;
+        public float cellPosX;
+        public float cellPosY;
         public Define.ObjectState State;
         public Define.MoveDir Dir;
 

@@ -154,15 +154,23 @@
   </packet>
 
   <packet name="C_Move">
-	<float name="posX"/>
-	<float name="posY"/>
-	<float name="posZ"/>
+    <int name="roomID"/>
+    <int name="CGUID"/>
+	  <float name="posX"/>
+	  <float name="posY"/>
+    <int name ="cellPosX"/>
+    <int name ="cellPosY"/>
+    <int name="Dir"/>
+    <int name ="State"/>
   </packet>
   
   <packet name="S_BroadcastMove">
-	<int name="playerId"/>
-	<float name="posX"/>
-	<float name="posY"/>
-	<float name="posZ"/>
+	  <int name="CGUID"/>
+	  <float name="posX"/>
+	  <float name="posY"/>
+    <int name ="cellPosX"/>
+    <int name ="cellPosY"/>
+    <int name="Dir"/>
+    <int name ="State"/>
   </packet>  
 </PDL>

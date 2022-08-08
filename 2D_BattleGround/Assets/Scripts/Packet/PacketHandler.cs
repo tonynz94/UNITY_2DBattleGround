@@ -143,10 +143,9 @@ class PacketHandler
 		Debug.Log("[NetworkManager] @>> RECV : S_EnterFieldWorld");
 		S_EnterFieldWorld sPkt = packet as S_EnterFieldWorld;
 
-		bool isMyPlayer = Managers.Player.GetMyCGUID() == sPkt.CGUID;
 		Vector3 spawnPos = new Vector3(sPkt.posX, sPkt.posY, sPkt.posZ);
 
-		Managers.Game.SpawnWorldObject(Define.WorldObject.Player, isMyPlayer, spawnPos);
+		Managers.Game.SpawnWorldObject(Define.WorldObject.Player, sPkt.CGUID, spawnPos);
 
 	}
 
@@ -161,8 +160,10 @@ class PacketHandler
 	public static void S_BroadcastMoveHandler(PacketSession session, IPacket packet)
 	{
 		Debug.Log("[NetworkManager] @>> RECV : S_BroadcastMove ");
-		S_BroadcastMove pkt = packet as S_BroadcastMove;
+		S_BroadcastMove sPkt = packet as S_BroadcastMove;
 		ServerSession serverSession = session as ServerSession;
+
+		Managers.Game.HandleMove(sPkt);
 
 	}
 

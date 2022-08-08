@@ -123,15 +123,9 @@ class PacketHandler
 
 	public static void C_MoveHandler(PacketSession session, IPacket packet)
 	{
-		C_Move movePacket = packet as C_Move;
+		C_Move cPkt = packet as C_Move;
 		ClientSession clientSession = session as ClientSession;
 
-		//if (clientSession.Room == null)
-		//	return;
-
-		////Console.WriteLine($"{movePacket.posX}, {movePacket.posY}, {movePacket.posZ}");
-
-		//GameRoom room = clientSession.Room;
-		//room.Move(clientSession, movePacket);
+		GameManager.Instance.HandleMove(cPkt);
 	}
 }

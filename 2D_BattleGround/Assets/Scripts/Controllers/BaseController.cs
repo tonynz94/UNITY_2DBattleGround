@@ -27,32 +27,38 @@ public class BaseController : MonoBehaviour
 
     protected bool _isUpdated = false;
 
-    
-    PositionInfo _positionInfo = new PositionInfo();
-    public PositionInfo PosInfo
-    {
-        get { return _positionInfo; }
-        set
-        {
-            if (_positionInfo.Equals(value))
-                return;
-
-            //CellPos = new Vector3(value.PosX, value.PosY, 0);
-            State = value.State;
-            Dir = value.Dir;
-        }
-    }
-    
-
     [SerializeField]
     public Vector3Int _cellPos = Vector3Int.zero;
     public Vector3Int CellPos
     {
         get { return _cellPos; } 
-        set { _cellPos = value; }
+        set 
+        {
+            if (_cellPos == value)
+                return;
+
+            _cellPos = value;
+            _isUpdated = true;
+        }
     }
 
-    protected MoveDir Dir
+    public Vector3 _destPos;
+
+    public Vector3 DestPos
+    {
+        get { return _destPos; }
+        set 
+        {
+            if (_destPos == value)
+                return;
+
+            _destPos = value;
+            transform.position = value;
+            _isUpdated = true;
+        }
+    }
+
+    public MoveDir Dir
     {
         get { return _dir; }
         set
@@ -73,7 +79,7 @@ public class BaseController : MonoBehaviour
     [SerializeField]
     protected float _speed = 5f;
 
-    protected Define.ObjectState State
+    public Define.ObjectState State
     {
         get
         {

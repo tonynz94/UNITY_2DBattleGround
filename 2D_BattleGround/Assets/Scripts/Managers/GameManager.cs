@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class GameManager
 {
-    HashSet<GameObject> _playerList = new HashSet<GameObject>();
-    HashSet<GameObject> _monsterList = new HashSet<GameObject>();
+    Dictionary<int, GameObject> _playerDic = new Dictionary<int, GameObject>();
+    //<GameObject> _monsterList = new HashSet<GameObject>();
 
     Define.MapType _mapType;
     Define.GameMode _gameMode;
@@ -36,9 +36,12 @@ public class GameManager
         return bc.WorldObjectType;
     }
 
-    public void SpawnWorldObject(Define.WorldObject type, bool isMyPlayer, Vector3 spawnPos ,Transform parent = null)
+    public void SpawnWorldObject(Define.WorldObject type, int CGUID, Vector3 spawnPos ,Transform parent = null)
     {
         GameObject go = null;
+
+        bool isMyPlayer = Managers.Player.GetMyCGUID() == CGUID;
+
         if (isMyPlayer)
         {
             go = Managers.Resource.Instantiate("Objects/MyPlayer");
@@ -55,10 +58,10 @@ public class GameManager
         switch (type)
         {
             case Define.WorldObject.Player:
-                _playerList.Add(go);
+                _playerDic.Add(CGUID, go);
                 break;
             case Define.WorldObject.Monster:
-                _monsterList.Add(go);
+                //_monsterList.Add(go);
                 break;
             case Define.WorldObject.Boss:
                 break;
@@ -70,25 +73,44 @@ public class GameManager
        
     }
 
+    public GameObject GetPlayerObject(int CGUID)
+    {
+        GameObject playerObject;
+        _playerDic.TryGetValue(CGUID, out playerObject);
+
+        return playerObject;
+    }
+
     public int GetPlayerCount()
     {
-        return _playerList.Count;
+        return _playerDic.Count;
     }
 
-    public int GetMonsterCount()
+    //public int GetMonsterCount()
+    //{
+    //    return _monsterList.Count;
+    //}
+
+    public void HandleMove(S_BroadcastMove sPkt)
     {
-        return _monsterList.Count;
+        GameObject go = GetPlayerObject(sPkt.playerId);
+        BaseController controller = go.GetComponent<BaseController>();
+
+        controller.CellPos = new Vector3Int(sPkt.cellPosX, sPkt.cellPosY, 0);
+        controller.DestPos = new Vector3(sPkt.posX, sPkt.posY, 0);
+        controller.Dir = (Define.MoveDir)sPkt.Dir;
+        controller.State = (Define.ObjectState)sPkt.State;
     }
 
-    public void LeaveGame(GameObject player)
+    public void LeaveGame(int CGUID)
     {
-        _playerList.Remove(player);
-        Managers.Resource.Destroy(player);
+        _playerDic.Remove(CGUID);
+        Managers.Resource.Destroy(GetPlayerObject(CGUID));
     }
 
     public void ClearAll()
     {
-        _playerList.Clear();
-        _monsterList.Clear();
+        _playerDic.Clear();
+        //_monsterList.Clear();
     }
 }

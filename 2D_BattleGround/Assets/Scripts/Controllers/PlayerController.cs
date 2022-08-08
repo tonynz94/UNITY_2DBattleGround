@@ -32,42 +32,6 @@ public class PlayerController : BaseController
             State = ObjectState.Moving;
     }
 
-    protected override void UpdateMoving()
-    {
-
-        if (Dir == MoveDir.None)
-        {
-            State = ObjectState.Idle;
-            return;
-        }
-        Vector3 destPos = CellPos;
-        switch(Dir)
-        {
-            case MoveDir.Down:
-                destPos = (Vector3.down * _speed * Time.deltaTime) + transform.position;
-                break;
-            case MoveDir.Left:
-                destPos = (Vector3.left * _speed * Time.deltaTime) + transform.position;
-                break;
-            case MoveDir.Right:
-                destPos = (Vector3.right * _speed * Time.deltaTime) + transform.position;
-                break;
-            case MoveDir.Up:
-                destPos = (Vector3.up * _speed * Time.deltaTime) + transform.position;
-                break;
-        }
-
-        //Debug.Log($"?????? : {destPos}");
-        //?????????? -0.5 -> -1?? ????????????
-        //?????????? 0.5 -> 0?? ???????? 
-        Vector3Int destPosInt = new Vector3Int((int)Mathf.Ceil(destPos.x)-1, (int)Mathf.Floor(destPos.y), 0);
-        if(Managers.Map.CanGo(destPosInt))
-        {
-            transform.position = destPos;
-            CellPos = destPosInt;
-        }
-    }
-
     protected override void UpdateDead()
     {
         Debug.Log("Player Dead");

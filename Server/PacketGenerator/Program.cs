@@ -6,7 +6,7 @@ namespace PacketGenerator
 {
 	class Program
 	{
-		static bool IS_WINDOW = false;
+		static bool IS_WINDOW = true;
 
 		static string genPackets;
 		static ushort packetId;
@@ -52,7 +52,7 @@ namespace PacketGenerator
 				if (IS_WINDOW)
 				{
 					File.WriteAllText("../../Server/Packet/GenPackets.cs", fileText); //
-					File.WriteAllText("../../../2D_BattleGround/Assets/Scripts/Packet/GenPackets.cs/Server/Packet/GenPackets.cs", fileText);                                                             //
+					File.WriteAllText("../../../2D_BattleGround/Assets/Scripts/Packet/GenPackets.cs", fileText);                                                             //
 				}
 				else
 				{
@@ -63,7 +63,7 @@ namespace PacketGenerator
 				string clientManagerText = string.Format(PacketFormat.managerFormat, clientRegister);
 
 				if (IS_WINDOW)
-					File.WriteAllText("../../../2D_BattleGround/Assets/Scripts/Packet/GenPackets.cs/Server/Packet/ClientPacketManager.cs", clientManagerText);
+					File.WriteAllText("../../../2D_BattleGround/Assets/Scripts/Packet/ClientPacketManager.cs", clientManagerText);
 				else
 					File.WriteAllText("//Users//yunsuggyeong//Documents//LastTony//UNITY_2DBattleGround//2D_BattleGround//Assets//Scripts//Packet//ClientPacketManager.cs", clientManagerText);
 

@@ -49,8 +49,8 @@ public class GameManager
             go = Managers.Resource.Instantiate("Objects/Player");
         }
 
-        go.name = 
-        go.transform.localPosition = spawnPos;
+        //go.name = 
+        //go.transform.localPosition = spawnPos;
 
         switch (type)
         {

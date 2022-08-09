@@ -42,8 +42,19 @@ public class MyPlayerController : PlayerController
 
         if (Input.GetKey(KeyCode.Space))
         {
-
+            SetWaterBOOM();
         }
+    }
+
+    protected void SetWaterBOOM()
+    {
+        C_WaterBOOM cPkt = new C_WaterBOOM();
+        cPkt.CGUID = Managers.Player.GetMyCGUID();
+        cPkt.roomID = Managers.Game.GetCurrentRoomID();
+        cPkt.CellPosX = _cellPos.x;
+        cPkt.CellPosY = _cellPos.y;
+
+        Managers.Net.Send(cPkt.Write());
     }
 
     protected override void UpdateMoving()

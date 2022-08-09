@@ -43,6 +43,8 @@ public class PacketManager
 		_handler.Add((ushort)PacketID.C_EnterFieldWorld, PacketHandler.C_EnterFieldWorldHandler);
 		_makeFunc.Add((ushort)PacketID.C_Move, MakePacket<C_Move>);
 		_handler.Add((ushort)PacketID.C_Move, PacketHandler.C_MoveHandler);
+		_makeFunc.Add((ushort)PacketID.C_WaterBOOM, MakePacket<C_WaterBOOM>);
+		_handler.Add((ushort)PacketID.C_WaterBOOM, PacketHandler.C_WaterBOOMHandler);
 
 	}
 

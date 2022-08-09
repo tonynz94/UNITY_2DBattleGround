@@ -172,5 +172,18 @@
     <int name ="cellPosY"/>
     <int name="Dir"/>
     <int name ="State"/>
-  </packet>  
+  </packet>
+
+  <packet name="C_WaterBOOM">
+    <int name ="roomID"/>
+    <int name = "CGUID"/>
+    <int name ="CellPosX"/>
+    <int name ="CellPosY"/>
+  </packet>
+
+  <packet name="S_WaterBOOM">
+    <int name ="CGUID"/>
+    <int name ="CellPosX"/>
+    <int name ="CellPosY"/>
+  </packet>
 </PDL>

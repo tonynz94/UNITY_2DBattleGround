@@ -51,6 +51,8 @@ public class PacketManager
 		_handler.Add((ushort)PacketID.S_PlayerList, PacketHandler.S_PlayerListHandler);
 		_makeFunc.Add((ushort)PacketID.S_BroadcastMove, MakePacket<S_BroadcastMove>);
 		_handler.Add((ushort)PacketID.S_BroadcastMove, PacketHandler.S_BroadcastMoveHandler);
+		_makeFunc.Add((ushort)PacketID.S_WaterBOOM, MakePacket<S_WaterBOOM>);
+		_handler.Add((ushort)PacketID.S_WaterBOOM, PacketHandler.S_WaterBOOMHandler);
 
 	}
 

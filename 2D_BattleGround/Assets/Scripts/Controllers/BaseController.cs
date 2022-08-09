@@ -26,6 +26,7 @@ public class BaseController : MonoBehaviour
     protected string currentAni = "";
 
     protected bool _isUpdated = false;
+    protected GameObject FocusGridObject;
 
     [SerializeField]
     public Vector3Int _cellPos = Vector3Int.zero;
@@ -109,9 +110,15 @@ public class BaseController : MonoBehaviour
         UpdateController();
     }
 
+    private void FixedUpdate()
+    {
+        FocusGridObject.transform.localPosition = new Vector3(_cellPos.x + 0.5f, _cellPos.y + 0.5f, 0);
+    }
+
     protected virtual void Init()
     {
         _anim = GetComponent<Animator>();
+        FocusGridObject = Managers.Resource.Instantiate("Objects/FocusGridObject");
     }
 
     protected virtual void UpdateController()

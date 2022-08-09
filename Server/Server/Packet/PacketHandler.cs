@@ -128,4 +128,11 @@ class PacketHandler
 
 		GameManager.Instance.HandleMove(cPkt);
 	}
+
+	public static void C_WaterBOOMHandler(PacketSession session, IPacket packet)
+	{
+		C_WaterBOOM cPkt = packet as C_WaterBOOM;
+
+		GameManager.Instance.HandleWaterBOOM(cPkt);
+	}
 }

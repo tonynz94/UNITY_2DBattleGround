@@ -70,7 +70,7 @@ namespace Server.Game
 
             // 모두에게 알린다
             S_BroadcastMove sPkt = new S_BroadcastMove();
-            sPkt.playerId = player.Session.SessionId;
+            sPkt.CGUID = player.Session.SessionId;
             sPkt.posX = cPkt.posX;
             sPkt.posY = cPkt.posY;
             sPkt.cellPosX = (int)player.Info.cellPosX;
@@ -139,6 +139,18 @@ namespace Server.Game
             }
 
             gameField.PlayerMove(cPkt);
+        }
+
+        public void HandleWaterBOOM(C_WaterBOOM cPkt)
+        {
+            GameField gameField = GetGameField(cPkt.roomID);
+
+            S_WaterBOOM sPkt = new S_WaterBOOM();
+            sPkt.CGUID = cPkt.CGUID;
+            sPkt.CellPosX = cPkt.CellPosX;
+            sPkt.CellPosY = cPkt.CellPosY;
+
+            gameField.Broadcast(sPkt.Write());
         }
     }
 }

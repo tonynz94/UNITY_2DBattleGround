@@ -167,6 +167,16 @@ class PacketHandler
 
 	}
 
-	
-	
+	public static void S_WaterBOOMHandler(PacketSession session, IPacket packet)
+	{
+		Debug.Log("[NetworkManager] @>> RECV : S_WaterBOOM");
+		S_WaterBOOM sPkt = packet as S_WaterBOOM;
+
+		Managers.Game.SetWaterBOOMInGameField(sPkt);
+
+	}
+
+
+
+
 }

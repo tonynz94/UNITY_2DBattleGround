@@ -93,13 +93,22 @@ public class GameManager
 
     public void HandleMove(S_BroadcastMove sPkt)
     {
-        GameObject go = GetPlayerObject(sPkt.playerId);
+        GameObject go = GetPlayerObject(sPkt.CGUID);
         BaseController controller = go.GetComponent<BaseController>();
 
         controller.CellPos = new Vector3Int(sPkt.cellPosX, sPkt.cellPosY, 0);
         controller.DestPos = new Vector3(sPkt.posX, sPkt.posY, 0);
         controller.Dir = (Define.MoveDir)sPkt.Dir;
         controller.State = (Define.ObjectState)sPkt.State;
+    }
+
+    public void SetWaterBOOMInGameField(S_WaterBOOM sPkt)
+    {
+        int cellPosX = sPkt.CellPosX;
+        int cellPosY = sPkt.CellPosY;
+
+        GameObject go = Managers.Resource.Instantiate("Objects/WaterBoomObject");
+        go.transform.localPosition = new Vector3(cellPosX + 0.5f, cellPosY + 0.5f, 0);
     }
 
     public void LeaveGame(int CGUID)

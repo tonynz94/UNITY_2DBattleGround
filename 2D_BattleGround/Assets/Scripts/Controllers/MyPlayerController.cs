@@ -5,6 +5,8 @@ using static Define;
 
 public class MyPlayerController : PlayerController
 {
+    bool _waterBoomPressed = false;
+
     protected override void Init()
     {
         base.Init();
@@ -40,7 +42,7 @@ public class MyPlayerController : PlayerController
             Dir = MoveDir.None;
         }
 
-        if (Input.GetKey(KeyCode.Space))
+        if (Input.GetKeyDown(KeyCode.Space))
         {
             SetWaterBOOM();
         }
@@ -48,13 +50,17 @@ public class MyPlayerController : PlayerController
 
     protected void SetWaterBOOM()
     {
-        C_WaterBOOM cPkt = new C_WaterBOOM();
-        cPkt.CGUID = Managers.Player.GetMyCGUID();
-        cPkt.roomID = Managers.Game.GetCurrentRoomID();
-        cPkt.CellPosX = _cellPos.x;
-        cPkt.CellPosY = _cellPos.y;
+        Vector2Int cellPos = new Vector2Int(_cellPos.x, _cellPos.y);
+        if (Managers.Game.FindBoom(cellPos) == null)
+        {
+            C_WaterBOOM cPkt = new C_WaterBOOM();
+            cPkt.CGUID = Managers.Player.GetMyCGUID();
+            cPkt.roomID = Managers.Game.GetCurrentRoomID();
+            cPkt.CellPosX = _cellPos.x;
+            cPkt.CellPosY = _cellPos.y;
 
-        Managers.Net.Send(cPkt.Write());
+            Managers.Net.Send(cPkt.Write());
+        }
     }
 
     protected override void UpdateMoving()
@@ -83,6 +89,7 @@ public class MyPlayerController : PlayerController
         }
 
         Vector3Int cellPosInt = new Vector3Int((int)Mathf.Ceil(destPosTemp.x) - 1, (int)Mathf.Floor(destPosTemp.y), 0);
+
         if (Managers.Map.CanGo(cellPosInt))
         {
             DestPos = destPosTemp;

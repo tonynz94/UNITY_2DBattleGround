@@ -5,7 +5,7 @@ using UnityEngine;
 public class GameManager
 {
     Dictionary<int, GameObject> _playerDic = new Dictionary<int, GameObject>();
-    //<GameObject> _monsterList = new HashSet<GameObject>();
+    LinkedList<GameObject> _objectList = new LinkedList<GameObject>();
 
     Define.MapType _mapType;
     Define.GameMode _gameMode;
@@ -102,19 +102,54 @@ public class GameManager
         controller.State = (Define.ObjectState)sPkt.State;
     }
 
+    public GameObject FindBoom(Vector2Int cellPos)
+    {
+        GameObject objectInField = null;
+
+        foreach(GameObject obj in _objectList)
+        {
+            WaterBoomObject boom = obj.GetComponent<WaterBoomObject>();
+            if (boom == null)
+                continue;
+
+            if (boom._cellPos == cellPos)
+                return obj;
+        }
+        
+        return null;
+    }
+
+    public bool BlowBoom(Vector2Int cellPos)
+    {
+        GameObject obj = FindBoom(cellPos);
+        Debug.Log(_objectList.Count);
+        if (obj == null)
+            return false;
+
+        obj.GetComponent<WaterBoomObject>().WaterBoomBlowUp();
+        _objectList.Remove(obj);
+        
+        return true;
+    }
+
     public void SetWaterBOOMInGameField(S_WaterBOOM sPkt)
     {
         int cellPosX = sPkt.CellPosX;
         int cellPosY = sPkt.CellPosY;
 
-        GameObject go = Managers.Resource.Instantiate("Objects/WaterBoomObject");
-        go.transform.localPosition = new Vector3(cellPosX + 0.5f, cellPosY + 0.5f, 0);
+        Vector2Int cellPos = new Vector2Int(cellPosX, cellPosY);
+        GameObject boomObject = Managers.Resource.Instantiate("Objects/WaterBoomObject");
+        boomObject.GetComponent<WaterBoomObject>().InitPos(cellPos);
+        _objectList.AddLast(boomObject);
+
+
+        boomObject.transform.localPosition = new Vector3(cellPosX + 0.5f, cellPosY + 0.5f, 0);
     }
 
     public void LeaveGame(int CGUID)
     {
-        _playerDic.Remove(CGUID);
         Managers.Resource.Destroy(GetPlayerObject(CGUID));
+        _playerDic.Remove(CGUID); 
     }
 
     public void ClearAll()

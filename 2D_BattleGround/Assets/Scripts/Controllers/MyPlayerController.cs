@@ -51,7 +51,7 @@ public class MyPlayerController : PlayerController
     protected void SetWaterBOOM()
     {
         Vector2Int cellPos = new Vector2Int(_cellPos.x, _cellPos.y);
-        if (Managers.Game.FindBoom(cellPos) == null)
+        if (Managers.Game.FindObjectsInField(cellPos) == null)
         {
             C_WaterBOOM cPkt = new C_WaterBOOM();
             cPkt.CGUID = Managers.Player.GetMyCGUID();

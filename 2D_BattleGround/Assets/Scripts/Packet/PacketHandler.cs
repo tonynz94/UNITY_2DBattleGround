@@ -172,7 +172,7 @@ class PacketHandler
 		Debug.Log("[NetworkManager] @>> RECV : S_WaterBOOM");
 		S_WaterBOOM sPkt = packet as S_WaterBOOM;
 
-		Managers.Game.SetWaterBOOMInGameField(sPkt);
+		Managers.Game.SetWaterBoomInField(sPkt);
 
 	}
 

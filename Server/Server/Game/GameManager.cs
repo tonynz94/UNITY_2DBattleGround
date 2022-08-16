@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Server.Util;
 using static Server.Define;
 
 namespace Server.Game
@@ -13,6 +14,9 @@ namespace Server.Game
         MapType _mapID;
         GameMode _gameMode;
         Dictionary<int, Player> _playerDic = new Dictionary<int, Player>();
+
+        LinkedList<GameObject> _waterBoomObjectList = new LinkedList<GameObject>();
+        LinkedList<GameObject> _itemObejcttList = new LinkedList<GameObject>();
 
         public GameField(int roomID, MapType mapID, GameMode gameMode)
         {
@@ -80,6 +84,35 @@ namespace Server.Game
             Broadcast(sPkt.Write());
         }
 
+        public GameObject FindObjectsInField(Vector2Int cellPos)
+        {
+            GameObject objectInField = null;
+
+            foreach (WaterBoomObject obj in _waterBoomObjectList)
+            {
+                WaterBoomObject boom = obj;
+
+                if (boom._cellPos == cellPos)
+                    return obj;
+            }
+
+            return null;
+        }
+
+        public void SetWaterBoomInField(Vector2Int _cellPos)
+        {
+            GameObject obj = FindObjectsInField(_cellPos);
+            if (obj != null)
+                return;
+
+            S_WaterBOOM sPkt = new S_WaterBOOM();
+            sPkt.CellPosX = _cellPos.x;
+            sPkt.CellPosY = _cellPos.y;
+
+            Broadcast(sPkt.Write());
+        }
+            
+
         public void Broadcast(ArraySegment<byte> packet)
        {
            lock (_lock)
@@ -91,11 +124,12 @@ namespace Server.Game
            }
        }
     }
-    //실행되고 있는 게임들
+
     class GameManager
     {
         public static GameManager Instance { get; } = new GameManager();
 
+        //실행되고 있는 게임들 목록
         public Dictionary<int, GameField> _playingGame = new Dictionary<int, GameField>();
 
         public void NewGameStart(int roomID)
@@ -144,13 +178,13 @@ namespace Server.Game
         public void HandleWaterBOOM(C_WaterBOOM cPkt)
         {
             GameField gameField = GetGameField(cPkt.roomID);
+            if (gameField == null)
+            {
+                Console.WriteLine("There are no GameField plz check");
+                return;
+            }
 
-            S_WaterBOOM sPkt = new S_WaterBOOM();
-            sPkt.CGUID = cPkt.CGUID;
-            sPkt.CellPosX = cPkt.CellPosX;
-            sPkt.CellPosY = cPkt.CellPosY;
-
-            gameField.Broadcast(sPkt.Write());
+            gameField.SetWaterBoomInField(new Vector2Int(cPkt.CellPosX, cPkt.CellPosY));
         }
     }
 }

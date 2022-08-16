@@ -5,27 +5,39 @@ using UnityEngine;
 public class WaterBoomObject : MonoBehaviour
 {
     // Start is called before the first frame update
-    public Vector2Int _cellPos;
+    protected Vector2Int _cellPos;
+    protected int _blowXYRange = 1;
 
     void Start()
     {
         StartCoroutine(AfterSecWaterBlow(2.0f));
     }
 
-    public void InitPos(Vector2Int cellPos)
+    public void SetInField(Vector2Int cellPos, int blowXYRange = 1)
     {
         _cellPos = cellPos;
+        _blowXYRange = blowXYRange;
+    }
+
+    public Vector2Int GetPos()
+    {
+        return _cellPos;
+    }
+
+    public int GetWaterBlowRange()
+    {
+        return _blowXYRange;
     }
 
     IEnumerator AfterSecWaterBlow(float sec)
     {
         yield return new WaitForSeconds(sec);
         Debug.Log("POW!!");
-        Managers.Game.BlowBoom(_cellPos);
+        WaterBoomBlowUp();
     }
 
     public void WaterBoomBlowUp()
     {
-        Managers.Resource.Destroy(this.gameObject);
+        Managers.Game.BlowWaterBoom(this.gameObject);
     }
 }

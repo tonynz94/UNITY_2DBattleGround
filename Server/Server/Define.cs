@@ -39,6 +39,12 @@ namespace Server
             Dead,
         }
 
+        public enum ObjectType
+        {
+            None,
+            WaterBoom,
+        }
+
         public enum MoveDir
         {
             None,

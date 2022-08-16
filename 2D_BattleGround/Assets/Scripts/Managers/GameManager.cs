@@ -5,10 +5,23 @@ using UnityEngine;
 public class GameManager
 {
     Dictionary<int, GameObject> _playerDic = new Dictionary<int, GameObject>();
-    LinkedList<GameObject> _objectList = new LinkedList<GameObject>();
+
+    LinkedList<GameObject> _waterBoomObjectList = new LinkedList<GameObject>();
+    LinkedList<GameObject> _itemObejcttList = new LinkedList<GameObject>();
 
     Define.MapType _mapType;
     Define.GameMode _gameMode;
+
+    public enum Direction
+    {
+        UP,
+        DOWN,
+        LEFT,
+        RIGHT,
+        FourDirections
+    }
+
+    Vector2Int[] _dir = new Vector2Int[(int)Direction.FourDirections] { new Vector2Int( 0 , 1), new Vector2Int( 0, -1 ), new Vector2Int( -1, 0 ), new Vector2Int(1, 0) };
 
     int _roomID;
 
@@ -86,11 +99,6 @@ public class GameManager
         return _playerDic.Count;
     }
 
-    //public int GetMonsterCount()
-    //{
-    //    return _monsterList.Count;
-    //}
-
     public void HandleMove(S_BroadcastMove sPkt)
     {
         GameObject go = GetPlayerObject(sPkt.CGUID);
@@ -102,45 +110,121 @@ public class GameManager
         controller.State = (Define.ObjectState)sPkt.State;
     }
 
-    public GameObject FindBoom(Vector2Int cellPos)
+    public GameObject FindObjectsInField(Vector2Int cellPos)
     {
         GameObject objectInField = null;
 
-        foreach(GameObject obj in _objectList)
+        foreach(GameObject obj in _waterBoomObjectList)
         {
             WaterBoomObject boom = obj.GetComponent<WaterBoomObject>();
             if (boom == null)
                 continue;
 
-            if (boom._cellPos == cellPos)
+            if (boom.GetPos() == cellPos)
                 return obj;
         }
         
         return null;
     }
 
-    public bool BlowBoom(Vector2Int cellPos)
+    public bool BlowWaterBoom(WaterBoomObject waterBoomObject)
     {
-        GameObject obj = FindBoom(cellPos);
-        Debug.Log(_objectList.Count);
+
+        //TODO
+        //물풍선이 터진 범위 체크하기
+        int blowXYRange = waterBoomObject.GetWaterBlowRange();
+        CheckIsThereObjectsInBlowRange(waterBoomObject);
+        
+        Debug.Log(_waterBoomObjectList.Count);
         if (obj == null)
             return false;
-
-        obj.GetComponent<WaterBoomObject>().WaterBoomBlowUp();
-        _objectList.Remove(obj);
         
+        _waterBoomObjectList.Remove(obj);
         return true;
     }
 
-    public void SetWaterBOOMInGameField(S_WaterBOOM sPkt)
+    public void CheckIsThereObjectsInBlowRange(WaterBoomObject waterBoomObject)
+    {
+        int blowXYRange = waterBoomObject.GetWaterBlowRange();
+
+        for (int k = 0; k < blowXYRange; k++)
+        {
+            Vector2Int cellPos = waterBoomObject.GetPos() + _dir[(int)Direction.UP];
+
+            GameObject go = FindObjectsInField(cellPos);
+            if (go != null)
+            {
+                //플레이인지, 물풍선인지, 아이템인지 확인 
+                //만약 아이템이면 그냥 통과.
+                //만약 물풍선이면 그 친구도 터지게 하기
+                //만약 플레어이면 죽게 하기.
+            }
+            else
+            {
+                DrawWaterBlow(cellPos);
+            }
+        }
+
+        for (int k = 0; k < blowXYRange; k++)
+        {
+            Vector2Int cellPos = waterBoomObject.GetPos() + _dir[(int)Direction.DOWN];
+
+            GameObject go = FindObjectsInField(cellPos);
+            if (go != null)
+            {
+
+            }
+            else
+            {
+                DrawWaterBlow(cellPos);
+            }
+        }
+
+        for (int k = 0; k < blowXYRange; k++)
+        {
+            Vector2Int cellPos = waterBoomObject.GetPos() + _dir[(int)Direction.LEFT];
+
+            GameObject go = FindObjectsInField(cellPos);
+            if (go != null)
+            {
+
+            }
+            else
+            {
+                DrawWaterBlow(cellPos);
+            }
+        }
+
+        for (int k = 0; k < blowXYRange; k++)
+        {
+            Vector2Int cellPos = waterBoomObject.GetPos() + _dir[(int)Direction.RIGHT];
+            GameObject go = FindObjectsInField(cellPos);
+
+            if (go != null)
+            {
+
+            }
+            else
+            {
+                DrawWaterBlow(cellPos);
+            }
+        }
+    }
+
+    public void DrawWaterBlow(Vector2Int cellPos)
+    {
+
+    }
+
+    public void SetWaterBoomInField(S_WaterBOOM sPkt)
     {
         int cellPosX = sPkt.CellPosX;
         int cellPosY = sPkt.CellPosY;
 
         Vector2Int cellPos = new Vector2Int(cellPosX, cellPosY);
         GameObject boomObject = Managers.Resource.Instantiate("Objects/WaterBoomObject");
-        boomObject.GetComponent<WaterBoomObject>().InitPos(cellPos);
-        _objectList.AddLast(boomObject);
+        boomObject.GetComponent<WaterBoomObject>().SetInField(cellPos);
+        _waterBoomObjectList.AddLast(boomObject);
 
 
         boomObject.transform.localPosition = new Vector3(cellPosX + 0.5f, cellPosY + 0.5f, 0);

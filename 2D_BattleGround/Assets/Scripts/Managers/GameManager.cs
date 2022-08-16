@@ -7,7 +7,7 @@ public class GameManager
     Dictionary<int, GameObject> _playerDic = new Dictionary<int, GameObject>();
 
     LinkedList<GameObject> _waterBoomObjectList = new LinkedList<GameObject>();
-    LinkedList<GameObject> _itemObejcttList = new LinkedList<GameObject>();
+    LinkedList<GameObject> _itemObjectList = new LinkedList<GameObject>();
 
     Define.MapType _mapType;
     Define.GameMode _gameMode;
@@ -112,9 +112,7 @@ public class GameManager
 
     public GameObject FindObjectsInField(Vector2Int cellPos)
     {
-        GameObject objectInField = null;
-
-        foreach(GameObject obj in _waterBoomObjectList)
+        foreach (GameObject obj in _waterBoomObjectList)
         {
             WaterBoomObject boom = obj.GetComponent<WaterBoomObject>();
             if (boom == null)
@@ -123,7 +121,24 @@ public class GameManager
             if (boom.GetPos() == cellPos)
                 return obj;
         }
-        
+
+        //foreach (GameObject obj in _itemObejctList)
+        //{
+        //    BaseController player = obj.GetComponent<BaseController>();
+        //}
+
+        return null;
+    }
+
+    public GameObject FindPlayersInField(Vector2Int cellPos)
+    {
+        foreach (GameObject obj in _playerDic.Values)
+        {
+            BaseController player = obj.GetComponent<BaseController>();
+            if (player.CellPos == new Vector3Int(cellPos.x, cellPos.y))
+                return obj;
+        }
+
         return null;
     }
 
@@ -151,14 +166,20 @@ public class GameManager
         {
             Vector2Int cellPos = waterBoomObject.GetPos() + _dir[(int)Direction.UP];
 
-            GameObject go = FindObjectsInField(cellPos);
-            if (go != null)
+            GameObject obj = FindObjectsInField(cellPos);
+            GameObject player = FindPlayersInField(cellPos);
+            if (obj != null)
             {
-                //플레이인지, 물풍선인지, 아이템인지 확인 
+                //물풍선인지, 아이템인지, 지형 확인 
                 //만약 아이템이면 그냥 통과.
                 //만약 물풍선이면 그 친구도 터지게 하기
-                //만약 플레어이면 죽게 하기.
+                
             }
+            if(player != null)
+            {
+                //플레이어이면 통과 + 해당 플레이어 죽이기
+            }
+
             else
             {
                 DrawWaterBlow(cellPos);

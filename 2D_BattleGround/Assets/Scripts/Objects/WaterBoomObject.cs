@@ -7,6 +7,7 @@ public class WaterBoomObject : MonoBehaviour
     // Start is called before the first frame update
     protected Vector2Int _cellPos;
     protected int _blowXYRange = 1;
+    Coroutine co;
 
     void Start()
     {
@@ -38,6 +39,8 @@ public class WaterBoomObject : MonoBehaviour
 
     public void WaterBoomBlowUp()
     {
-        Managers.Game.BlowWaterBoom(this.gameObject);
+        StopAllCoroutines();
+        Managers.Game.BlowWaterBoom(this);
+        Object.Destroy(this);
     }
 }

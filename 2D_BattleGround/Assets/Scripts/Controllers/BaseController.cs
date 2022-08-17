@@ -136,7 +136,7 @@ public class BaseController : MonoBehaviour
 
     }
 
-    protected virtual void UpdateDead()
+    public virtual void UpdateDead()
     {
 
     }

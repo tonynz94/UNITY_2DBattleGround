@@ -32,7 +32,7 @@ public class PlayerController : BaseController
             State = ObjectState.Moving;
     }
 
-    protected override void UpdateDead()
+    public override void UpdateDead()
     {
         Debug.Log("Player Dead");
     }

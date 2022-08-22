@@ -40,7 +40,8 @@ public class WaterBoomObject : MonoBehaviour
     public void WaterBoomBlowUp()
     {
         StopAllCoroutines();
+        Destroy(gameObject);
         Managers.Game.BlowWaterBoom(this);
-        Object.Destroy(this);
+        
     }
 }

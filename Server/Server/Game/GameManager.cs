@@ -105,14 +105,26 @@ namespace Server.Game
             if (obj != null)
                 return;
 
+            _waterBoomObjectList.AddLast(new WaterBoomObject(_cellPos));
+
             S_WaterBOOM sPkt = new S_WaterBOOM();
             sPkt.CellPosX = _cellPos.x;
             sPkt.CellPosY = _cellPos.y;
 
             Broadcast(sPkt.Write());
         }
-            
 
+        public void Update()
+        {
+            lock(_lock)
+            {
+                foreach(WaterBoomObject waterBoom in _waterBoomObjectList)
+                {
+                    waterBoom.Update();
+                }
+            }
+        }
+            
         public void Broadcast(ArraySegment<byte> packet)
        {
            lock (_lock)

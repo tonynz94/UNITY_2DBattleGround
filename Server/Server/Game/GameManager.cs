@@ -139,10 +139,23 @@ namespace Server.Game
 
     class GameManager
     {
-        public static GameManager Instance { get; } = new GameManager();
+        object _lock = new object();
 
+        public static GameManager Instance { get; } = new GameManager();
+       
         //실행되고 있는 게임들 목록
         public Dictionary<int, GameField> _playingGame = new Dictionary<int, GameField>();
+
+        public void Update()
+        {
+            lock(_lock)
+            {
+                foreach (GameField field in _playingGame.Values)
+                {
+                    field.Update();
+                }
+            }
+        }
 
         public void NewGameStart(int roomID)
         {

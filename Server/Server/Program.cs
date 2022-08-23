@@ -37,12 +37,9 @@ namespace Server
 
 			while (true)
 			{
-				
+				//GameManager.Instance.Update();
 				//JobTimer.Instance.Flush();
-				foreach(GameField field in GameManager.Instance._playingGame.Values)
-				{
-					field.Update();
-				}
+
 			}
 		}
 	}

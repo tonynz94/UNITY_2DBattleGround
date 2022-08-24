@@ -84,6 +84,17 @@ namespace Server.Game
             Broadcast(sPkt.Write());
         }
 
+        public Player FindPlayersInField(Vector2Int cellPos)
+        {
+            foreach (Player player in _playerDic.Values)
+            {
+                if (new Vector2Int(player.Info.cellPosX, player.Info.cellPosY) == new Vector2Int(cellPos.x, cellPos.y))
+                    return player;
+            }
+
+            return null;
+        }
+
         public GameObject FindObjectsInField(Vector2Int cellPos)
         {
             GameObject objectInField = null;
@@ -105,13 +116,101 @@ namespace Server.Game
             if (obj != null)
                 return;
 
-            _waterBoomObjectList.AddLast(new WaterBoomObject(_cellPos));
+            _waterBoomObjectList.AddLast(new WaterBoomObject(_roomID, _cellPos));
 
             S_WaterBOOM sPkt = new S_WaterBOOM();
             sPkt.CellPosX = _cellPos.x;
             sPkt.CellPosY = _cellPos.y;
 
             Broadcast(sPkt.Write());
+        }
+
+        public void BlowWaterBoom(WaterBoomObject waterBoomObject)
+        {
+            _waterBoomObjectList.Remove(waterBoomObject);
+            CheckIsThereObjectsInBlowRange(waterBoomObject);
+        }
+
+        public void CheckIsThereObjectsInBlowRange(WaterBoomObject waterBoomObject)
+        {
+            int blowXYRange = waterBoomObject.GetWaterBlowRange();
+
+            for (int k = 1; k <= blowXYRange; k++)
+            {
+                Console.WriteLine($"({waterBoomObject.GetPos().x}, {waterBoomObject.GetPos().y}) +  ({ (Vector2Int.Up * k).x},{ (Vector2Int.Up * k).y})");
+                Vector2Int cellPos = waterBoomObject.GetPos() + (Vector2Int.Up * k);
+
+                GameObject obj = FindObjectsInField(cellPos);
+                Player player = FindPlayersInField(cellPos);
+                if (obj != null)
+                {
+                    if (obj._objectType == ObjectType.WaterBoom)
+                        (obj as WaterBoomObject).WaterBoomBlowUp();
+
+                    break;
+                }
+                else if (player != null)
+                {
+                    Console.WriteLine("player HIT!!");
+                }
+            }
+
+            for (int k = 1; k <= blowXYRange; k++)
+            {
+                Vector2Int cellPos = waterBoomObject.GetPos() + (Vector2Int.Down * k);
+
+                GameObject obj = FindObjectsInField(cellPos);
+                Player player = FindPlayersInField(cellPos);
+                if (obj != null)
+                {
+                    if (obj._objectType == ObjectType.WaterBoom)
+                        (obj as WaterBoomObject).WaterBoomBlowUp();
+
+                    break;
+                }
+                else if (player != null)
+                {
+                    Console.WriteLine("player HIT!!");
+                }
+            }
+
+            for (int k = 1; k <= blowXYRange; k++)
+            {
+                Vector2Int cellPos = waterBoomObject.GetPos() + (Vector2Int.Left * k);
+
+                GameObject obj = FindObjectsInField(cellPos);
+                Player player = FindPlayersInField(cellPos);
+                if (obj != null)
+                {
+                    if (obj._objectType == ObjectType.WaterBoom)
+                        (obj as WaterBoomObject).WaterBoomBlowUp();
+
+                    break;
+                }
+                else if (player != null)
+                {
+                    Console.WriteLine("player HIT!!");
+                }
+            }
+
+            for (int k = 1; k <= blowXYRange; k++)
+            {
+                Vector2Int cellPos = waterBoomObject.GetPos() + (Vector2Int.Right * k);
+
+                GameObject obj = FindObjectsInField(cellPos);
+                Player player = FindPlayersInField(cellPos);
+                if (obj != null)
+                {
+                    if (obj._objectType == ObjectType.WaterBoom)
+                        (obj as WaterBoomObject).WaterBoomBlowUp();
+
+                    break;
+                }
+                else if (player != null)
+                {
+                    Console.WriteLine("player HIT!!");
+                }
+            }
         }
 
         public void Update()
@@ -148,13 +247,13 @@ namespace Server.Game
 
         public void Update()
         {
-            lock(_lock)
-            {
-                foreach (GameField field in _playingGame.Values)
-                {
-                    field.Update();
-                }
-            }
+            //lock(_lock)
+            //{
+            //    foreach (GameField field in _playingGame.Values)
+            //    {
+            //        field.Update();
+            //    }
+            //}
         }
 
         public void NewGameStart(int roomID)

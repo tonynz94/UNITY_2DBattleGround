@@ -146,7 +146,6 @@ public class GameManager
     {
         //TODO
         //물풍선이 터진 범위 체크하기
-        int blowXYRange = waterBoomObject.GetWaterBlowRange();
         _waterBoomObjectList.Remove(waterBoomObject.gameObject);
         CheckIsThereObjectsInBlowRange(waterBoomObject);
         

@@ -12,12 +12,15 @@ namespace Server.Game
     {
         long _blowUpTick = 3000;
         long _startTick = 0;
+        int _blowXYRange = 1;
 
         Task t1;
         CancellationTokenSource tokenSource = new CancellationTokenSource();
 
-        public WaterBoomObject(Vector2Int pos)
+        public WaterBoomObject(int roomID, Vector2Int pos, int blowXYRange = 1)
         {
+            _roomID = roomID;
+            _blowXYRange = blowXYRange;
             _objectType = ObjectType.WaterBoom;
             _cellPos = pos;
 
@@ -25,6 +28,16 @@ namespace Server.Game
 
             t1 = new Task(Update);
             t1.Start();
+        }
+        
+        public int GetWaterBlowRange()
+        {
+            return _blowXYRange;
+        }
+
+        public Vector2Int GetPos()
+        {
+            return _cellPos;
         }
 
         public void Update()
@@ -51,11 +64,8 @@ namespace Server.Game
             //StopCorotuine
             if (!t1.IsCompleted) 
                 tokenSource.Cancel();
-            //TODO
-            //삭제 해주고 충돌체크 해주면 끝 난 잔다 이제
-            //Destroy(gameObject);
-            //Managers.Game.BlowWaterBoom(this);
 
+            GameManager.Instance.GetGameField(_roomID).BlowWaterBoom(this);
         }
     }
 }

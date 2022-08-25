@@ -11,11 +11,12 @@ namespace Server.Game
         object _lock = new object();
 
         int _roomID;
+        int _waterBoomID = 333;
         MapType _mapID;
         GameMode _gameMode;
         Dictionary<int, Player> _playerDic = new Dictionary<int, Player>();
 
-        LinkedList<GameObject> _waterBoomObjectList = new LinkedList<GameObject>();
+        Dictionary<int, GameObject> _waterBoomObjectDic = new Dictionary<int, GameObject>();
         LinkedList<GameObject> _itemObejcttList = new LinkedList<GameObject>();
 
         public GameField(int roomID, MapType mapID, GameMode gameMode)
@@ -99,7 +100,7 @@ namespace Server.Game
         {
             GameObject objectInField = null;
 
-            foreach (WaterBoomObject obj in _waterBoomObjectList)
+            foreach (WaterBoomObject obj in _waterBoomObjectDic.Values)
             {
                 WaterBoomObject boom = obj;
 
@@ -110,26 +111,40 @@ namespace Server.Game
             return null;
         }
 
-        public void SetWaterBoomInField(Vector2Int _cellPos)
+        public void SetWaterBoomInField(C_WaterBOOM cPkt)
         {
-            GameObject obj = FindObjectsInField(_cellPos);
+            Vector2Int cellPos = new Vector2Int(cPkt.CellPosX, cPkt.CellPosY);
+            GameObject obj = FindObjectsInField(cellPos);
             if (obj != null)
                 return;
 
-            _waterBoomObjectList.AddLast(new WaterBoomObject(_roomID, _cellPos));
+            WaterBoomObject waterBoom = new WaterBoomObject(_roomID, cellPos);
+            waterBoom._ownerID = cPkt.CGUID;
+            waterBoom._roomID = cPkt.roomID;
+            waterBoom._id = _waterBoomID++;
+            _waterBoomObjectDic.Add(waterBoom._id, waterBoom);
 
             S_WaterBOOM sPkt = new S_WaterBOOM();
-            sPkt.CellPosX = _cellPos.x;
-            sPkt.CellPosY = _cellPos.y;
+            sPkt.ID = waterBoom._id;
+            sPkt.CellPosX = cPkt.CellPosX;
+            sPkt.CellPosY = cPkt.CellPosY;
 
             Broadcast(sPkt.Write());
         }
 
         public void BlowWaterBoom(WaterBoomObject waterBoomObject)
         {
-            _waterBoomObjectList.Remove(waterBoomObject);
-            CheckIsThereObjectsInBlowRange(waterBoomObject);
-        }
+            lock (_lock)
+            {
+                S_WaterBlowUp sPkt = new S_WaterBlowUp();
+                sPkt.ID = waterBoomObject._id;
+                Broadcast(sPkt.Write());
+
+                _waterBoomObjectDic.Remove(waterBoomObject._id);
+                
+                CheckIsThereObjectsInBlowRange(waterBoomObject);
+            }
+         }
 
         public void CheckIsThereObjectsInBlowRange(WaterBoomObject waterBoomObject)
         {
@@ -213,11 +228,46 @@ namespace Server.Game
             }
         }
 
+        public void PlayerLeaveGame(int CGUID)
+        {
+            //lock (_lock)
+            //{
+            //    Player player = null;
+            //    if (_.Remove(CGUID, out player) == false)
+            //        return;
+
+            //    player.Room = null;
+            //    Map.ApplyLeave(player);
+
+            //    // 본인한테 정보 전송
+            //    {
+            //        S_LeaveGame leavePacket = new S_LeaveGame();
+            //        player.Session.Send(leavePacket);
+            //    }
+            //}
+
+
+
+
+
+            //    // 타인한테 정보 전송
+            //{
+            //    S_Despawn despawnPacket = new S_Despawn();
+            //    despawnPacket.ObjectIds.Add(objectId);
+            //    foreach (Player p in _players.Values)
+            //    {
+            //        if (p.Id != objectId)
+            //            p.Session.Send(despawnPacket);
+            //    }
+            //}
+         }
+      
+
         public void Update()
         {
             lock(_lock)
             {
-                foreach(WaterBoomObject waterBoom in _waterBoomObjectList)
+                foreach(WaterBoomObject waterBoom in _waterBoomObjectDic.Values)
                 {
                     waterBoom.Update();
                 }
@@ -225,15 +275,15 @@ namespace Server.Game
         }
             
         public void Broadcast(ArraySegment<byte> packet)
-       {
-           lock (_lock)
-           {
-               foreach (Player player in _playerDic.Values)
-               {
-                   player.Session.Send(packet);
-               }
-           }
-       }
+        {
+            lock (_lock)
+            {
+                foreach (Player player in _playerDic.Values)
+                {
+                    player.Session.Send(packet);
+                }
+            }
+        }
     }
 
     class GameManager
@@ -307,8 +357,8 @@ namespace Server.Game
                 Console.WriteLine("There are no GameField plz check");
                 return;
             }
-
-            gameField.SetWaterBoomInField(new Vector2Int(cPkt.CellPosX, cPkt.CellPosY));
+            
+            gameField.SetWaterBoomInField(cPkt);
         }
     }
 }

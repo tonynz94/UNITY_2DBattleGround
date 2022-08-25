@@ -6,7 +6,7 @@ public class GameManager
 {
     Dictionary<int, GameObject> _playerDic = new Dictionary<int, GameObject>();
 
-    LinkedList<GameObject> _waterBoomObjectList = new LinkedList<GameObject>();
+    Dictionary<int, GameObject> _waterBoomObjectDic = new Dictionary<int, GameObject>();
     LinkedList<GameObject> _itemObjectList = new LinkedList<GameObject>();
 
     Define.MapType _mapType;
@@ -112,7 +112,7 @@ public class GameManager
 
     public GameObject FindObjectsInField(Vector2Int cellPos)
     {
-        foreach (GameObject obj in _waterBoomObjectList)
+        foreach (GameObject obj in _waterBoomObjectDic.Values)
         {
             WaterBoomObject boom = obj.GetComponent<WaterBoomObject>();
             if (boom == null)
@@ -142,16 +142,33 @@ public class GameManager
         return null;
     }
 
-    public void BlowWaterBoom(WaterBoomObject waterBoomObject)
+    public void SetWaterBoomInField(S_WaterBOOM sPkt)
+    {
+        int cellPosX = sPkt.CellPosX;
+        int cellPosY = sPkt.CellPosY;
+
+        Vector2Int cellPos = new Vector2Int(cellPosX, cellPosY);
+        GameObject boomObject = Managers.Resource.Instantiate("Objects/WaterBoomObject");
+
+        boomObject.GetComponent<WaterBoomObject>().SetInField(cellPos);
+        _waterBoomObjectDic.Add(sPkt.ID, boomObject);
+
+
+        boomObject.transform.localPosition = new Vector3(cellPosX + 0.5f, cellPosY + 0.5f, 0);
+    }
+
+    public void BlowWaterBoom(S_WaterBlowUp sPkt)
     {
         //TODO
         //물풍선이 터진 범위 체크하기
-        _waterBoomObjectList.Remove(waterBoomObject.gameObject);
-        CheckIsThereObjectsInBlowRange(waterBoomObject);
-        
-        Debug.Log(_waterBoomObjectList.Count);
+        //_waterBoomObjectDic.Remove(waterBoomObject.id);
+        //CheckIsThereObjectsInBlowRange(waterBoomObject);
+       GameObject waterBoom = null;
+        _waterBoomObjectDic.TryGetValue(sPkt.ID, out waterBoom);
+        _waterBoomObjectDic.Remove(sPkt.ID);
 
-        
+        waterBoom.GetComponent<WaterBoomObject>().WaterBoomBlowUp();
+        DrawWaterBlow(waterBoom.GetComponent<WaterBoomObject>().GetPos());
     }
 
     public void CheckIsThereObjectsInBlowRange(WaterBoomObject waterBoomObject)
@@ -253,20 +270,6 @@ public class GameManager
         boomObject.transform.localPosition = new Vector3(cellPos.x + 0.5f, cellPos.y + 0.5f, 0);
 
         Object.Destroy(boomObject, 0.8f);
-    }
-
-    public void SetWaterBoomInField(S_WaterBOOM sPkt)
-    {
-        int cellPosX = sPkt.CellPosX;
-        int cellPosY = sPkt.CellPosY;
-
-        Vector2Int cellPos = new Vector2Int(cellPosX, cellPosY);
-        GameObject boomObject = Managers.Resource.Instantiate("Objects/WaterBoomObject");
-        boomObject.GetComponent<WaterBoomObject>().SetInField(cellPos);
-        _waterBoomObjectList.AddLast(boomObject);
-
-
-        boomObject.transform.localPosition = new Vector3(cellPosX + 0.5f, cellPosY + 0.5f, 0);
     }
 
     public void LeaveGame(int CGUID)

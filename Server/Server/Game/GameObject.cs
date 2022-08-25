@@ -9,8 +9,10 @@ namespace Server.Game
 
     class GameObject
     {
-        public Vector2Int _cellPos { get; protected set; }
-        public int _roomID { get; protected set; }
+        public int _ownerID { get; set; }
+        public int _id { get; set; }
+        public Vector2Int _cellPos { get; set; }
+        public int _roomID { get; set; }
         public ObjectType _objectType { get; protected set; } = ObjectType.None;
 
         public GameObject()

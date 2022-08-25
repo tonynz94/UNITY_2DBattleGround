@@ -48,6 +48,7 @@ namespace Server.Game
                 {
                     Console.WriteLine("POW");
                     WaterBoomBlowUp();
+                    Console.WriteLine("비워주기");
                     break;
                 }
 

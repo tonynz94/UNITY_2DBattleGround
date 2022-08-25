@@ -11,7 +11,7 @@ public class WaterBoomObject : MonoBehaviour
 
     void Start()
     {
-        StartCoroutine(AfterSecWaterBlow(2.0f));
+        //StartCoroutine(AfterSecWaterBlow(2.0f));
     }
 
     public void SetInField(Vector2Int cellPos, int blowXYRange = 1)
@@ -30,18 +30,18 @@ public class WaterBoomObject : MonoBehaviour
         return _blowXYRange;
     }
 
-    IEnumerator AfterSecWaterBlow(float sec)
-    {
-        yield return new WaitForSeconds(sec);
-        Debug.Log("POW!!");
-        WaterBoomBlowUp();
-    }
+    //IEnumerator AfterSecWaterBlow(float sec)
+    //{
+    //    yield return new WaitForSeconds(sec);
+    //    Debug.Log("POW!!");
+    //    WaterBoomBlowUp();
+    //}
 
     public void WaterBoomBlowUp()
     {
-        StopAllCoroutines();
+        //StopAllCoroutines();
         Destroy(gameObject);
-        Managers.Game.BlowWaterBoom(this);
+        //Managers.Game.BlowWaterBoom(this);
         
     }
 }

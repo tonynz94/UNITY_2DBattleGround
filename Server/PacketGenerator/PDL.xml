@@ -183,13 +183,12 @@
 
   <packet name="S_WaterBOOM">
     <int name ="CGUID"/>
+    <int name ="ID"/>
     <int name ="CellPosX"/>
     <int name ="CellPosY"/>
   </packet>
 
   <packet name="S_WaterBlowUp">
-    <int name ="CGUID"/>
-    <int name ="CellPosX"/>
-    <int name ="CellPosY"/>
+    <int name ="ID"/>
   </packet>
 </PDL>

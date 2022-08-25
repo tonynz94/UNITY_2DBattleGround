@@ -159,7 +159,7 @@ class PacketHandler
 
 	public static void S_BroadcastMoveHandler(PacketSession session, IPacket packet)
 	{
-		Debug.Log("[NetworkManager] @>> RECV : S_BroadcastMove ");
+		//Debug.Log("[NetworkManager] @>> RECV : S_BroadcastMove ");
 		S_BroadcastMove sPkt = packet as S_BroadcastMove;
 		ServerSession serverSession = session as ServerSession;
 
@@ -174,6 +174,15 @@ class PacketHandler
 
 		Managers.Game.SetWaterBoomInField(sPkt);
 
+	}
+
+	public static void S_WaterBlowUpHandler(PacketSession session, IPacket packet)
+	{
+		Debug.Log("[NetworkManager] @>> RECV : S_WaterBlowUp");
+
+		S_WaterBlowUp sPkt = packet as S_WaterBlowUp;
+
+		Managers.Game.BlowWaterBoom(sPkt);
 	}
 
 

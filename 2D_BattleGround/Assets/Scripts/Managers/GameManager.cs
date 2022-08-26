@@ -12,17 +12,6 @@ public class GameManager
     Define.MapType _mapType;
     Define.GameMode _gameMode;
 
-    public enum Direction
-    {
-        UP,
-        DOWN,
-        LEFT,
-        RIGHT,
-        FourDirections
-    }
-
-    Vector2Int[] _dir = new Vector2Int[(int)Direction.FourDirections] { new Vector2Int( 0 , 1), new Vector2Int( 0, -1 ), new Vector2Int( -1, 0 ), new Vector2Int(1, 0) };
-
     int _roomID;
 
     public int GetCurrentRoomID()
@@ -159,117 +148,11 @@ public class GameManager
 
     public void BlowWaterBoom(S_WaterBlowUp sPkt)
     {
-        //TODO
-        //물풍선이 터진 범위 체크하기
-        //_waterBoomObjectDic.Remove(waterBoomObject.id);
-        //CheckIsThereObjectsInBlowRange(waterBoomObject);
-       GameObject waterBoom = null;
+        GameObject waterBoom = null;
         _waterBoomObjectDic.TryGetValue(sPkt.ID, out waterBoom);
         _waterBoomObjectDic.Remove(sPkt.ID);
 
         waterBoom.GetComponent<WaterBoomObject>().WaterBoomBlowUp();
-        DrawWaterBlow(waterBoom.GetComponent<WaterBoomObject>().GetPos());
-    }
-
-    public void CheckIsThereObjectsInBlowRange(WaterBoomObject waterBoomObject)
-    {
-        int blowXYRange = waterBoomObject.GetWaterBlowRange();
-        DrawWaterBlow(waterBoomObject.GetPos());
-        for (int k = 0; k < blowXYRange; k++)
-        {
-            Vector2Int cellPos = waterBoomObject.GetPos() + _dir[(int)Direction.UP];
-
-            GameObject obj = FindObjectsInField(cellPos);
-            GameObject player = FindPlayersInField(cellPos);
-            if (obj != null)
-            {
-                obj.GetComponent<WaterBoomObject>().WaterBoomBlowUp();
-                break;
-            }
-            else if(player != null)
-            {
-                BaseController hitPlayer= player.GetComponent<BaseController>();
-                hitPlayer.UpdateDead();
-            }
-            else
-            {
-                DrawWaterBlow(cellPos);
-            }
-        }
-
-        for (int k = 0; k < blowXYRange; k++)
-        {
-            Vector2Int cellPos = waterBoomObject.GetPos() + _dir[(int)Direction.DOWN];
-
-            GameObject obj = FindObjectsInField(cellPos);
-            GameObject player = FindPlayersInField(cellPos);
-            if (obj != null)
-            {
-                obj.GetComponent<WaterBoomObject>().WaterBoomBlowUp();
-                break;
-            }
-            else if (player != null)
-            {
-                BaseController hitPlayer = player.GetComponent<BaseController>();
-                hitPlayer.UpdateDead();
-            }
-            else
-            {
-                DrawWaterBlow(cellPos);
-            }
-        }
-
-        for (int k = 0; k < blowXYRange; k++)
-        {
-            Vector2Int cellPos = waterBoomObject.GetPos() + _dir[(int)Direction.LEFT];
-
-            GameObject obj = FindObjectsInField(cellPos);
-            GameObject player = FindPlayersInField(cellPos);
-            if (obj != null)
-            {
-                obj.GetComponent<WaterBoomObject>().WaterBoomBlowUp();
-                break;
-            }
-            else if (player != null)
-            {
-                BaseController hitPlayer = player.GetComponent<BaseController>();
-                hitPlayer.UpdateDead();
-            }
-            else
-            {
-                DrawWaterBlow(cellPos);
-            }
-        }
-
-        for (int k = 0; k < blowXYRange; k++)
-        {
-            Vector2Int cellPos = waterBoomObject.GetPos() + _dir[(int)Direction.RIGHT];
-
-            GameObject obj = FindObjectsInField(cellPos);
-            GameObject player = FindPlayersInField(cellPos);
-            if (obj != null)
-            {
-                obj.GetComponent<WaterBoomObject>().WaterBoomBlowUp();
-                break;
-            }
-            else if (player != null)
-            {
-                BaseController hitPlayer = player.GetComponent<BaseController>();
-                hitPlayer.UpdateDead();
-            }
-            else
-            {
-                DrawWaterBlow(cellPos);
-            }
-        }
-    }
-
-    public void DrawWaterBlow(Vector2Int cellPos)
-    {
-        GameObject boomObject = Managers.Resource.Instantiate("Objects/WaterBlowEffectObject");
-        boomObject.transform.localPosition = new Vector3(cellPos.x + 0.5f, cellPos.y + 0.5f, 0);
-
-        Object.Destroy(boomObject, 0.8f);
     }
 
     public void LeaveGame(int CGUID)

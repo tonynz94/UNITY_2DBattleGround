@@ -4,10 +4,23 @@ using UnityEngine;
 
 public class WaterBoomObject : MonoBehaviour
 {
+    public enum Direction
+    {
+        UP,
+        DOWN,
+        LEFT,
+        RIGHT,
+        FourDirections
+    }
+
+    Vector2Int[] DIR = new Vector2Int[(int)Direction.FourDirections] { new Vector2Int(0, 1), new Vector2Int(0, -1), new Vector2Int(-1, 0), new Vector2Int(1, 0) };
+
     // Start is called before the first frame update
     protected Vector2Int _cellPos;
     protected int _blowXYRange = 1;
     Coroutine co;
+
+
 
     void Start()
     {
@@ -41,7 +54,27 @@ public class WaterBoomObject : MonoBehaviour
     {
         //StopAllCoroutines();
         Destroy(gameObject);
-        //Managers.Game.BlowWaterBoom(this);
+        DrawWaterBlow();
+    }
+
+    public void DrawWaterBlow()
+    {
+        {
+            GameObject boomObject = Managers.Resource.Instantiate("Objects/WaterBlowEffectObject");
+            boomObject.transform.localPosition = new Vector3(_cellPos.x + 0.5f, _cellPos.y + 0.5f, 0);
+            Object.Destroy(boomObject, 0.8f);
+        }
+
+
+        for (Direction dir = Direction.UP; dir < Direction.FourDirections; dir++) {
+            for (int i = 0; i < _blowXYRange; i++)
+            {
+                GameObject boomObject = Managers.Resource.Instantiate("Objects/WaterBlowEffectObject");
+                boomObject.transform.localPosition = new Vector3(_cellPos.x + 0.5f + DIR[(int)dir].x, _cellPos.y + 0.5f + DIR[(int)dir].y, 0);
+                Object.Destroy(boomObject, 0.8f);
+            }
+        }
+
         
     }
 }

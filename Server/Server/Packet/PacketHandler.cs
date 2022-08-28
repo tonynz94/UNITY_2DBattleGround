@@ -135,4 +135,18 @@ class PacketHandler
 
 		GameManager.Instance.HandleWaterBOOM(cPkt);
 	}
+
+	public static void C_FieldToLobbyHandler(PacketSession session, IPacket packet)
+	{
+		C_FieldToLobby cPkt = packet as C_FieldToLobby;
+
+		GameManager.Instance.MoveGameFieldToLobby(cPkt);
+	}
+
+	public static void C_GameFinishHandler(PacketSession session, IPacket packet)
+	{
+		//C_GameFinish cPkt = packet as C_GameFinish;
+
+		//GameManager.Instance.GameFinish(cPkt);
+	}
 }

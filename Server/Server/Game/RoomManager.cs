@@ -178,7 +178,6 @@ namespace Server.Game
             return gameRoom;
         }
 
-
         public void MoveIntroToLobbyRoom(ClientSession session ,int CGUID)
         {
             lock (_lock)

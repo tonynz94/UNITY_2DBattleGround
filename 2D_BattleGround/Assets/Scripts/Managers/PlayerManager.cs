@@ -47,7 +47,7 @@ public class Player
         _isPlayerReady = false;
     }
 
-    public void LeaveFromGameRoom()
+    public void LeaveFromGame()
     {
         _isPlayerReady = false;
     }

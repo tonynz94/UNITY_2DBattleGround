@@ -85,12 +85,11 @@ public class UI_RoomList : UI_Popup
     public void RefreshGameRoom()
     {
         GameObject parent = GetObject((int)Objects.RoomItemContentObject);
-        //Managers.Resource.Instantiate("UI/SubItem/UI_ChatItem", GetObject((int)GameObjects.ChatDashBoardObject).transform);
 
         foreach(GameRoom gameRoom in Managers.Room._gameRooms.Values)
         {
             UI_GameRoomItem item = Managers.Resource.Instantiate("UI/SubItem/UI_GameRoomItem", parent.transform).GetComponent<UI_GameRoomItem>();
-            item.SetRoomItemNotice(gameRoom.roomId, gameRoom.roomOwner, gameRoom._mapType, gameRoom.GetPlayerCount(), Define.GameState.Waiting);
+            item.SetRoomItemNotice(gameRoom.roomId, gameRoom.roomOwner, gameRoom._mapType, gameRoom.GetPlayerCount(), gameRoom.isStarted ? Define.GameState.Started : Define.GameState.Waiting);
             _gameRoomItem.Add(gameRoom.roomId, item);
         }
     }
@@ -101,6 +100,12 @@ public class UI_RoomList : UI_Popup
         if(_selectRoomId == -1)
         {
             Debug.Log("There is no room select ");
+            return;
+        }
+
+        if(Managers.Room.GetGameRoom(_selectRoomId).isStarted)
+        {
+            Debug.Log("is already Started");
             return;
         }
 
@@ -128,17 +133,18 @@ public class UI_RoomList : UI_Popup
     public void OnRoomListItemClicked(object obj)
     {
         _selectRoomId = (int)obj;
-        GetObject((int)Objects.NoRoomObject).SetActive(false);
-
         GameRoom room = Managers.Room.GetGameRoom(_selectRoomId);
 
+        GetObject((int)Objects.NoRoomObject).SetActive(false);
         GetObject((int)Objects.RoomExistObject).SetActive(true);
+
         GetImage((int)Images.MapImage).sprite = Managers.Map.GetMapSprite(room._mapType);
         GetText((int)Texts.MapImageText).text = System.Enum.GetName(typeof(Define.MapType), (int)room._mapType);
         GetImage((int)Images.GameTypeImage).sprite = Managers.Map.GetGameType(room._gameMode);
         GetText((int)Texts.GameTypeText).text = System.Enum.GetName(typeof(Define.GameMode), (int)room._gameMode);
-        int i = 1;
+        GetButton((int)Buttons.JoinButton).interactable = !room.isStarted;
 
+        int i = 1;
         foreach(var player in room._playerList)
         {
             GetObject((int)System.Enum.Parse(typeof(Objects), $"Slot{i}OffObject")).SetActive(false);

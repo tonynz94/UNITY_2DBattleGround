@@ -45,6 +45,10 @@ public class PacketManager
 		_handler.Add((ushort)PacketID.C_Move, PacketHandler.C_MoveHandler);
 		_makeFunc.Add((ushort)PacketID.C_WaterBOOM, MakePacket<C_WaterBOOM>);
 		_handler.Add((ushort)PacketID.C_WaterBOOM, PacketHandler.C_WaterBOOMHandler);
+		_makeFunc.Add((ushort)PacketID.C_GameFinish, MakePacket<C_GameFinish>);
+		_handler.Add((ushort)PacketID.C_GameFinish, PacketHandler.C_GameFinishHandler);
+		_makeFunc.Add((ushort)PacketID.C_FieldToLobby, MakePacket<C_FieldToLobby>);
+		_handler.Add((ushort)PacketID.C_FieldToLobby, PacketHandler.C_FieldToLobbyHandler);
 
 	}
 

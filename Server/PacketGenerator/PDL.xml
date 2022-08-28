@@ -191,4 +191,18 @@
   <packet name="S_WaterBlowUp">
     <int name ="ID"/>
   </packet>
+
+  <packet name="S_PlayerDie">
+    <int name="CGUID"/>
+    <int name="AttackerCGUID"/>
+  </packet>
+
+  <packet name="C_GameFinish">
+    <int name="roomID"/>
+  </packet>
+
+  <packet name="C_FieldToLobby">
+    <int name="CGUID"/>
+    <int name="RoomID"/>
+  </packet>
 </PDL>

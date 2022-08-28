@@ -9,10 +9,10 @@ public class GameManager
     Dictionary<int, GameObject> _waterBoomObjectDic = new Dictionary<int, GameObject>();
     LinkedList<GameObject> _itemObjectList = new LinkedList<GameObject>();
 
-    Define.MapType _mapType;
-    Define.GameMode _gameMode;
+    Define.MapType _mapType = Define.MapType.None;
+    Define.GameMode _gameMode = Define.GameMode.None;
 
-    int _roomID;
+    int _roomID = -1;
 
     public int GetCurrentRoomID()
     {
@@ -25,7 +25,7 @@ public class GameManager
         _mapType = mapType;
         _gameMode = gameMode;
 
-        ClearAll();
+        ClearAllObjects();
     }
 
     public Define.WorldObject GetWorldObjectType(GameObject go)
@@ -70,9 +70,47 @@ public class GameManager
         }
     }
 
-    public void Despawn(GameObject go)
+    public void DespawnPlayer(S_PlayerDie sPkt)
     {
-       
+        GameObject player;
+        GameObject attackerPlayer;
+
+        KillDeath killDeath = new KillDeath();
+        killDeath._attackerCGUID = sPkt.AttackerCGUID;
+        killDeath._deathCGUID = sPkt.CGUID;
+
+        MessageSystem.CallEventMessage(MESSAGE_EVENT_TYPE.MESS_PLAYERDIE, killDeath);
+
+        _playerDic.TryGetValue(sPkt.CGUID, out player);
+        _playerDic.TryGetValue(sPkt.AttackerCGUID, out attackerPlayer);
+    
+        _playerDic.Remove(sPkt.CGUID);
+
+        Managers.Player.GetPlayer(sPkt.CGUID).LeaveFromGame();
+        player.GetComponent<PlayerController>().State = Define.ObjectState.Dead;
+
+        bool isMyPlayer = (Managers.Player.GetMyCGUID() == sPkt.CGUID);
+
+        if(isMyPlayer)
+        {
+            Camera.main.GetComponent<CameraController>().MyPlayerDie();
+            MessageSystem.CallEventMessage(MESSAGE_EVENT_TYPE.MESS_PLAYERDEATH, null);
+            return;
+        }
+
+        if (isOnlySurvivor())
+            GameEnd();
+    }
+
+    public bool isOnlySurvivor()
+    {
+        return (_playerDic.Count == 1);
+    }
+
+    public void GameEnd()
+    {
+        MessageSystem.CallEventMessage(MESSAGE_EVENT_TYPE.MESS_PLAYERWINNER, null);
+        Debug.Log("¿ì½Â");
     }
 
     public GameObject GetPlayerObject(int CGUID)
@@ -161,9 +199,18 @@ public class GameManager
         _playerDic.Remove(CGUID); 
     }
 
-    public void ClearAll()
+    public void ClearAllObjects()
     {
         _playerDic.Clear();
-        //_monsterList.Clear();
+        _waterBoomObjectDic.Clear();
+    }
+
+    public void ClearRoom()
+    {
+        ClearAllObjects();
+        _mapType = Define.MapType.None;
+        _gameMode = Define.GameMode.None;
+        _roomID = -1;
+
     }
 }

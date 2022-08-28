@@ -88,6 +88,7 @@ public class Define
 
     public enum GameState
     {
+        None,
         Waiting,
         Started,
     }
@@ -98,7 +99,11 @@ public enum MESSAGE_EVENT_TYPE
     MESS_CHATTING_ADD,
     MESS_ALLNOTICE_ADD,
     MESS_ROOMLIST_SELECT,
+    MESS_PLAYERDIE,
+    MESS_PLAYERWINNER,
+    MESS_PLAYERDEATH,
     MESS_MAXCOUNT
+
 }
 
 
@@ -120,7 +125,10 @@ public class MessageSystem
     {
         _eventProcDelegates[evtType] -= evt;
     }
+}
 
-
-
+public class KillDeath
+{
+    public int _attackerCGUID;
+    public int _deathCGUID;
 }

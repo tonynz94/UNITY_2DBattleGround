@@ -185,6 +185,16 @@ class PacketHandler
 		Managers.Game.BlowWaterBoom(sPkt);
 	}
 
+	public static void S_PlayerDieHandler(PacketSession session, IPacket packet)
+	{
+		Debug.Log("[NetworkManager] @>> RECV : S_PlayerDieHandler");
+
+		S_PlayerDie sPkt = packet as S_PlayerDie;
+
+		Managers.Game.DespawnPlayer(sPkt);
+		//GameObject player = Managers.Game.GetPlayerObject(sPkt.CGUID);
+	}
+
 
 
 

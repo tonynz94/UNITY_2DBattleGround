@@ -11,6 +11,11 @@ public class CameraController : MonoBehaviour
     {
         _targetPoint = player;
     }
+    public void MyPlayerDie()
+    {
+        _mode = Define.CameraMode.DieMode;
+    }
+
     // Update is called once per frame
     void LateUpdate()
     {

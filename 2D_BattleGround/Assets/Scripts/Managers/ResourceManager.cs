@@ -33,11 +33,11 @@ public class ResourceManager
         return go;
     }
 
-    public void Destroy(GameObject go)
+    public void Destroy(GameObject go, float sec = 0)
     {
         if (go == null)
             return;
 
-        Object.Destroy(go);
+        Object.Destroy(go, sec);
     }
 }

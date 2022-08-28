@@ -9,6 +9,7 @@ public class GameRoom
     public Define.MapType _mapType;
     public Define.GameMode _gameMode;
     public List<Player> _playerList = new List<Player>();
+    public bool isStarted;
 
     public void AddPlayer(int CGUID)
     {
@@ -29,7 +30,7 @@ public class GameRoom
         }
         else
         {
-            player.LeaveFromGameRoom();
+            player.LeaveFromGame();
             _playerList.Remove(player);
         }
     }
@@ -125,12 +126,10 @@ public class RoomManager
         }
         else
         {
-            //?? ???????? ?????? ??????.
             Debug.Log("popup : This Room is Full");
         }
     }
 
-    //?????? ?????? ?? (?? ?????????? ?????? ???? ???????? ?? ???? ????.)
     public void HandleGameToLobby(S_GameToLobby sPkt)
     {
         GameRoom room = Managers.Room.GetGameRoom(sPkt.roomId);
@@ -138,16 +137,14 @@ public class RoomManager
 
         room.LeaveGameRoom(leavePlayerCGUID);
 
-        //???? ????????.
         if (leavePlayerCGUID == Managers.Player.GetMyCGUID())
         {  
             Managers.UI.ClosePopupUI();
             Managers.Room.GameRoomAllClear();   
         }
-        //?????? ????????.
+
         else
         {
-            //?????????? ????????. 
             if (room.roomOwner == leavePlayerCGUID)
                 room.SetNewOwner(sPkt.newOwner);
                 
@@ -166,8 +163,9 @@ public class RoomManager
             gameRoom.SetGameRoom((Define.GameMode)temp.GameMode, (Define.MapType)temp.MapType);
             gameRoom.roomId = temp.RoomId;
             gameRoom.roomOwner = temp.RoomOwner;
-            
-            foreach(S_GetGameRooms.GameRoomlist.PlayerList tempPlayer in temp.playerLists)
+            gameRoom.isStarted = temp.isStarted;
+
+            foreach (S_GetGameRooms.GameRoomlist.PlayerList tempPlayer in temp.playerLists)
             {
                 Player player = Managers.Player.GetPlayer(tempPlayer.CGUID);
 

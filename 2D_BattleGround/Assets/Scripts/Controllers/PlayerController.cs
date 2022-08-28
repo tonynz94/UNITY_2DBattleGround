@@ -5,6 +5,7 @@ using static Define;
 
 public class PlayerController : BaseController
 {
+    bool isDead = false;
     protected override void Init()
     {
         base.Init();
@@ -34,7 +35,14 @@ public class PlayerController : BaseController
 
     public override void UpdateDead()
     {
+        if (isDead)
+            return;
+
+        isDead = true;
         Debug.Log("Player Dead");
+
+        State = ObjectState.Dead;
+        GameObject.Destroy(this.gameObject, 0.5f);
     }
 
     protected override void UpdateAnimation()
@@ -83,6 +91,10 @@ public class PlayerController : BaseController
                     break;
             }
         }
-
+        else if(State == ObjectState.Dead)
+        {
+            currentAni = "DIE";
+            _anim.Play("DIE");
+        }
     }
 }

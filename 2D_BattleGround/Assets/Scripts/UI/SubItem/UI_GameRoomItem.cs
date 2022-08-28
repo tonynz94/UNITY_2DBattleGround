@@ -10,6 +10,8 @@ public class UI_GameRoomItem : UI_Base
     Color _selectedColor = Color.cyan;
     Color _unSelectedColor = Color.gray;
 
+    GameState state = GameState.None;
+
 
     enum Images
     {

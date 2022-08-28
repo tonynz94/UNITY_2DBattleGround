@@ -122,7 +122,7 @@ public class UI_GameRoom : UI_Popup
         }
         else
         {
-            Debug.LogError("You'r not owner... how did you press start button...");
+            Debug.LogError("You'r not owner");
         }
     }
 

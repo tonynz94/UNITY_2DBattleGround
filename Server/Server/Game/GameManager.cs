@@ -26,6 +26,11 @@ namespace Server.Game
             _gameMode = gameMode;
         }
 
+        public int GetPlayerCount()
+        {
+            return _playerDic.Count;
+        }
+
         public void EnterToField(int CGUID)
         {
             lock (_lock)
@@ -142,18 +147,21 @@ namespace Server.Game
 
                 _waterBoomObjectDic.Remove(waterBoomObject._id);
                 
-                CheckIsThereObjectsInBlowRange(waterBoomObject);
+                CheckIsThereObjectsInBlowRange(waterBoomObject, Vector2Int.Up);
+                CheckIsThereObjectsInBlowRange(waterBoomObject, Vector2Int.Down);
+                CheckIsThereObjectsInBlowRange(waterBoomObject, Vector2Int.Left);
+                CheckIsThereObjectsInBlowRange(waterBoomObject, Vector2Int.Right);
             }
          }
 
-        public void CheckIsThereObjectsInBlowRange(WaterBoomObject waterBoomObject)
+        public void CheckIsThereObjectsInBlowRange(WaterBoomObject waterBoomObject, Vector2Int dir)
         {
             int blowXYRange = waterBoomObject.GetWaterBlowRange();
 
             for (int k = 1; k <= blowXYRange; k++)
             {
-                Console.WriteLine($"({waterBoomObject.GetPos().x}, {waterBoomObject.GetPos().y}) +  ({ (Vector2Int.Up * k).x},{ (Vector2Int.Up * k).y})");
-                Vector2Int cellPos = waterBoomObject.GetPos() + (Vector2Int.Up * k);
+                Console.WriteLine($"({waterBoomObject.GetPos().x}, {waterBoomObject.GetPos().y}) +  ({ (dir * k).x},{ (dir * k).y})");
+                Vector2Int cellPos = waterBoomObject.GetPos() + (dir * k);
 
                 GameObject obj = FindObjectsInField(cellPos);
                 Player player = FindPlayersInField(cellPos);
@@ -161,108 +169,30 @@ namespace Server.Game
                 {
                     if (obj._objectType == ObjectType.WaterBoom)
                         (obj as WaterBoomObject).WaterBoomBlowUp();
-
+                    
                     break;
                 }
                 else if (player != null)
                 {
-                    Console.WriteLine("player HIT!!");
-                }
-            }
-
-            for (int k = 1; k <= blowXYRange; k++)
-            {
-                Vector2Int cellPos = waterBoomObject.GetPos() + (Vector2Int.Down * k);
-
-                GameObject obj = FindObjectsInField(cellPos);
-                Player player = FindPlayersInField(cellPos);
-                if (obj != null)
-                {
-                    if (obj._objectType == ObjectType.WaterBoom)
-                        (obj as WaterBoomObject).WaterBoomBlowUp();
-
-                    break;
-                }
-                else if (player != null)
-                {
-                    Console.WriteLine("player HIT!!");
-                }
-            }
-
-            for (int k = 1; k <= blowXYRange; k++)
-            {
-                Vector2Int cellPos = waterBoomObject.GetPos() + (Vector2Int.Left * k);
-
-                GameObject obj = FindObjectsInField(cellPos);
-                Player player = FindPlayersInField(cellPos);
-                if (obj != null)
-                {
-                    if (obj._objectType == ObjectType.WaterBoom)
-                        (obj as WaterBoomObject).WaterBoomBlowUp();
-
-                    break;
-                }
-                else if (player != null)
-                {
-                    Console.WriteLine("player HIT!!");
-                }
-            }
-
-            for (int k = 1; k <= blowXYRange; k++)
-            {
-                Vector2Int cellPos = waterBoomObject.GetPos() + (Vector2Int.Right * k);
-
-                GameObject obj = FindObjectsInField(cellPos);
-                Player player = FindPlayersInField(cellPos);
-                if (obj != null)
-                {
-                    if (obj._objectType == ObjectType.WaterBoom)
-                        (obj as WaterBoomObject).WaterBoomBlowUp();
-
-                    break;
-                }
-                else if (player != null)
-                {
-                    Console.WriteLine("player HIT!!");
+                    S_PlayerDie sPkt = new S_PlayerDie();
+                    sPkt.CGUID = player.Session.SessionId;
+                    sPkt.AttackerCGUID = waterBoomObject._ownerID;
+                    Broadcast(sPkt.Write());
                 }
             }
         }
 
         public void PlayerLeaveGame(int CGUID)
         {
-            //lock (_lock)
-            //{
-            //    Player player = null;
-            //    if (_.Remove(CGUID, out player) == false)
-            //        return;
+            Player player = null;
+            _playerDic.TryGetValue(CGUID, out player);
+            _playerDic.Remove(CGUID);
 
-            //    player.Room = null;
-            //    Map.ApplyLeave(player);
+            player.LeaveFromGameRoom();
 
-            //    // 본인한테 정보 전송
-            //    {
-            //        S_LeaveGame leavePacket = new S_LeaveGame();
-            //        player.Session.Send(leavePacket);
-            //    }
-            //}
-
-
-
-
-
-            //    // 타인한테 정보 전송
-            //{
-            //    S_Despawn despawnPacket = new S_Despawn();
-            //    despawnPacket.ObjectIds.Add(objectId);
-            //    foreach (Player p in _players.Values)
-            //    {
-            //        if (p.Id != objectId)
-            //            p.Session.Send(despawnPacket);
-            //    }
-            //}
-         }
+            RoomManager.Instance.GetLobby().EnterLobbyRoom(CGUID);
+        }
       
-
         public void Update()
         {
             lock(_lock)
@@ -294,17 +224,6 @@ namespace Server.Game
        
         //실행되고 있는 게임들 목록
         public Dictionary<int, GameField> _playingGame = new Dictionary<int, GameField>();
-
-        public void Update()
-        {
-            //lock(_lock)
-            //{
-            //    foreach (GameField field in _playingGame.Values)
-            //    {
-            //        field.Update();
-            //    }
-            //}
-        }
 
         public void NewGameStart(int roomID)
         {
@@ -359,6 +278,25 @@ namespace Server.Game
             }
             
             gameField.SetWaterBoomInField(cPkt);
+        }
+
+        public void MoveGameFieldToLobby(C_FieldToLobby cPkt)
+        {
+            GameField gameField = GetGameField(cPkt.RoomID);
+            gameField.PlayerLeaveGame(cPkt.CGUID);
+
+            if (gameField.GetPlayerCount() == 0)
+                GameFinish(cPkt.RoomID);
+        }
+
+        public void GameFinish(int roomID)
+        {
+            lock (_lock)
+            {
+                GameField gameField = GetGameField(roomID);
+                _playingGame.Remove(roomID);
+                RoomManager.Instance.RemoveGameRoom(roomID);
+            }
         }
     }
 }

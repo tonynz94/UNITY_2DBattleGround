@@ -6,7 +6,8 @@ public class UI_InGame : UI_Scene
 {
     enum Buttons
     {
-        ToResultButton,
+        ToWinnerResultButton,
+        ToLoserResultButton,
         ToLobbyButton,
     }
 
@@ -50,7 +51,8 @@ public class UI_InGame : UI_Scene
         BindText(typeof(Texts));
         BindObject(typeof(GameObjects));
 
-        BindEvent(GetButton((int)Buttons.ToResultButton).gameObject, OnToResultButton);
+        BindEvent(GetButton((int)Buttons.ToWinnerResultButton).gameObject, OnToResultButton);
+        BindEvent(GetButton((int)Buttons.ToLoserResultButton).gameObject, OnToResultButton);
         BindEvent(GetButton((int)Buttons.ToLobbyButton).gameObject, OnToLobbyButton);
 
         return true;
@@ -62,7 +64,7 @@ public class UI_InGame : UI_Scene
         GetObject((int)GameObjects.LoserObject).SetActive(false);
         GetObject((int)GameObjects.ResultObject).SetActive(false);
 
-        GetText((int)Texts.SurvivorText).text = string.Format("Suvivor : {0}", Managers.Game.GetPlayerCount());
+        GetText((int)Texts.SurvivorText).text = Managers.Game._startPlayerCount.ToString();
     }
 
     public void OnPlayerDieMessage(object obj)
@@ -88,6 +90,8 @@ public class UI_InGame : UI_Scene
     {
         GetObject((int)GameObjects.WinnerObject).SetActive(false);
         GetObject((int)GameObjects.LoserObject).SetActive(true);
+
+        //GetText((int)Texts.ResultRankText).
     }
 
     public void OnToResultButton()

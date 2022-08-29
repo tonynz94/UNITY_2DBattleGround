@@ -12,6 +12,7 @@ public class GameManager
     Define.MapType _mapType = Define.MapType.None;
     Define.GameMode _gameMode = Define.GameMode.None;
 
+    public int _startPlayerCount = 0;
     int _roomID = -1;
 
     public int GetCurrentRoomID()
@@ -26,6 +27,11 @@ public class GameManager
         _gameMode = gameMode;
 
         ClearAllObjects();
+    }
+
+    public void SetStartingPlayerCount(int playerCount)
+    {
+        _startPlayerCount = playerCount;
     }
 
     public Define.WorldObject GetWorldObjectType(GameObject go)
@@ -210,6 +216,7 @@ public class GameManager
         ClearAllObjects();
         _mapType = Define.MapType.None;
         _gameMode = Define.GameMode.None;
+        _startPlayerCount = 0;
         _roomID = -1;
 
     }

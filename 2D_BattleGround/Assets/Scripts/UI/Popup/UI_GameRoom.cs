@@ -7,6 +7,7 @@ public class UI_GameRoom : UI_Popup
 {
     //¹æ ID
     int _roomID;
+    int _playerCount = 0;
     Dictionary<int, UI_CharacterItem> slot = new Dictionary<int, UI_CharacterItem>();
 
     Color _readyColor = new Color(239 / 255f, 88 / 255f, 80 / 255f, 1f);
@@ -117,6 +118,8 @@ public class UI_GameRoom : UI_Popup
         {
             cPkt.CGUID = Managers.Player.GetMyCGUID();
             cPkt.roomID = _roomID;
+
+            Managers.Game.SetStartingPlayerCount(Managers.Room.GetGameRoom(_roomID)._playerList.Count);
 
             Managers.Net.Send(cPkt.Write());
         }

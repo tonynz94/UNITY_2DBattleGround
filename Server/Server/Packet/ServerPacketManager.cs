@@ -49,6 +49,8 @@ public class PacketManager
 		_handler.Add((ushort)PacketID.C_GameFinish, PacketHandler.C_GameFinishHandler);
 		_makeFunc.Add((ushort)PacketID.C_FieldToLobby, MakePacket<C_FieldToLobby>);
 		_handler.Add((ushort)PacketID.C_FieldToLobby, PacketHandler.C_FieldToLobbyHandler);
+		_makeFunc.Add((ushort)PacketID.C_SkillState, MakePacket<C_SkillState>);
+		_handler.Add((ushort)PacketID.C_SkillState, PacketHandler.C_SkillStateHandler);
 
 	}
 

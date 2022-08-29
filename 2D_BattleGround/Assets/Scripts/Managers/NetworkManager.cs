@@ -15,7 +15,13 @@ public class NetworkManager
 		_session.Send(sendBuff);
 	}
 
-    public void ConnectServer()
+	public void Send(List<ArraySegment<byte>> sendBuffList)
+	{
+		_session.Send(sendBuffList);
+	}
+
+
+	public void ConnectServer()
     {
         // DNS (Domain Name System)
         string host = Dns.GetHostName();

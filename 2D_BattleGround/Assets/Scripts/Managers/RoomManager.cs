@@ -51,6 +51,8 @@ public class GameRoom
 
     public void GameStart()
     {
+        Managers.Game.SetStartingPlayerCount(_playerList.Count);
+
         Managers.Game.GameStart(roomID : roomId, mapType : _mapType ,gameMode: _gameMode);
         Managers.Scene.ChangeScene(Define.Scene.GameScene);
     }

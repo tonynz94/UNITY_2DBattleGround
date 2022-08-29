@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class UI_InGame : UI_Scene
 {
+
+    int _myRank = 0;
     enum Buttons
     {
         ToWinnerResultButton,
@@ -26,7 +28,6 @@ public class UI_InGame : UI_Scene
 
         ResultObject,
     }
-
 
     public void OnEnable()
     {
@@ -64,7 +65,7 @@ public class UI_InGame : UI_Scene
         GetObject((int)GameObjects.LoserObject).SetActive(false);
         GetObject((int)GameObjects.ResultObject).SetActive(false);
 
-        GetText((int)Texts.SurvivorText).text = Managers.Game._startPlayerCount.ToString();
+        GetText((int)Texts.SurvivorText).text = string.Format("Suvivor : {0}", Managers.Game._startPlayerCount.ToString());
     }
 
     public void OnPlayerDieMessage(object obj)
@@ -82,16 +83,20 @@ public class UI_InGame : UI_Scene
 
     public void OnWinnerMessage(object obj)
     {
+        _myRank = 1;
+
         GetObject((int)GameObjects.WinnerObject).SetActive(true);
         GetObject((int)GameObjects.LoserObject).SetActive(false);
     }
 
     public void OnDeathMessage(object obj)
     {
+        _myRank = ((int)obj) + 1;
+
         GetObject((int)GameObjects.WinnerObject).SetActive(false);
         GetObject((int)GameObjects.LoserObject).SetActive(true);
 
-        //GetText((int)Texts.ResultRankText).
+        GetText((int)Texts.ResultRankText).text = _myRank.ToString();
     }
 
     public void OnToResultButton()
@@ -99,6 +104,8 @@ public class UI_InGame : UI_Scene
         GetObject((int)GameObjects.WinnerObject).SetActive(false);
         GetObject((int)GameObjects.LoserObject).SetActive(false);
         GetObject((int)GameObjects.ResultObject).SetActive(true);
+
+        GetText((int)Texts.ResultRankText).text = _myRank.ToString();
     }
 
     public void OnToLobbyButton()

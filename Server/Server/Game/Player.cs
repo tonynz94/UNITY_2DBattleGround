@@ -9,7 +9,14 @@ namespace Server.Game
 
         public String NickName;
 
-        public int Level;
+        public int Level = 1;
+        public int money = 10000;
+        public int diamond = 300;
+        public int SpeedUpPoint = 1;
+        public int RangeUpPoint = 1;
+        public int PowerUpPoint = 1;
+        public int WaterCountUpPoint = 1;
+
         public int cellPosX;
         public int cellPosY;
         public Define.ObjectState State;

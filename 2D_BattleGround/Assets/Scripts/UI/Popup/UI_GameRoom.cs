@@ -119,8 +119,6 @@ public class UI_GameRoom : UI_Popup
             cPkt.CGUID = Managers.Player.GetMyCGUID();
             cPkt.roomID = _roomID;
 
-            Managers.Game.SetStartingPlayerCount(Managers.Room.GetGameRoom(_roomID)._playerList.Count);
-
             Managers.Net.Send(cPkt.Write());
         }
         else

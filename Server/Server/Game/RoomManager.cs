@@ -401,10 +401,7 @@ namespace Server.Game
             lock (_lock)
             {
                 GameRoom room = GetGameRoom(roomId);
-                if (room.GetPlayerCount() == 0)
-                    _gameRooms.Remove(roomId);
-                else
-                    Console.WriteLine("Someone is in the gameRoom... cant remove it");
+                _gameRooms.Remove(roomId);
             }
         }
 

@@ -14,6 +14,7 @@ public class UI_LobbyPopup : UI_Popup
         CreateRoomButton,
         HeroButton,
         SendChatButton,
+        SkillButton,
     }
 
     enum Texts
@@ -67,6 +68,7 @@ public class UI_LobbyPopup : UI_Popup
         BindEvent(GetButton((int)Buttons.CreateRoomButton).gameObject, OnCreateButton);
         BindEvent(GetButton((int)Buttons.HeroButton).gameObject, OnHeroButton);
         BindEvent(GetButton((int)Buttons.SendChatButton).gameObject, OnSendChatButton);
+        BindEvent(GetButton((int)Buttons.SkillButton).gameObject, OnSkillButton);
 
         InitPlayerInfo();
 
@@ -123,6 +125,11 @@ public class UI_LobbyPopup : UI_Popup
         GetObject((int)GameObjects.ChatContentField).GetComponent<TMP_InputField>().text = "";
     }
 
+    public void OnSkillButton()
+    {
+        Managers.UI.ShowPopupUI<UI_SkillPopup>();
+    }
+
     public void OnChatAdd(object obj)
     {
         ChatPiece chatPiece = obj as ChatPiece;
@@ -134,4 +141,6 @@ public class UI_LobbyPopup : UI_Popup
     {
 
     }
+
+
 }

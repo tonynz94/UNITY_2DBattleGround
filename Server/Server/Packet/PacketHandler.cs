@@ -149,4 +149,13 @@ class PacketHandler
 
 		//GameManager.Instance.GameFinish(cPkt);
 	}
+
+	public static void C_SkillStateHandler(PacketSession session, IPacket packet)
+	{
+		C_SkillState cPkt = packet as C_SkillState;
+
+		PlayerManager.Instance.HandlePlayerSkillPoint(cPkt);
+
+		Console.WriteLine("[Server] @>> RECV : C_SkillState");
+	}
 }

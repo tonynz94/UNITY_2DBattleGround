@@ -208,10 +208,6 @@
 
   <packet name="C_SkillState">
     <int name="CGUID" />
-  </packet>
-
-  <packet name="S_SkillState">
-    <int name="CGUID" />
     <int name="SpeedUpPoint"/>
     <int name="RangeUpPoint"/>
     <int name="PowerUpPoint"/>

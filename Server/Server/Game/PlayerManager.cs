@@ -57,5 +57,21 @@ namespace Server.Game
             Player player = GetPlayer(CGUID);
             return player.Info.NickName;
         }
+
+        public void HandlePlayerSkillPoint(C_SkillState cPkt)
+        {
+            lock(_lock)
+            {
+                Player player = GetPlayer(cPkt.CGUID);
+
+                if (player == null)
+                    Console.WriteLine("There are no Player ");
+
+                player.Info.SpeedUpPoint = cPkt.SpeedUpPoint;
+                player.Info.RangeUpPoint = cPkt.RangeUpPoint;
+                player.Info.PowerUpPoint = cPkt.PowerUpPoint;
+                player.Info.WaterCountUpPoint = cPkt.WaterCountUpPoint;
+            }
+        }
     }
 }

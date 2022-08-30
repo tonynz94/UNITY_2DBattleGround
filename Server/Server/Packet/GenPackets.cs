@@ -41,7 +41,6 @@ public enum PacketID
 	C_GameFinish = 33,
 	C_FieldToLobby = 34,
 	C_SkillState = 35,
-	S_SkillState = 36,
 	
 }
 
@@ -1592,44 +1591,12 @@ public class C_FieldToLobby : IPacket
 public class C_SkillState : IPacket
 {
 	public int CGUID;
-
-	public ushort Protocol { get { return (ushort)PacketID.C_SkillState; } }
-
-	public void Read(ArraySegment<byte> segment)
-	{
-		ushort count = 0;
-		count += sizeof(ushort);
-		count += sizeof(ushort);
-		this.CGUID = BitConverter.ToInt32(segment.Array, segment.Offset + count);
-		count += sizeof(int);
-	}
-
-	public ArraySegment<byte> Write()
-	{
-		ArraySegment<byte> segment = SendBufferHelper.Open(4096);
-		ushort count = 0;
-
-		count += sizeof(ushort);
-		Array.Copy(BitConverter.GetBytes((ushort)PacketID.C_SkillState), 0, segment.Array, segment.Offset + count, sizeof(ushort));
-		count += sizeof(ushort);
-		Array.Copy(BitConverter.GetBytes(this.CGUID), 0, segment.Array, segment.Offset + count, sizeof(int));
-		count += sizeof(int);
-
-		Array.Copy(BitConverter.GetBytes(count), 0, segment.Array, segment.Offset, sizeof(ushort));
-
-		return SendBufferHelper.Close(count);
-	}
-}
-
-public class S_SkillState : IPacket
-{
-	public int CGUID;
 	public int SpeedUpPoint;
 	public int RangeUpPoint;
 	public int PowerUpPoint;
 	public int WaterCountUpPoint;
 
-	public ushort Protocol { get { return (ushort)PacketID.S_SkillState; } }
+	public ushort Protocol { get { return (ushort)PacketID.C_SkillState; } }
 
 	public void Read(ArraySegment<byte> segment)
 	{
@@ -1654,7 +1621,7 @@ public class S_SkillState : IPacket
 		ushort count = 0;
 
 		count += sizeof(ushort);
-		Array.Copy(BitConverter.GetBytes((ushort)PacketID.S_SkillState), 0, segment.Array, segment.Offset + count, sizeof(ushort));
+		Array.Copy(BitConverter.GetBytes((ushort)PacketID.C_SkillState), 0, segment.Array, segment.Offset + count, sizeof(ushort));
 		count += sizeof(ushort);
 		Array.Copy(BitConverter.GetBytes(this.CGUID), 0, segment.Array, segment.Offset + count, sizeof(int));
 		count += sizeof(int);

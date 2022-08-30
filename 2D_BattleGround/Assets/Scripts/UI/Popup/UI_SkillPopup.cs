@@ -1,9 +1,25 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class UI_SkillPopup : UI_Popup
 {
+    Player _myPlayer = null;
+
+    Color32 _checkColor = new Color32(120, 236, 72, 255);
+    Color _emptyColor = Color.white;
+    bool _isChanged = false;
+
+    const int MAX_POINT = 5;
+
+    int _tempSpeedUpSkillPoint;
+    int _tempRangeUpSkillPoint;
+    int _tempPowerUpSkillPoint;
+    int _tempWaterCountUpSkillPoint;
+
+    int _tempSkillPoint;
+
     enum Buttons
     {
         SpeedUpSkillButton,
@@ -49,51 +65,154 @@ public class UI_SkillPopup : UI_Popup
             return false;
 
         BindButton(typeof(Buttons));
-        BindButton(typeof(Images));
-        BindButton(typeof(Texts));
+        BindImage(typeof(Images));
+        BindText(typeof(Texts));
 
         BindEvent(GetButton((int)Buttons.HomeButton).gameObject, OnHomeButton);
-        BindEvent(GetButton((int)Buttons.HomeButton).gameObject, OnSpeedUpSkillButton);
-        BindEvent(GetButton((int)Buttons.HomeButton).gameObject, OnRangeUpSkillButton);
-        BindEvent(GetButton((int)Buttons.HomeButton).gameObject, OnPowerUpSkillButton);
-        BindEvent(GetButton((int)Buttons.HomeButton).gameObject, OnWaterCountUpSkillButton);
+        BindEvent(GetButton((int)Buttons.SpeedUpSkillButton).gameObject, OnSpeedUpSkillButton);
+        BindEvent(GetButton((int)Buttons.RangeUpSkillButton).gameObject, OnRangeUpSkillButton);
+        BindEvent(GetButton((int)Buttons.PowerUpSkillButton).gameObject, OnPowerUpSkillButton);
+        BindEvent(GetButton((int)Buttons.WaterCountUpSkillButton).gameObject, OnWaterCountUpSkillButton);
 
-
+        _myPlayer = Managers.Player.GetMyPlayer();
         return true;
     }
 
     private void Start()
     {
-        
+        GetText((int)Texts.SkillPointNumberText).text = _tempSkillPoint.ToString();
+        _tempSkillPoint = _myPlayer._skillPoint;
+        _tempSpeedUpSkillPoint = _myPlayer._SpeedUpSkillCount;
+        _tempRangeUpSkillPoint = _myPlayer._RangeUpSkillCount;
+        _tempPowerUpSkillPoint = _myPlayer._PowerUpSkillCount;
+        _tempWaterCountUpSkillPoint = _myPlayer._WaterCountUpSkillCount;
+
+        SetSkillPointCountUI("SpeedUp", _tempSpeedUpSkillPoint);
+        SetSkillPointCountUI("RangeUp", _tempRangeUpSkillPoint);
+        SetSkillPointCountUI("PowerUp", _tempPowerUpSkillPoint);
+        SetSkillPointCountUI("WaterCountUp", _tempWaterCountUpSkillPoint);
+    }
+
+    public void SetSkillPointCountUI(string skillName , int count)
+    {
+        for (int i = 1; i <= count; i++)
+        {
+            Image image = GetImage((int)((Images)System.Enum.Parse(typeof(Images), string.Format("{0}Point{1}",skillName, i))));
+            image.color = _checkColor;
+        }
     }
 
     public void OnSpeedUpSkillButton()
     {
+        
+        if (_tempSkillPoint == 0)
+        {
+            Managers.UI.ShowPopupUI<UI_CommonPopup>().SetPopupCommon(
+            Define.PopupCommonType.YES,
+            "No SkillPoint", "There are no Skill Point.\nYou can get Skill Point by Leveling UP"
+            );
+            return;
+        }
 
+        if (_tempSpeedUpSkillPoint + 1 < MAX_POINT)
+        {
+            _isChanged = true;
+            _tempSkillPoint--;
+            _tempSpeedUpSkillPoint += 1;
+            SetSkillPointCountUI("SpeedUp", _tempSpeedUpSkillPoint);
+        }
     }
 
     public void OnRangeUpSkillButton()
     {
+        if (_tempSkillPoint == 0)
+        {
+            Managers.UI.ShowPopupUI<UI_CommonPopup>().SetPopupCommon(
+            Define.PopupCommonType.YES,
+            "No SkillPoint", "There are no Skill Point.\nYou can get Skill Point by Leveling UP"
+            );
+            return;
+        }
 
+        if (_tempRangeUpSkillPoint + 1 < 3)
+        {
+            _isChanged = true;
+            _tempSkillPoint--;
+            _tempRangeUpSkillPoint += 1;
+            SetSkillPointCountUI("RangeUp", _tempRangeUpSkillPoint);
+        }
     }
 
     public void OnPowerUpSkillButton()
     {
+        if (_tempSkillPoint == 0)
+        {
+            Managers.UI.ShowPopupUI<UI_CommonPopup>().SetPopupCommon(
+            Define.PopupCommonType.YES,
+            "No SkillPoint", "There are no Skill Point.\nYou can get Skill Point by Leveling UP"
+            );
+            return;
+        }
 
+        if (_tempPowerUpSkillPoint + 1 < MAX_POINT)
+        {
+            _isChanged = true;
+            _tempSkillPoint--;
+            _tempPowerUpSkillPoint += 1;
+            SetSkillPointCountUI("PowerUp", _tempPowerUpSkillPoint);
+        }
     }
 
     public void OnWaterCountUpSkillButton()
     {
+        if (_tempSkillPoint == 0)
+        {
+            Managers.UI.ShowPopupUI<UI_CommonPopup>().SetPopupCommon(
+                Define.PopupCommonType.YES,
+                "No SkillPoint", "There are no Skill Point.\nYou can get Skill Point by Leveling UP"
+            );
+            return;
+        }
 
+        if (_tempWaterCountUpSkillPoint + 1 < MAX_POINT)
+        {
+            _isChanged = true;
+            _tempSkillPoint--;
+            _tempWaterCountUpSkillPoint += 1;
+            SetSkillPointCountUI("WaterCountUp", _tempWaterCountUpSkillPoint);
+        }
     }
 
     public void OnHomeButton()
     {
+        //TODO 서버에 저장
+        if (_isChanged)
+        {
+            Managers.UI.ShowPopupUI<UI_CommonPopup>().SetPopupCommon(
+                Define.PopupCommonType.YESNO,
+                "Skill LevelUP", "Are you sure you want to save the points?",
+                () =>
+                {
+                    _myPlayer._SpeedUpSkillCount = _tempSpeedUpSkillPoint;
+                    _myPlayer._RangeUpSkillCount = _tempRangeUpSkillPoint;
+                    _myPlayer._PowerUpSkillCount = _tempPowerUpSkillPoint;
+                    _myPlayer._WaterCountUpSkillCount = _tempWaterCountUpSkillPoint;
 
-    }
+                    C_SkillState sPkt = new C_SkillState();
+                    sPkt.CGUID = Managers.Player.GetMyCGUID();
+                    sPkt.SpeedUpPoint = _tempSpeedUpSkillPoint;
+                    sPkt.RangeUpPoint = _tempRangeUpSkillPoint;
+                    sPkt.PowerUpPoint = _tempPowerUpSkillPoint;
+                    sPkt.WaterCountUpPoint = _tempWaterCountUpSkillPoint;
 
-    public void RefreshSkillUI()
-    {
-
+                    Managers.Net.Send(sPkt.Write());
+                    Managers.UI.ClosePopupUI(this);
+                }
+            );
+        }
+        else
+        {
+            Managers.UI.ClosePopupUI(this);
+        }
     }
 }

@@ -194,8 +194,14 @@ class PacketHandler
 		Managers.Game.DespawnPlayer(sPkt);
 		//GameObject player = Managers.Game.GetPlayerObject(sPkt.CGUID);
 	}
+	public static void S_SkillStateHandler(PacketSession session, IPacket packet)
+	{
+		Debug.Log("[NetworkManager] @>> RECV : S_SkillState");
+		//S_SkillState sPkt = packet as S_SkillState;
 
 
+	}
+	
 
 
 }

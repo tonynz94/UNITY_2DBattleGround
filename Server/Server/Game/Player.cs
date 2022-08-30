@@ -12,10 +12,13 @@ namespace Server.Game
         public int Level = 1;
         public int money = 10000;
         public int diamond = 300;
-        public int SpeedUpPoint = 1;
-        public int RangeUpPoint = 1;
-        public int PowerUpPoint = 1;
-        public int WaterCountUpPoint = 1;
+        public int _level = 1;
+        public int _totalExp = 200;
+        public int _currentExp = 0;
+        public int SpeedUpPoint = 0;
+        public int RangeUpPoint = 0;
+        public int PowerUpPoint = 0;
+        public int WaterCountUpPoint = 0;
 
         public int cellPosX;
         public int cellPosY;

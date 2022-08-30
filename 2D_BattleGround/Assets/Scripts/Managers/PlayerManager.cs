@@ -16,6 +16,13 @@ public class Player
     public int _gameMoney;
     public int _gameDiamond;
 
+    //Skill
+    public int _skillPoint;
+    public int _SpeedUpSkillCount;
+    public int _RangeUpSkillCount;
+    public int _PowerUpSkillCount;
+    public int _WaterCountUpSkillCount;
+
     public bool IsPlayerReady;
 
     public bool _isPlayerReady
@@ -36,13 +43,19 @@ public class Player
         _nickName = nickName;
 
         _level = 1;
-        _totalExp = 0;
+        _totalExp = 200;
         _currentExp = 0;
         _profileImage = 1;
-        _maxHP = 300;
+        _maxHP = 4000;
+
+        _SpeedUpSkillCount = 0;
+        _RangeUpSkillCount = 0;
+        _PowerUpSkillCount = 0;
+        _WaterCountUpSkillCount = 0;
 
         _gameMoney = 10000;
         _gameDiamond = 300;
+        _skillPoint = 0;
 
         _isPlayerReady = false;
     }

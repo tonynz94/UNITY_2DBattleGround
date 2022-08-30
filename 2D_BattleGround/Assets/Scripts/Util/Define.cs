@@ -92,6 +92,12 @@ public class Define
         Waiting,
         Started,
     }
+
+    public enum PopupCommonType
+    {
+        YES,
+        YESNO
+    }
 }
 
 public enum MESSAGE_EVENT_TYPE

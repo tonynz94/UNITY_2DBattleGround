@@ -1,0 +1,28 @@
+{
+  "levelStats": [
+    {
+      "level": "1",
+      "totalEXP": "100"
+    },
+    {
+      "level": "2",
+      "totalEXP": "200"
+    },
+    {
+      "level": "3",
+      "totalEXP": "300"
+    },
+    {
+      "level": "4",
+      "totalEXP": "400"
+    },
+    {
+      "level": "5",
+      "totalEXP": "500"
+    },
+    {
+      "level": "6",
+      "totalEXP": "600"
+    }
+  ]
+}

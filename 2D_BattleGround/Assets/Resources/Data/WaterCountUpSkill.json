@@ -1,0 +1,24 @@
+{
+  "waterCountUpSkills": [
+    {
+      "point": "1",
+      "waterMaxCount": "2"
+    },
+    {
+      "point": "2",
+      "waterMaxCount": "3"
+    },
+    {
+      "point": "3",
+      "waterMaxCount": "4"
+    },
+    {
+      "point": "4",
+      "waterMaxCount": "5"
+    },
+    {
+      "point": "5",
+      "waterMaxCount": "6"
+    }
+  ]
+}

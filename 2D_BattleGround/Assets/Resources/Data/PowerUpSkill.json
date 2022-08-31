@@ -1,0 +1,24 @@
+{
+  "powerUpSkills": [
+    {
+      "point": "1",
+      "power": "1.2"
+    },
+    {
+      "point": "2",
+      "power": "1.4"
+    },
+    {
+      "point": "3",
+      "power": "1.6"
+    },
+    {
+      "point": "4",
+      "power": "1.8"
+    },
+    {
+      "point": "5",
+      "power": "2.0"
+    }
+  ]
+}

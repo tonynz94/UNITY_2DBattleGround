@@ -45,7 +45,7 @@ namespace Server.Game
         public void LeaveGameRoom(int CGUID)
         {
             Player player = _playerList.Find(x => x.Session.SessionId == CGUID);
-            player.LeaveFromGameRoom();
+            player.LeaveFromGameRoomOrField();
             _playerList.Remove(player);
         }
 

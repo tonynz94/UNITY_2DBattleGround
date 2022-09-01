@@ -1,6 +1,10 @@
 {
   "rangeUpSkills": [
     {
+      "point": "0",
+      "range": "1"
+    },
+    {
       "point": "1",
       "range": "2"
     },

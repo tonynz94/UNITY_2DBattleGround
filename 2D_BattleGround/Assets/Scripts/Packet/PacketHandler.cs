@@ -185,6 +185,16 @@ class PacketHandler
 		Managers.Game.BlowWaterBoom(sPkt);
 	}
 
+	public static void S_PlayerHitHandler(PacketSession session, IPacket packet)
+	{
+		Debug.Log("[NetworkManager] @>> RECV : S_PlayerHitHandler");
+
+		S_PlayerHit sPkt = packet as S_PlayerHit;
+
+		Managers.Game.HitPlayer(sPkt);
+		//GameObject player = Managers.Game.GetPlayerObject(sPkt.CGUID);
+	}
+
 	public static void S_PlayerDieHandler(PacketSession session, IPacket packet)
 	{
 		Debug.Log("[NetworkManager] @>> RECV : S_PlayerDieHandler");
@@ -197,9 +207,10 @@ class PacketHandler
 	public static void S_SkillStateHandler(PacketSession session, IPacket packet)
 	{
 		Debug.Log("[NetworkManager] @>> RECV : S_SkillState");
-		//S_SkillState sPkt = packet as S_SkillState;
 
+		S_SkillState sPkt = packet as S_SkillState;
 
+		Managers.Player.GetMyPlayer()._speed = sPkt.Speed;
 	}
 	
 

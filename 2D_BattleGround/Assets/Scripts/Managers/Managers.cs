@@ -51,7 +51,6 @@ public class Managers : MonoBehaviour
             DontDestroyOnLoad(go);
             s_Resource.Init();
             s_Scene.Init();
-            s_Data.Init();
             s_Map.init();
             s_Sound.Init();
         }

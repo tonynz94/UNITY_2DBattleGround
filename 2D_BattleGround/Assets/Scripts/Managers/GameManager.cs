@@ -76,6 +76,15 @@ public class GameManager
         }
     }
 
+    public void HitPlayer(S_PlayerHit sPkt)
+    {
+        GameObject player = _playerDic[sPkt.CGUID];
+        PlayerController playerController= player.GetComponent<PlayerController>();
+
+        Debug.Log($"{sPkt.Damage}");
+        playerController.HP = sPkt.HitPlayerLeftHP;
+    }
+
     public void DespawnPlayer(S_PlayerDie sPkt)
     {
         GameObject player;

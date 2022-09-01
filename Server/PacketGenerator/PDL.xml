@@ -192,9 +192,16 @@
     <int name ="ID"/>
   </packet>
 
+  <packet name="S_PlayerHit">
+    <int name="CGUID"/>
+    <int name="Damage"/>
+    <int name="HitPlayerLeftHP"/>
+  </packet>
+  
   <packet name="S_PlayerDie">
     <int name="CGUID"/>
     <int name="AttackerCGUID"/>
+    <int name="Damage"/>
   </packet>
 
   <packet name="C_GameFinish">
@@ -212,5 +219,9 @@
     <int name="RangeUpPoint"/>
     <int name="PowerUpPoint"/>
     <int name="WaterCountUpPoint"/>
+  </packet>
+
+  <packet name="S_SkillState">
+    <int name="Speed"/>
   </packet>
 </PDL>

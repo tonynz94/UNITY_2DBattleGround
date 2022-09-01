@@ -71,6 +71,12 @@ namespace Server.Game
                 player.Info.RangeUpPoint = cPkt.RangeUpPoint;
                 player.Info.PowerUpPoint = cPkt.PowerUpPoint;
                 player.Info.WaterCountUpPoint = cPkt.WaterCountUpPoint;
+
+                //이동속도는 클라에서 컨트롤해줌
+                S_SkillState sPkt = new S_SkillState();
+                sPkt.Speed = Data.DataManager.SpeedUpDict[cPkt.SpeedUpPoint].speed;
+                GetPlayer(cPkt.CGUID).Session.Send(sPkt.Write());
+                
             }
         }
     }

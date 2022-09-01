@@ -1,24 +1,28 @@
 {
   "speedUpSkills": [
     {
+      "point": "0",
+      "speed": "5"
+    },
+    {
       "point": "1",
-      "speed": "20"
+      "speed": "6"
     },
     {
       "point": "2",
-      "speed": "21"
+      "speed": "7"
     },
     {
       "point": "3",
-      "speed": "22"
+      "speed": "8"
     },
     {
       "point": "4",
-      "speed": "23"
+      "speed": "9"
     },
     {
       "point": "5",
-      "speed": "25"
+      "speed": "10"
     }
   ]
 }

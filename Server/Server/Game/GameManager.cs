@@ -118,12 +118,20 @@ namespace Server.Game
 
         public void SetWaterBoomInField(C_WaterBOOM cPkt)
         {
+            Player player = _playerDic[cPkt.CGUID];
+            if (!player.isPossableWaterBoomSettedInField())
+                return;
+
             Vector2Int cellPos = new Vector2Int(cPkt.CellPosX, cPkt.CellPosY);
             GameObject obj = FindObjectsInField(cellPos);
             if (obj != null)
                 return;
 
-            WaterBoomObject waterBoom = new WaterBoomObject(_roomID, cellPos);
+            player.SetWaterBoomCountUp();
+
+            int range = Data.DataManager.RangeUpDict[player.Info.RangeUpPoint].range;
+            float damge = 100 * Data.DataManager.PowerUpDict[player.Info.PowerUpPoint].power;
+            WaterBoomObject waterBoom = new WaterBoomObject(cPkt.CGUID, _roomID, cellPos, (int)damge, range);
             waterBoom._ownerID = cPkt.CGUID;
             waterBoom._roomID = cPkt.roomID;
             waterBoom._id = _waterBoomID++;
@@ -141,6 +149,9 @@ namespace Server.Game
         {
             lock (_lock)
             {
+                Player player = _playerDic[waterBoomObject._ownerID];
+                player.SetWaterBoomCountDown();
+
                 S_WaterBlowUp sPkt = new S_WaterBlowUp();
                 sPkt.ID = waterBoomObject._id;
                 Broadcast(sPkt.Write());
@@ -169,15 +180,29 @@ namespace Server.Game
                 {
                     if (obj._objectType == ObjectType.WaterBoom)
                         (obj as WaterBoomObject).WaterBoomBlowUp();
-                    
+
                     break;
                 }
                 else if (player != null)
                 {
-                    S_PlayerDie sPkt = new S_PlayerDie();
-                    sPkt.CGUID = player.Session.SessionId;
-                    sPkt.AttackerCGUID = waterBoomObject._ownerID;
-                    Broadcast(sPkt.Write());
+                    int hitPlayerLeftHP = Math.Max(player.Info.currentHP - waterBoomObject.GetDamage(), 0);
+
+                    player.Info.currentHP = hitPlayerLeftHP;
+
+                    S_PlayerHit sPkt1 = new S_PlayerHit();
+                    sPkt1.Damage = waterBoomObject.GetDamage();
+                    sPkt1.HitPlayerLeftHP = player.Info.currentHP;
+                    sPkt1.CGUID = player.Session.SessionId;
+                    Broadcast(sPkt1.Write());
+
+                    if( hitPlayerLeftHP <= 0)
+                    {
+                        S_PlayerDie sPkt2 = new S_PlayerDie();
+                        sPkt2.CGUID = player.Session.SessionId;
+                        sPkt2.AttackerCGUID = waterBoomObject._ownerID;
+                        sPkt2.Damage = waterBoomObject.GetDamage();
+                        Broadcast(sPkt2.Write());
+                    }
                 }
             }
         }
@@ -188,7 +213,7 @@ namespace Server.Game
             _playerDic.TryGetValue(CGUID, out player);
             _playerDic.Remove(CGUID);
 
-            player.LeaveFromGameRoom();
+            player.LeaveFromGameRoomOrField();
 
             RoomManager.Instance.GetLobby().EnterLobbyRoom(CGUID);
         }

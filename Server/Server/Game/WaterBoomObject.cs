@@ -13,16 +13,20 @@ namespace Server.Game
         long _blowUpTick = 3000;
         long _startTick = 0;
         int _blowXYRange = 1;
+        int _ownerCGUID;
+        int _damage;
 
         Task t1;
         CancellationTokenSource tokenSource = new CancellationTokenSource();
 
-        public WaterBoomObject(int roomID, Vector2Int pos, int blowXYRange = 1)
+        public WaterBoomObject(int ownerCGUID ,int roomID, Vector2Int pos, int damage, int blowXYRange)
         {
+            _ownerCGUID = ownerCGUID;
             _roomID = roomID;
             _blowXYRange = blowXYRange;
             _objectType = ObjectType.WaterBoom;
             _cellPos = pos;
+            _damage = damage;
 
             _startTick = Environment.TickCount;
 
@@ -33,6 +37,11 @@ namespace Server.Game
         public int GetWaterBlowRange()
         {
             return _blowXYRange;
+        }
+
+        public int GetDamage()
+        {
+            return _damage;
         }
 
         public Vector2Int GetPos()

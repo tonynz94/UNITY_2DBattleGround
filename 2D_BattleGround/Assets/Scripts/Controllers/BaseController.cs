@@ -28,6 +28,8 @@ public class BaseController : MonoBehaviour
     protected bool _isUpdated = false;
     protected GameObject FocusGridObject;
 
+    HPBar _hpBar;
+
     [SerializeField]
     public Vector3Int _cellPos = Vector3Int.zero;
     public Vector3Int CellPos
@@ -40,6 +42,18 @@ public class BaseController : MonoBehaviour
 
             _cellPos = value;
             _isUpdated = true;
+        }
+    }
+
+    public int _HP;
+
+    public int HP
+    {
+        get { return _HP; }
+        set
+        {
+            _HP = value;
+            UpdateHpBar();
         }
     }
 
@@ -119,6 +133,29 @@ public class BaseController : MonoBehaviour
     {
         _anim = GetComponent<Animator>();
         FocusGridObject = Managers.Resource.Instantiate("Objects/FocusGridObject");
+        HP = 200;
+        AddHpBar();
+    }
+
+    protected void AddHpBar()
+    {
+        GameObject go = Managers.Resource.Instantiate("UI/HpBar", transform);
+        go.transform.localPosition = new Vector3(0, 1.2f, 0);
+        go.name = "HpBar";
+        _hpBar = go.GetComponent<HPBar>();
+        UpdateHpBar();
+    }
+
+    void UpdateHpBar()
+    {
+        if (_hpBar == null)
+            return;
+
+        float ratio = 0.0f;
+        if (HP > 0)
+            ratio = ((float)HP) / 200;
+
+        _hpBar.SetHpBar(ratio);
     }
 
     protected virtual void UpdateController()
@@ -145,5 +182,6 @@ public class BaseController : MonoBehaviour
     {
 
     }
+
 
 }

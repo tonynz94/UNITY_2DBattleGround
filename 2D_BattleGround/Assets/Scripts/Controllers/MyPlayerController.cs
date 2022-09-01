@@ -14,6 +14,7 @@ public class MyPlayerController : PlayerController
     protected override void Init()
     {
         base.Init();
+        _speed = Managers.Player.GetMyPlayer()._speed;
         _startTick = System.Environment.TickCount;
     }
 

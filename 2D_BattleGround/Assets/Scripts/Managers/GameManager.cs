@@ -59,6 +59,8 @@ public class GameManager
         {
             go = Managers.Resource.Instantiate("Objects/Player");
         }
+        Vector2Int posInt = 
+        go.transform.localPosition = new Vector3(posInt.)
 
         //go.name = 
         //go.transform.localPosition = spawnPos;
@@ -82,6 +84,11 @@ public class GameManager
         PlayerController playerController= player.GetComponent<PlayerController>();
 
         Debug.Log($"{sPkt.Damage}");
+
+        UI_DamageText damageText = Managers.Resource.Instantiate("UI/WorldSpace/UI_DamageText", playerController.gameObject.transform).GetComponent<UI_DamageText>();
+        damageText.ShowDamage(sPkt.Damage);
+        damageText.transform.localPosition = new Vector3(0f,1.5f, 0f);
+
         playerController.HP = sPkt.HitPlayerLeftHP;
     }
 

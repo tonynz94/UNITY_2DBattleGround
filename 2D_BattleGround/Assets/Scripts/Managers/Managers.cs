@@ -17,6 +17,7 @@ public class Managers : MonoBehaviour
     public static NetworkManager s_Net = new NetworkManager();
     public static ChatManager s_Chat = new ChatManager();
     public static RoomManager s_Room = new RoomManager();
+    public static PoolManager s_Pool = new PoolManager();
 
     public static Managers Instance { get { return s_instance; } }
 
@@ -32,6 +33,7 @@ public class Managers : MonoBehaviour
     public static NetworkManager Net { get { Init(); return s_Net; } }
     public static ChatManager Chat { get { Init(); return s_Chat; } }
     public static RoomManager Room { get { Init(); return s_Room; } }
+    public static PoolManager Pool { get { Init(); return s_Pool; } }
 
     // Start is called before the first frame update
     void Start()
@@ -53,6 +55,7 @@ public class Managers : MonoBehaviour
             s_Scene.Init();
             s_Map.init();
             s_Sound.Init();
+            s_Pool.Init();
         }
     }
 

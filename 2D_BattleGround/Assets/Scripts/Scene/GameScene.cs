@@ -9,8 +9,10 @@ public class GameScene : BaseScene
         if (base.Init() == false)
             return false;
 
-        Managers.Map.LoadMap(1);
+        Managers.Map.LoadMap(3);
         Managers.Sound.Play(Define.Sound.Bgm, "Sound_IngameBGM");
+
+        Managers.Map.GetPlayerSpawnPos(Managers.Room.GetGameRoom(GetCurrentRoomID()).GetMySlotIndex(CGUID));
 
         C_EnterFieldWorld cPkt = new C_EnterFieldWorld();
         cPkt.CGUID = Managers.Player.GetMyCGUID();

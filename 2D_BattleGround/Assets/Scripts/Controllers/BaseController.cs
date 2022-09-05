@@ -139,7 +139,7 @@ public class BaseController : MonoBehaviour
 
     protected void AddHpBar()
     {
-        GameObject go = Managers.Resource.Instantiate("UI/HpBar", transform);
+        GameObject go = Managers.Resource.Instantiate("UI/WorldSpace/HpBar", transform);
         go.transform.localPosition = new Vector3(0, 1.2f, 0);
         go.name = "HpBar";
         _hpBar = go.GetComponent<HPBar>();

@@ -35,6 +35,19 @@ public class GameRoom
         }
     }
 
+    public int GetMySlotIndex(int CGUID)
+    {
+        for(int slot = 0; slot < _playerList.Count; slot++)
+        {
+            if(_playerList[slot]._CGUID == CGUID)
+            {
+                return slot;
+            }
+        }
+
+        return -1;
+    }
+
     public void SetNewOwner(int newOwnerCGUID)
     {
         roomOwner = newOwnerCGUID;

@@ -40,6 +40,13 @@ public class UIManager
         }
     }
 
+    public void SetCanvasInWorldSpace(GameObject go)
+    {
+        Canvas canvas = go.GetOrAddComponent<Canvas>();
+        canvas.renderMode = RenderMode.WorldSpace;
+        canvas.worldCamera = Camera.main;
+    }
+
     public T ShowSceneUI<T>(string name = null, Transform parent = null) where T : UI_Scene
     {
         if (string.IsNullOrEmpty(name))

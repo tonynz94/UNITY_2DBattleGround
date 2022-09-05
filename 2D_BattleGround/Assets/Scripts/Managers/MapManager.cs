@@ -8,6 +8,7 @@ public class MapManager
 	Dictionary<int, List<List<int>>> _mapInfoDic = new Dictionary<int, List<List<int>>>();
 	Dictionary<Define.MapType, Sprite> _mapSprite = new Dictionary<Define.MapType, Sprite>();
 	Dictionary<Define.GameMode, Sprite> _gameType = new Dictionary<Define.GameMode, Sprite>();
+	List<Vector2Int> _playerSpawnPosList = new List<Vector2Int>();
 	public Grid CurrentGrid { get; private set; }
 	int _currentMapID;
 
@@ -42,11 +43,10 @@ public class MapManager
 		Tilemap tileBase = Utils.FindChild(go, "Tilemap_Base", false).GetComponent<Tilemap>();
 		//Ãæµ¹¿ë 
 		Tilemap tileCol = Utils.FindChild(go, "Tilemap_Collision", false).GetComponent<Tilemap>();
+		Tilemap tilePlayerPos = Utils.FindChild(go, "Tilemap_PlayerStartPos", false).GetComponent<Tilemap>();
 
-		if (tileCol != null)
-		{
-			tileCol.gameObject.SetActive(false);
-		}
+		tileCol.gameObject.SetActive(false);
+		tilePlayerPos.gameObject.SetActive(false);
 
 		MaxX = (tileBase.cellBounds.xMax);
 		MinX = (tileBase.cellBounds.xMin);
@@ -62,6 +62,10 @@ public class MapManager
 			for(int x = MinX; x <= MaxX; x++)
 			{
 				TileBase tile = tileCol.GetTile(new Vector3Int(x,y,0));
+				TileBase playerPos = tilePlayerPos.GetTile(new Vector3Int(x,y,0));
+
+				if (playerPos != null)
+					_playerSpawnPosList.Add(new Vector2Int(x,y));
 				temp.Add(tile == null ? 0 : 1);
 			}
 			mapBin.Add(temp);
@@ -90,6 +94,11 @@ public class MapManager
 		{
 			GameObject.Destroy(map);
 		}
+	}
+
+	public Vector2Int GetPlayerSpawnPos(int slot)
+	{
+		return _playerSpawnPosList[slot];
 	}
 
 	public Sprite GetMapSprite(Define.MapType maptype)

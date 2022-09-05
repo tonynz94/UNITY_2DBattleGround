@@ -74,7 +74,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 10
+  m_SortingOrder: 12
   m_Sprite: {fileID: -6598946016331564889, guid: 23748c298f885bf4c89671f6d30f562b,
     type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -124,4 +124,6 @@ MonoBehaviour:
   _lastDir: 2
   currentAni: 
   _cellPos: {x: 0, y: 0, z: 0}
+  _HP: 0
+  _destPos: {x: 0, y: 0, z: 0}
   _speed: 5

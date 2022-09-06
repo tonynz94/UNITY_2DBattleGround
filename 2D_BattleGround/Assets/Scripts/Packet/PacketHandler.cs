@@ -143,9 +143,9 @@ class PacketHandler
 		Debug.Log("[NetworkManager] @>> RECV : S_EnterFieldWorld");
 		S_EnterFieldWorld sPkt = packet as S_EnterFieldWorld;
 
-		Vector3 spawnPos = new Vector3(sPkt.posX, sPkt.posY, sPkt.posZ);
+		int slotIndex = sPkt.slotIndex;
 
-		Managers.Game.SpawnWorldObject(Define.WorldObject.Player, sPkt.CGUID, spawnPos);
+		Managers.Game.SpawnWorldObject(Define.WorldObject.Player, sPkt.CGUID, slotIndex);
 
 	}
 

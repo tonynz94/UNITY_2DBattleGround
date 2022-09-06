@@ -7,7 +7,7 @@ public class CameraController : MonoBehaviour
     [SerializeField] Define.CameraMode _mode = Define.CameraMode.AliveMode;
     [SerializeField] GameObject _targetPoint = null;
 
-    public void TargetPoint(GameObject player)
+    public void setTargetPoint(GameObject player)
     {
         _targetPoint = player;
     }
@@ -23,7 +23,8 @@ public class CameraController : MonoBehaviour
         switch(_mode)
         {
             case Define.CameraMode.AliveMode:
-                transform.position = new Vector3(_targetPoint.transform.position.x, _targetPoint.transform.position.y, -10);
+                if(_targetPoint != null)
+                    transform.position = new Vector3(_targetPoint.transform.position.x, _targetPoint.transform.position.y, -10);
                 break;
             case Define.CameraMode.DieMode:
                 break;

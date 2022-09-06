@@ -138,9 +138,7 @@
   
   <packet name="S_EnterFieldWorld">
     <int name ="CGUID"/>
-    <int name="posX"/>
-    <int name="posY"/>
-    <int name="posZ"/>
+    <int name="slotIndex"/>
   </packet>
   
   <packet name="S_PlayerList">

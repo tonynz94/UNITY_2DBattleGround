@@ -1,10 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using DG.Tweening;
+using System;
 
 public class UI_InGame : UI_Scene
 {
-
     int _myRank = 0;
     enum Buttons
     {
@@ -15,12 +16,14 @@ public class UI_InGame : UI_Scene
 
     enum Texts
     {
+        MiddleNoticeText,
         SurvivorText,
         ResultRankText,
     }
 
     enum GameObjects
     {
+        StartNoticeObject,
         InGameObject,
         LoserObject,
         WinnerObject,
@@ -64,8 +67,11 @@ public class UI_InGame : UI_Scene
         GetObject((int)GameObjects.WinnerObject).SetActive(false);
         GetObject((int)GameObjects.LoserObject).SetActive(false);
         GetObject((int)GameObjects.ResultObject).SetActive(false);
+        StartCoroutine(coStart());
+        StartCoroutine(coCameraAnimation());
 
-        GetText((int)Texts.SurvivorText).text = string.Format("Suvivor : {0}", Managers.Game._startPlayerCount.ToString());
+
+        GetText((int)Texts.SurvivorText).text = string.Format("Suvivor : {0}", Managers.Game._startPlayerCount.ToString());  
     }
 
     public void OnPlayerDieMessage(object obj)
@@ -120,5 +126,56 @@ public class UI_InGame : UI_Scene
 
         Managers.Scene.ChangeScene(Define.Scene.LobbyScene);
         
+    }
+
+    IEnumerator coCameraAnimation()
+    {
+        GameObject myPlayerObject = Managers.Game.GetPlayerObject(Managers.Player.GetMyCGUID());
+
+        Vector3 desPos = new Vector3(myPlayerObject.transform.position.x, myPlayerObject.transform.position.y, -10) ;
+        Vector3 startPos = Camera.main.transform.position;
+
+        //========µµÀü=======================================
+        Vector3 dir = (desPos - startPos).normalized;
+        float distance = (desPos - startPos).magnitude;
+
+        float runTime = 0;
+
+        while (runTime < 3f)
+        {
+            runTime += Time.deltaTime;
+            Camera.main.transform.position += dir * (distance * (Time.deltaTime / 3f));
+            yield return null;
+
+        }
+        Camera.main.transform.GetComponent<CameraController>().setTargetPoint(myPlayerObject);
+
+        //===========================================
+        /*
+        float runTime = 0;
+
+        while (runTime < 3f)
+        {
+            runTime += Time.deltaTime;
+            Camera.main.transform.position = Vector3.Lerp(startPos, desPos, runTime / 3f);
+            yield return null;
+            
+        }
+        Camera.main.transform.GetComponent<CameraController>().setTargetPoint(myPlayerObject);
+        */
+    }
+
+    IEnumerator coStart()
+    {
+        yield return new WaitForSeconds(0.5f);
+        GetText((int)Texts.MiddleNoticeText).text = 3.ToString();
+        yield return new WaitForSeconds(1f);
+        GetText((int)Texts.MiddleNoticeText).text = 2.ToString();
+        yield return new WaitForSeconds(1f);
+        GetText((int)Texts.MiddleNoticeText).text = 1.ToString();
+        yield return new WaitForSeconds(1f);
+        GetText((int)Texts.MiddleNoticeText).text = "Survive and Be the last persion!!";
+        yield return new WaitForSeconds(1f);
+        GetText((int)Texts.MiddleNoticeText).gameObject.SetActive(false);
     }
 }

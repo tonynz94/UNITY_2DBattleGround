@@ -44,7 +44,7 @@ public class GameManager
         return bc.WorldObjectType;
     }
 
-    public void SpawnWorldObject(Define.WorldObject type, int CGUID, Vector3 spawnPos ,Transform parent = null)
+    public void SpawnWorldObject(Define.WorldObject type, int CGUID, int slotIndex ,Transform parent = null)
     {
         GameObject go = null;
 
@@ -53,14 +53,13 @@ public class GameManager
         if (isMyPlayer)
         {
             go = Managers.Resource.Instantiate("Objects/MyPlayer");
-            Camera.main.GetComponent<CameraController>().TargetPoint(go);
         }
         else
         {
             go = Managers.Resource.Instantiate("Objects/Player");
         }
-        Vector2Int posInt = 
-        go.transform.localPosition = new Vector3(posInt.)
+        Vector2Int posInt = Managers.Map.GetPlayerSpawnPos(slotIndex);
+        go.transform.localPosition = new Vector3(posInt.x, posInt.y, 0);
 
         //go.name = 
         //go.transform.localPosition = spawnPos;
@@ -76,6 +75,9 @@ public class GameManager
             case Define.WorldObject.Boss:
                 break;
         }
+
+        if(isMyPlayer)
+            Managers.UI.ShowSceneUI<UI_InGame>("UI_InGame");
     }
 
     public void HitPlayer(S_PlayerHit sPkt)

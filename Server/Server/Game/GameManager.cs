@@ -60,15 +60,14 @@ namespace Server.Game
                         //ClientSession session = SessionManager.Instance.Find(CGUID);
                         S_EnterFieldWorld sPkt = new S_EnterFieldWorld();
                         sPkt.CGUID = CGUID;
-                        sPkt.posX = rand.Next(-5, 5);
-                        sPkt.posY = 0;
-                        sPkt.posZ = rand.Next(-5, 5);
+                        sPkt.slotIndex = _playerDic.Count - 1;
                         others.Session.Send(sPkt.Write());
                     }
                 }
             }
         }
 
+        //절대값으로 보내 줌
         public void PlayerMove(C_Move cPkt)
         {
             // 좌표 바꿔주고
@@ -267,16 +266,19 @@ namespace Server.Game
 
         public void HandlePlayerEnterToField(int roomID,int CGUID)
         {
-            GameField gameField = null;
-            _playingGame.TryGetValue(roomID, out gameField);
+            lock (_lock)
+            {
+                GameField gameField = null;
+                _playingGame.TryGetValue(roomID, out gameField);
 
-            if (gameField == null)
-            {
-                Console.WriteLine("Theres is no GameID Started plz Check");
-            }
-            else
-            {
-                gameField.EnterToField(CGUID);
+                if (gameField == null)
+                {
+                    Console.WriteLine("Theres is no GameID Started plz Check");
+                }
+                else
+                {
+                    gameField.EnterToField(CGUID);
+                }
             }
         }
 

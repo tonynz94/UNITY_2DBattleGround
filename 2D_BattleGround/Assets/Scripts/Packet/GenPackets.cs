@@ -1106,9 +1106,7 @@ public class C_EnterFieldWorld : IPacket
 public class S_EnterFieldWorld : IPacket
 {
 	public int CGUID;
-	public int posX;
-	public int posY;
-	public int posZ;
+	public int slotIndex;
 
 	public ushort Protocol { get { return (ushort)PacketID.S_EnterFieldWorld; } }
 
@@ -1119,11 +1117,7 @@ public class S_EnterFieldWorld : IPacket
 		count += sizeof(ushort);
 		this.CGUID = BitConverter.ToInt32(segment.Array, segment.Offset + count);
 		count += sizeof(int);
-		this.posX = BitConverter.ToInt32(segment.Array, segment.Offset + count);
-		count += sizeof(int);
-		this.posY = BitConverter.ToInt32(segment.Array, segment.Offset + count);
-		count += sizeof(int);
-		this.posZ = BitConverter.ToInt32(segment.Array, segment.Offset + count);
+		this.slotIndex = BitConverter.ToInt32(segment.Array, segment.Offset + count);
 		count += sizeof(int);
 	}
 
@@ -1137,11 +1131,7 @@ public class S_EnterFieldWorld : IPacket
 		count += sizeof(ushort);
 		Array.Copy(BitConverter.GetBytes(this.CGUID), 0, segment.Array, segment.Offset + count, sizeof(int));
 		count += sizeof(int);
-		Array.Copy(BitConverter.GetBytes(this.posX), 0, segment.Array, segment.Offset + count, sizeof(int));
-		count += sizeof(int);
-		Array.Copy(BitConverter.GetBytes(this.posY), 0, segment.Array, segment.Offset + count, sizeof(int));
-		count += sizeof(int);
-		Array.Copy(BitConverter.GetBytes(this.posZ), 0, segment.Array, segment.Offset + count, sizeof(int));
+		Array.Copy(BitConverter.GetBytes(this.slotIndex), 0, segment.Array, segment.Offset + count, sizeof(int));
 		count += sizeof(int);
 
 		Array.Copy(BitConverter.GetBytes(count), 0, segment.Array, segment.Offset, sizeof(ushort));

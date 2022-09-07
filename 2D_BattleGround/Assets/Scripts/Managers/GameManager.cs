@@ -117,8 +117,8 @@ public class GameManager
 
         if(isMyPlayer)
         {
-            Camera.main.GetComponent<CameraController>().MyPlayerDie();
-            MessageSystem.CallEventMessage(MESSAGE_EVENT_TYPE.MESS_PLAYERDEATH, _playerDic.Count);
+            Camera.main.GetComponent<CameraController>().MyPlayerDie();      
+            MessageSystem.CallEventMessage(MESSAGE_EVENT_TYPE.MESS_PLAYERDEATH, _playerDic.Count);     
             return;
         }
 

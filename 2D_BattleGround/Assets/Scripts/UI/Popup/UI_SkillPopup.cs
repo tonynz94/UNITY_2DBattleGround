@@ -19,6 +19,7 @@ public class UI_SkillPopup : UI_Popup
     int _tempWaterCountUpSkillPoint;
 
     int _tempSkillPoint;
+    int _consumeSkillPoint;
 
     enum Buttons
     {
@@ -80,8 +81,10 @@ public class UI_SkillPopup : UI_Popup
 
     private void Start()
     {
-        GetText((int)Texts.SkillPointNumberText).text = _tempSkillPoint.ToString();
+        _consumeSkillPoint = 0;
+
         _tempSkillPoint = _myPlayer._skillPoint;
+        GetText((int)Texts.SkillPointNumberText).text = _tempSkillPoint.ToString();
         _tempSpeedUpSkillPoint = _myPlayer._SpeedUpSkillCount;
         _tempRangeUpSkillPoint = _myPlayer._RangeUpSkillCount;
         _tempPowerUpSkillPoint = _myPlayer._PowerUpSkillCount;
@@ -114,11 +117,12 @@ public class UI_SkillPopup : UI_Popup
             return;
         }
 
-        if (_tempSpeedUpSkillPoint + 1 < MAX_POINT)
+        if (_tempSpeedUpSkillPoint + 1 <= MAX_POINT)
         {
             _isChanged = true;
             _tempSkillPoint--;
             _tempSpeedUpSkillPoint += 1;
+            _consumeSkillPoint++;
             SetSkillPointCountUI("SpeedUp", _tempSpeedUpSkillPoint);
         }
     }
@@ -134,11 +138,12 @@ public class UI_SkillPopup : UI_Popup
             return;
         }
 
-        if (_tempRangeUpSkillPoint + 1 < 3)
+        if (_tempRangeUpSkillPoint + 1 <= 3)
         {
             _isChanged = true;
             _tempSkillPoint--;
             _tempRangeUpSkillPoint += 1;
+            _consumeSkillPoint++;
             SetSkillPointCountUI("RangeUp", _tempRangeUpSkillPoint);
         }
     }
@@ -154,11 +159,12 @@ public class UI_SkillPopup : UI_Popup
             return;
         }
 
-        if (_tempPowerUpSkillPoint + 1 < MAX_POINT)
+        if (_tempPowerUpSkillPoint + 1 <= MAX_POINT)
         {
             _isChanged = true;
             _tempSkillPoint--;
             _tempPowerUpSkillPoint += 1;
+            _consumeSkillPoint++;
             SetSkillPointCountUI("PowerUp", _tempPowerUpSkillPoint);
         }
     }
@@ -174,11 +180,12 @@ public class UI_SkillPopup : UI_Popup
             return;
         }
 
-        if (_tempWaterCountUpSkillPoint + 1 < MAX_POINT)
+        if (_tempWaterCountUpSkillPoint + 1 <= MAX_POINT)
         {
             _isChanged = true;
             _tempSkillPoint--;
             _tempWaterCountUpSkillPoint += 1;
+            _consumeSkillPoint++;
             SetSkillPointCountUI("WaterCountUp", _tempWaterCountUpSkillPoint);
         }
     }
@@ -206,6 +213,13 @@ public class UI_SkillPopup : UI_Popup
                     sPkt.WaterCountUpPoint = _tempWaterCountUpSkillPoint;
 
                     Managers.Net.Send(sPkt.Write());
+                    int leftSkillPoint = Managers.Player.MyPlayer._skillPoint - _consumeSkillPoint;
+                    if (leftSkillPoint < 0)
+                    {
+                        Debug.LogError("0юлго");
+                        return;
+                    }
+                    Managers.Player.MyPlayer._skillPoint = leftSkillPoint;
                     Managers.UI.ClosePopupUI(this);
                 }
             );

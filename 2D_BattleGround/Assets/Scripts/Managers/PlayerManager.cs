@@ -1,3 +1,4 @@
+using Data;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -39,6 +40,36 @@ public class Player
         }
     }
 
+    public int Exp
+    {
+        get
+        {
+            return _currentExp;
+        }
+        set
+        {
+            _currentExp = value;
+
+            int level = _level;
+            while (true)
+            {
+                LevelStat stat;
+                if (Managers.Data.LevelStatDict.TryGetValue(level, out stat) == false)
+                    break;
+                if (_currentExp < stat.totalEXP)
+                    break;
+
+                Debug.Log("1Level UP");
+                level++;
+            }
+
+            if (level != _level)
+            {
+                _level = level;
+            }
+        }
+    }
+
     public Player(int CGUID, string nickName)
     {
         _CGUID = CGUID;
@@ -60,7 +91,7 @@ public class Player
         _WaterCountUpSkillCount = 0;
 
 
-        _skillPoint = 0;
+        _skillPoint = 2;
 
         _isPlayerReady = false;
     }

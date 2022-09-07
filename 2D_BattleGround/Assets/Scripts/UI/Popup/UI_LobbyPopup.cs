@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using static Define;
+using Data;
 
 public class UI_LobbyPopup : UI_Popup
 {
@@ -102,10 +103,18 @@ public class UI_LobbyPopup : UI_Popup
 
     public void InitPlayerInfo()
     {
+        int level = Managers.Player.MyPlayer.Level;
+
         GetText((int)Texts.PlayerNickText).text = Managers.Player.MyPlayer.NickName;
-        GetText((int)Texts.PlayerLevelText).text = Managers.Player.MyPlayer.Level.ToString();
+        GetText((int)Texts.PlayerLevelText).text = level.ToString();
         GetText((int)Texts.DiamondText).text = Managers.Player.MyPlayer._gameDiamond.ToString();
         GetText((int)Texts.MoneyText).text = Managers.Player.MyPlayer._gameMoney.ToString();
+
+        LevelStat levelStat;
+        Managers.Data.LevelStatDict.TryGetValue(level, out levelStat);
+        int totalExp = levelStat.totalEXP;
+        float expPersent = Managers.Player.MyPlayer._currentExp / totalExp;
+        GetObject((int)GameObjects.PlayerEXPBar).GetComponent<Slider>().value = expPersent;
     }
 
     public void OnSendChatButton()

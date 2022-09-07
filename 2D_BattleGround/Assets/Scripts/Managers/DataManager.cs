@@ -1,30 +1,21 @@
+using Data;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-
-public interface ILoader<Key, Value>
-{
-    Dictionary<Key, Value> MakeDict();
-}
-
 [Serializable]
-
-
 public class DataManager
 {
-    public Dictionary<int, Data.Stat> _statData { get; private set; } = new Dictionary<int, Data.Stat>();
+    public Dictionary<int, Data.LevelStat> LevelStatDict { get; private set; } = new Dictionary<int, Data.LevelStat>();
     public void Init()
     {
-        _statData = LoadJson<Data.StatData, int, Data.Stat>("StatData").MakeDict();
+        LevelStatDict = LoadJson<LevelStatData, int, Data.LevelStat>("LevelStat").MakeDict();
     }
 
-    Loader LoadJson<Loader, Key, Value>(string path) where Loader : ILoader<Key, Value>
+    Loader LoadJson<Loader, Key, Value>(string path)
     {
         TextAsset textAsset = Managers.Resource.Load<TextAsset>($"Data/{path}");
         return JsonUtility.FromJson<Loader>(textAsset.text);
     }
-
-
 }

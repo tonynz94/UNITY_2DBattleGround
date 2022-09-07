@@ -56,6 +56,7 @@ public class Managers : MonoBehaviour
             s_Map.init();
             s_Sound.Init();
             s_Pool.Init();
+            s_Data.Init();
         }
     }
 

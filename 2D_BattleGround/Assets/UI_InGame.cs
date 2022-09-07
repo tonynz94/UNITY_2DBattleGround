@@ -3,15 +3,22 @@ using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
 using System;
+using Data;
 
 public class UI_InGame : UI_Scene
 {
     int _myRank = 0;
+    int clickCount = 0;
+
+    int _plusMoney = 0;
+    int _plusDia = 0;
+    int _plusExp = 0;
     enum Buttons
     {
         ToWinnerResultButton,
         ToLoserResultButton,
         ToLobbyButton,
+        NextStepButton,
     }
 
     enum Texts
@@ -19,6 +26,16 @@ public class UI_InGame : UI_Scene
         MiddleNoticeText,
         SurvivorText,
         ResultRankText,
+
+        LevelText,
+        ObtainExpText,
+        CoinText,
+        DiamondText,
+
+        SpeedUpText,
+        AttackRangeText,
+        DamageUpText,
+        WaterBallonNumText,
     }
 
     enum GameObjects
@@ -29,11 +46,17 @@ public class UI_InGame : UI_Scene
         WinnerObject,
         KillAndDeathBoardObject,
 
+        ExpObject,
+        MoneyObject,
+        DiamondObject,
+        SkillPointObject,
+        ExpBarControllerObject,
         ResultObject,
     }
 
     public void OnEnable()
     {
+        clickCount = 0;
         MessageSystem.RegisterMessageSystem((int)MESSAGE_EVENT_TYPE.MESS_PLAYERDIE, OnPlayerDieMessage);
         MessageSystem.RegisterMessageSystem((int)MESSAGE_EVENT_TYPE.MESS_PLAYERWINNER, OnWinnerMessage);
         MessageSystem.RegisterMessageSystem((int)MESSAGE_EVENT_TYPE.MESS_PLAYERDEATH, OnDeathMessage);
@@ -58,6 +81,7 @@ public class UI_InGame : UI_Scene
         BindEvent(GetButton((int)Buttons.ToWinnerResultButton).gameObject, OnToResultButton);
         BindEvent(GetButton((int)Buttons.ToLoserResultButton).gameObject, OnToResultButton);
         BindEvent(GetButton((int)Buttons.ToLobbyButton).gameObject, OnToLobbyButton);
+        BindEvent(GetButton((int)Buttons.NextStepButton).gameObject, OnNextStepButton);
 
         return true;
     }
@@ -67,6 +91,14 @@ public class UI_InGame : UI_Scene
         GetObject((int)GameObjects.WinnerObject).SetActive(false);
         GetObject((int)GameObjects.LoserObject).SetActive(false);
         GetObject((int)GameObjects.ResultObject).SetActive(false);
+
+        GetObject((int)GameObjects.ExpObject).SetActive(false);
+        GetObject((int)GameObjects.MoneyObject).SetActive(false);
+        GetObject((int)GameObjects.DiamondObject).SetActive(false);
+        GetObject((int)GameObjects.SkillPointObject).SetActive(false);
+
+        GetButton((int)Buttons.ToLobbyButton).gameObject.SetActive(false);
+
         StartCoroutine(coStart());
         StartCoroutine(coCameraAnimation());
 
@@ -90,7 +122,6 @@ public class UI_InGame : UI_Scene
     public void OnWinnerMessage(object obj)
     {
         _myRank = 1;
-
         GetObject((int)GameObjects.WinnerObject).SetActive(true);
         GetObject((int)GameObjects.LoserObject).SetActive(false);
     }
@@ -98,11 +129,9 @@ public class UI_InGame : UI_Scene
     public void OnDeathMessage(object obj)
     {
         _myRank = ((int)obj) + 1;
-
+        GiveReward(_myRank);
         GetObject((int)GameObjects.WinnerObject).SetActive(false);
-        GetObject((int)GameObjects.LoserObject).SetActive(true);
-
-        GetText((int)Texts.ResultRankText).text = _myRank.ToString();
+        GetObject((int)GameObjects.LoserObject).SetActive(true);  
     }
 
     public void OnToResultButton()
@@ -111,7 +140,8 @@ public class UI_InGame : UI_Scene
         GetObject((int)GameObjects.LoserObject).SetActive(false);
         GetObject((int)GameObjects.ResultObject).SetActive(true);
 
-        GetText((int)Texts.ResultRankText).text = _myRank.ToString();
+        GetText((int)Texts.ResultRankText).text = $"Rank : {_myRank}";
+        GiveReward(_myRank);
     }
 
     public void OnToLobbyButton()
@@ -126,6 +156,116 @@ public class UI_InGame : UI_Scene
 
         Managers.Scene.ChangeScene(Define.Scene.LobbyScene);
         
+    }
+
+    public void OnNextStepButton()
+    {
+        if(clickCount == 0)
+        {
+            GetObject((int)GameObjects.ExpObject).SetActive(true);
+            int level = Managers.Player.MyPlayer._level;
+            StartCoroutine(coExpObtain());
+        }
+        else if(clickCount == 1)
+        {
+            GetObject((int)GameObjects.MoneyObject).SetActive(true);
+            StartCoroutine(coCoinObtain());
+        }
+        else if(clickCount == 2)
+        {
+            GetObject((int)GameObjects.DiamondObject).SetActive(true);
+            StartCoroutine(coDiaObtain());
+        }
+        else if(clickCount == 3)
+        {
+            GetObject((int)GameObjects.SkillPointObject).SetActive(true);
+            GetText((int)Texts.SpeedUpText).text = $"Speed UP : {Managers.Player.MyPlayer._SpeedUpSkillCount}";
+            GetText((int)Texts.AttackRangeText).text = $"Attack Range : {Managers.Player.MyPlayer._RangeUpSkillCount}";
+            GetText((int)Texts.DamageUpText).text = $"Damage : {Managers.Player.MyPlayer._PowerUpSkillCount}";
+            GetText((int)Texts.WaterBallonNumText).text = $"Water Ballon : {Managers.Player.MyPlayer._WaterCountUpSkillCount}";
+            Managers.Player.MyPlayer._skillPoint += 2;
+        }
+        else if(clickCount == 4)
+        {
+            GetButton((int)Buttons.NextStepButton).gameObject.SetActive(false);
+            GetButton((int)Buttons.ToLobbyButton).gameObject.SetActive(true);
+        }
+        clickCount++;
+    }
+
+    IEnumerator coExpObtain()
+    {
+        float currentTime = 0;
+        int level = Managers.Player.MyPlayer._level;
+
+        GetText((int)Texts.LevelText).text = "LV " + level.ToString();
+        GetText((int)Texts.ObtainExpText).text = $"+{_plusExp} EXP";
+
+        Managers.Player.MyPlayer.Exp += _plusExp;
+
+        LevelStat levelStat;
+        LevelStat beforeLevelStat;
+        Managers.Data.LevelStatDict.TryGetValue(level, out levelStat);
+        Managers.Data.LevelStatDict.TryGetValue(level-1, out beforeLevelStat);
+
+        int currentLevelTotalEXP = levelStat.totalEXP - beforeLevelStat.totalEXP;
+
+        float startPos = GetObject((int)GameObjects.ExpBarControllerObject).transform.localScale.x;
+        float desPos = (Managers.Player.MyPlayer.Exp - beforeLevelStat.totalEXP) / currentLevelTotalEXP;
+
+        float distance = desPos - startPos;
+
+        while (currentTime < 2.0f)
+        {
+            currentTime += Time.deltaTime;
+            
+            float scaleX = GetObject((int)GameObjects.ExpBarControllerObject).transform.localScale.x + ((distance/2.0f) * Time.deltaTime);
+
+            if (scaleX > 1.0f)
+            {
+                GetText((int)Texts.LevelText).text = $"LV {++level}";
+                scaleX = 0f;
+            }
+            GetObject((int)GameObjects.ExpBarControllerObject).transform.localScale = new Vector3(scaleX, 1, 1);
+            yield return null;
+        }
+        
+    }
+
+    IEnumerator coCoinObtain()
+    {
+        int start = 0;
+        int des = _plusMoney;
+
+        float currentTime = 0;
+
+        Managers.Player.MyPlayer._gameMoney += _plusMoney;
+        while (currentTime < 2.0f)
+        {
+            currentTime += Time.deltaTime;
+            float persent = Math.Clamp(currentTime/2.0f, 0, 1f);
+            int coin = Math.Clamp((int)Mathf.Lerp(start, des, persent), 0, _plusMoney);
+            GetText((int)Texts.CoinText).text = $"+{coin} Coin";
+            yield return null;
+        }
+    }
+
+    IEnumerator coDiaObtain()
+    {
+        int start = 0;
+        int des = _plusDia;
+
+        float currentTime = 0;
+
+        Managers.Player.MyPlayer._gameDiamond += _plusDia;
+        while (currentTime < 2.0f)
+        {
+            currentTime += Time.deltaTime;
+            float persent = Math.Clamp(currentTime / 2.0f, 0, 1f);
+            int dia = Math.Clamp((int)Mathf.Lerp(start, des, persent), 0, _plusMoney);
+            GetText((int)Texts.DiamondText).text = $"+{dia} Dia";
+            yield return null;
+        }
     }
 
     IEnumerator coCameraAnimation()
@@ -177,5 +317,12 @@ public class UI_InGame : UI_Scene
         GetText((int)Texts.MiddleNoticeText).text = "Survive and Be the last persion!!";
         yield return new WaitForSeconds(1f);
         GetText((int)Texts.MiddleNoticeText).gameObject.SetActive(false);
+    }
+
+    public void GiveReward(int rank)
+    {
+        _plusMoney = 400 - (100 * (rank - 1));
+        _plusDia =  40 - (10 * (rank - 1)); 
+        _plusExp = 100 - (10 * (rank - 1));
     }
 }

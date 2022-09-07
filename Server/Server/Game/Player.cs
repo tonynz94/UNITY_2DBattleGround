@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Server.Data;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -6,7 +7,6 @@ namespace Server.Game
 {
     public class PlayerInfo
     {
-
         public String NickName;
 
         public int Level = 1;
@@ -32,6 +32,37 @@ namespace Server.Game
         public bool isInGameRoom = false;
         public bool isGameOwner = false;
         public bool isPlayerReady = false;
+
+        public int Exp
+        {
+            get
+            {
+                return _currentExp;
+            }
+            set
+            {
+                _currentExp = value;
+
+                int level = _level;
+                while(true)
+                {
+                    LevelStat stat;
+                    if (DataManager.LevelStatDict.TryGetValue(_level, out stat) == false)
+                        break;
+                    if (_currentExp < stat.totalEXP)
+                        break;
+
+                    Console.WriteLine("1Level UP");
+                    level++;
+                }
+
+                if(level != _level)
+                {
+                    //TODO
+                    //패킷 보내주면 됌.
+                }
+            }
+        }
     }
 
     class Player

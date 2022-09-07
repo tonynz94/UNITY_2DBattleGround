@@ -5,37 +5,28 @@ using UnityEngine;
 
 namespace Data
 {
-    #region Stat
     [Serializable]
-    public class Stat
+    public class LevelStat
     {
         public int level;
-        public int maxHp;
-        public int maxMp;
-        public int attack;
-        public int defense;
-        public int critical;
-        public int evasive;
-        public int totalExp;
+        public int totalEXP;
     }
-
     [Serializable]
-    public class StatData : ILoader<int, Stat>
+    public class LevelStatData
     {
-        public List<Stat> stats = new List<Stat>();
+        public List<LevelStat> levelStats = new List<LevelStat>();
 
-        public Dictionary<int, Stat> MakeDict()
+        public Dictionary<int, LevelStat> MakeDict()
         {
-            Dictionary<int, Stat> statData = new Dictionary<int, Stat>();
-            
-            foreach (Stat stat in stats)
-                statData.Add(stat.level, stat);
-            
-            return statData;
+            Dictionary<int, LevelStat> dic = new Dictionary<int, LevelStat>();
+            foreach (LevelStat LevelStat in levelStats)
+            {
+                dic.Add(LevelStat.level, LevelStat);
+            }
+
+            return dic;
         }
     }
-
-    #endregion
 
 
 

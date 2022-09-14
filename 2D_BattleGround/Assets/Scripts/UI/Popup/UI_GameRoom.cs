@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class UI_GameRoom : UI_Popup
@@ -111,7 +112,7 @@ public class UI_GameRoom : UI_Popup
     }
 
     //방장 일때.
-    public void OnStartButton()
+    public void OnStartButton(PointerEventData evt)
     {
         C_GameStart cPkt = new C_GameStart();
         if(Managers.Player.GetMyCGUID() == Managers.Room.GetGameRoom(_roomID).roomOwner)
@@ -128,7 +129,7 @@ public class UI_GameRoom : UI_Popup
     }
 
     //이 레디함수는 내가 누를때만 실행됨.
-    public void OnReadyButton()
+    public void OnReadyButton(PointerEventData evt)
     {
         C_ClickReadyOnOff sPkt = new C_ClickReadyOnOff();
 
@@ -144,7 +145,7 @@ public class UI_GameRoom : UI_Popup
         Managers.Net.Send(sPkt.Write());
     }
 
-    public void OnBackButton()
+    public void OnBackButton(PointerEventData evt)
     {
         C_GameToLobby cPkt = new C_GameToLobby();
         cPkt.CGUID = Managers.Player.GetMyCGUID();

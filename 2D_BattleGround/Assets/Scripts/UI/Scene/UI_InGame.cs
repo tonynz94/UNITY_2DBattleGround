@@ -4,6 +4,7 @@ using UnityEngine;
 using DG.Tweening;
 using System;
 using Data;
+using UnityEngine.EventSystems;
 
 public class UI_InGame : UI_Scene
 {
@@ -13,6 +14,8 @@ public class UI_InGame : UI_Scene
     int _plusMoney = 0;
     int _plusDia = 0;
     int _plusExp = 0;
+
+    UI_Controller _controller = null;
     enum Buttons
     {
         ToWinnerResultButton,
@@ -124,6 +127,7 @@ public class UI_InGame : UI_Scene
         _myRank = 1;
         GetObject((int)GameObjects.WinnerObject).SetActive(true);
         GetObject((int)GameObjects.LoserObject).SetActive(false);
+        Destroy(_controller.gameObject);
     }
 
     public void OnDeathMessage(object obj)
@@ -131,10 +135,11 @@ public class UI_InGame : UI_Scene
         _myRank = ((int)obj) + 1;
         GiveReward(_myRank);
         GetObject((int)GameObjects.WinnerObject).SetActive(false);
-        GetObject((int)GameObjects.LoserObject).SetActive(true);  
+        GetObject((int)GameObjects.LoserObject).SetActive(true);
+        Destroy(_controller.gameObject);
     }
 
-    public void OnToResultButton()
+    public void OnToResultButton(PointerEventData evt)
     {
         GetObject((int)GameObjects.WinnerObject).SetActive(false);
         GetObject((int)GameObjects.LoserObject).SetActive(false);
@@ -144,7 +149,7 @@ public class UI_InGame : UI_Scene
         GiveReward(_myRank);
     }
 
-    public void OnToLobbyButton()
+    public void OnToLobbyButton(PointerEventData evt)
     {
         C_FieldToLobby cPkt = new C_FieldToLobby();
         cPkt.RoomID = Managers.Game.GetCurrentRoomID();
@@ -158,7 +163,7 @@ public class UI_InGame : UI_Scene
         
     }
 
-    public void OnNextStepButton()
+    public void OnNextStepButton(PointerEventData evt)
     {
         if(clickCount == 0)
         {
@@ -211,7 +216,7 @@ public class UI_InGame : UI_Scene
         int currentLevelTotalEXP = levelStat.totalEXP - beforeLevelStat.totalEXP;
 
         float startPos = GetObject((int)GameObjects.ExpBarControllerObject).transform.localScale.x;
-        float desPos = (Managers.Player.MyPlayer.Exp - beforeLevelStat.totalEXP) / currentLevelTotalEXP;
+        float desPos = (Managers.Player.MyPlayer.Exp - beforeLevelStat.totalEXP) / (float)currentLevelTotalEXP;
 
         float distance = desPos - startPos;
 
@@ -289,7 +294,8 @@ public class UI_InGame : UI_Scene
 
         }
         Camera.main.transform.GetComponent<CameraController>().setTargetPoint(myPlayerObject);
-
+        if(Define.ByJoyStick)
+            _controller = Managers.UI.ShowSceneUI<UI_Controller>();
         //===========================================
         /*
         float runTime = 0;

@@ -24,7 +24,7 @@ public class UI_DamageText : UI_WorldSpace
 
     public void ShowDamage(int damage)
     { 
-        damage = _damage;
+       _damage = damage;
         GetText((int)Texts.DamageText).text = _damage.ToString();
         StartCoroutine(coDestory());
 

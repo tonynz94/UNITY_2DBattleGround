@@ -6,6 +6,7 @@ using UnityEngine.UI;
 using TMPro;
 using static Define;
 using Data;
+using UnityEngine.EventSystems;
 
 public class UI_LobbyPopup : UI_Popup
 {
@@ -79,7 +80,7 @@ public class UI_LobbyPopup : UI_Popup
         return true;
     }
 
-    public void OnShowRoomButton()
+    public void OnShowRoomButton(PointerEventData evt)
     {
         Debug.Log("Show Room");
         Managers.Room.GameRoomAllClear();
@@ -91,12 +92,12 @@ public class UI_LobbyPopup : UI_Popup
         
     }
 
-    public void OnCreateButton()
+    public void OnCreateButton(PointerEventData evt)
     {
         Managers.UI.ShowPopupUI<UI_CreateRoom>();
     }
 
-    public void OnHeroButton()
+    public void OnHeroButton(PointerEventData evt)
     {
         Debug.Log("My Hero List");
     }
@@ -117,7 +118,7 @@ public class UI_LobbyPopup : UI_Popup
         GetObject((int)GameObjects.PlayerEXPBar).GetComponent<Slider>().value = expPersent;
     }
 
-    public void OnSendChatButton()
+    public void OnSendChatButton(PointerEventData evt)
     {
         string chatStr = GetObject((int)GameObjects.ChatContentField).GetComponent<TMP_InputField>().text;
 
@@ -134,7 +135,7 @@ public class UI_LobbyPopup : UI_Popup
         GetObject((int)GameObjects.ChatContentField).GetComponent<TMP_InputField>().text = "";
     }
 
-    public void OnSkillButton()
+    public void OnSkillButton(PointerEventData evt)
     {
         Managers.UI.ShowPopupUI<UI_SkillPopup>();
     }

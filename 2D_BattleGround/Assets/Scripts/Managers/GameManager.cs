@@ -144,6 +144,13 @@ public class GameManager
 
         return playerObject;
     }
+    public GameObject GetMyPlayerObject()
+    {
+        GameObject playerObject;
+        _playerDic.TryGetValue(Managers.Player.GetMyCGUID(), out playerObject);
+
+        return playerObject;
+    }
 
     public int GetPlayerCount()
     {

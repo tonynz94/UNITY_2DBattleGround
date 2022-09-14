@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
+using UnityEngine.EventSystems;
 
 public class UI_IntroPopup : UI_Popup
 {
@@ -24,7 +25,7 @@ public class UI_IntroPopup : UI_Popup
         return true;
     }
 
-    void OnTapToStartButton()
+    void OnTapToStartButton(PointerEventData evt)
     {
         Debug.Log("start Button");
         Managers.Sound.Play(Define.Sound.Effect, "Sound_MainButton");

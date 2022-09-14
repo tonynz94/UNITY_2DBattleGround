@@ -5,35 +5,42 @@ using UnityEngine;
 using DG.Tweening;
 using UnityEngine.EventSystems;
 
-public class UI_EventHandler : MonoBehaviour, IPointerClickHandler, IPointerDownHandler, IBeginDragHandler, IDragHandler
+public class UI_EventHandler : MonoBehaviour, IPointerClickHandler, IPointerDownHandler, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
-    public Action OnClickHandler = null;
-    public Action OnBeginDragHandler = null;
-    public Action OnDragHandler = null;
-    //?????? ????????
-    public void OnBeginDrag(PointerEventData eventData)
+    public Action<PointerEventData> OnClickHandler = null;
+    public Action<PointerEventData> OnBeginDragHandler = null;
+    public Action<PointerEventData> OnDragHandler = null;
+    public Action<PointerEventData> OnEndDragHandler= null;
+    public void OnBeginDrag(PointerEventData evt)
     {
         if (OnBeginDragHandler != null)
-            OnBeginDragHandler.Invoke();
+            OnBeginDragHandler.Invoke(evt);
     }
 
-    //?? ???? ???????? ???????? ???? ??????
-    public void OnDrag(PointerEventData eventData)
+    public void OnDrag(PointerEventData evt)
     {
         if (OnDragHandler != null)
-            OnDragHandler.Invoke();
+            OnDragHandler.Invoke(evt);
     }
 
-    public void OnPointerClick(PointerEventData eventData)
+    public void OnEndDrag(PointerEventData evt)
+    {
+        if (OnEndDragHandler != null)
+            OnEndDragHandler.Invoke(evt);
+    }
+
+    public void OnPointerClick(PointerEventData evt)
     {
         gameObject.transform.DOPunchScale(new Vector3(-0.1f, -0.1f, 0f), 0.1f);
         //Managers.Sound.Play(Define.Sound.Effect, "Sound_Bubble");
         if (OnClickHandler != null)
-            OnClickHandler.Invoke();
+            OnClickHandler.Invoke(evt);
     }
 
-    public void OnPointerDown(PointerEventData eventData)
+    public void OnPointerDown(PointerEventData evt)
     {
         //throw new NotImplementedException();
     }
+
+
 }

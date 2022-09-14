@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class UI_RoomList : UI_Popup
 {
@@ -94,7 +95,7 @@ public class UI_RoomList : UI_Popup
         }
     }
 
-    public void OnJoinButton()
+    public void OnJoinButton(PointerEventData evt)
     {
         Debug.Log("Join Button Clicked");
         if(_selectRoomId == -1)
@@ -123,7 +124,7 @@ public class UI_RoomList : UI_Popup
         Managers.Net.Send(sPkt.Write());
     }
 
-    public void OnBackButton()
+    public void OnBackButton(PointerEventData evt)
     {
         Managers.Room.GameRoomAllClear();
         Managers.UI.ClosePopupUI(this);

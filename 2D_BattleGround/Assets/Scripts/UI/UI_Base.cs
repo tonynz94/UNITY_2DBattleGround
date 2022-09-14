@@ -57,7 +57,7 @@ public class UI_Base : MonoBehaviour
     protected Button GetButton(int idx) { return Get<Button>(idx); }
     protected TextMeshProUGUI GetText(int idx) { return Get<TextMeshProUGUI>(idx); }
 
-    public static void BindEvent(GameObject go, Action action, Define.UIEvent type = Define.UIEvent.Click)
+    public static void BindEvent(GameObject go, Action<PointerEventData> action, Define.UIEvent type = Define.UIEvent.Click)
     {
         UI_EventHandler evt = go.GetOrAddComponent<UI_EventHandler>();
 
@@ -72,6 +72,18 @@ public class UI_Base : MonoBehaviour
             case Define.UIEvent.PointerUp:
                 break;
             case Define.UIEvent.Pressed:
+                break;
+            case Define.UIEvent.BeginDrag:
+                evt.OnBeginDragHandler -= action;
+                evt.OnBeginDragHandler += action;
+                break;
+            case Define.UIEvent.Drag:
+                evt.OnDragHandler -= action;
+                evt.OnDragHandler += action;
+                break;
+            case Define.UIEvent.EndDrag:
+                evt.OnEndDragHandler -= action;
+                evt.OnEndDragHandler += action;
                 break;
         }
     }

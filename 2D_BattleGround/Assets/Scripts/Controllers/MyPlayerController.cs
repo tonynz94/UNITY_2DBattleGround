@@ -27,6 +27,9 @@ public class MyPlayerController : PlayerController
 
     void GetDirInput()
     {
+        if (Define.ByJoyStick)
+            return;
+
         if (Input.GetKey(KeyCode.W))
         {
             Dir = MoveDir.Up;
@@ -54,7 +57,7 @@ public class MyPlayerController : PlayerController
         }
     }
 
-    protected void SetWaterBOOM()
+    public void SetWaterBOOM()
     {
         Vector2Int cellPos = new Vector2Int(_cellPos.x, _cellPos.y);
         if (Managers.Game.FindObjectsInField(cellPos) == null)

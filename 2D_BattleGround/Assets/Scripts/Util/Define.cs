@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class Define
 {
+    public static bool ByJoyStick;
     public enum MapType
     {
         None,
@@ -76,6 +77,9 @@ public class Define
         Pressed,
         PointerDown,
         PointerUp,
+        BeginDrag,
+        Drag,
+        EndDrag,
     }
 
     public enum Sound

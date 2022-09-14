@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.EventSystems;
 
 public class UI_ConfirmPopup : UI_Popup
 {
@@ -39,7 +40,7 @@ public class UI_ConfirmPopup : UI_Popup
         return true;
     }
 
-    public void OnStartButtonClick()
+    public void OnStartButtonClick(PointerEventData evt)
     {
         Debug.Log("StartButton Click");
         if (string.IsNullOrEmpty(inputField.text) || inputField.text.Length > 11)

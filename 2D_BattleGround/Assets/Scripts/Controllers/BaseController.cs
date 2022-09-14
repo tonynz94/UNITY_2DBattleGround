@@ -19,7 +19,7 @@ public class BaseController : MonoBehaviour
     [SerializeField]
     protected ObjectState _state = Define.ObjectState.Idle;
     [SerializeField]
-    protected MoveDir _dir = Define.MoveDir.Down;
+    protected MoveDir _dir = Define.MoveDir.None;
     [SerializeField]
     protected MoveDir _lastDir = Define.MoveDir.Down;
     [SerializeField]

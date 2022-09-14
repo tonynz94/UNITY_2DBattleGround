@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class UI_CommonPopup : UI_Popup
 {
@@ -51,7 +52,7 @@ public class UI_CommonPopup : UI_Popup
         }
     }
 
-    public void OnYesButton()
+    public void OnYesButton(PointerEventData evt)
     {
         Managers.UI.ClosePopupUI(this);
         //Managers.Sound.Play(Define.Sound.Effect, "Sound_CheckButton");
@@ -59,7 +60,7 @@ public class UI_CommonPopup : UI_Popup
             _onClickYesButton.Invoke();
     }
 
-    public void OnNoButton()
+    public void OnNoButton(PointerEventData evt)
     {
         //Managers.Sound.Play(Define.Sound.Effect, "Sound_CheckButton");
         Managers.UI.ClosePopupUI();

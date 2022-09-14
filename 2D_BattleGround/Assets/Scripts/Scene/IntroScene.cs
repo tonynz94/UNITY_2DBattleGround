@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class IntroScene : BaseScene
 {
+    public bool _byJoyStick;
     protected override bool Init()
     {
         if (base.Init() == false)
@@ -12,6 +13,7 @@ public class IntroScene : BaseScene
         SceneType = Define.Scene.IntroScene;
         Managers.UI.ShowPopupUI<UI_IntroPopup>();
         Managers.Sound.Play(Define.Sound.Bgm, "Sound_IntroBGM");
+        Define.ByJoyStick = _byJoyStick;
         return true;
     }
 }

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using static Define;
 
 public class UI_GameRoomItem : UI_Base
@@ -55,7 +56,7 @@ public class UI_GameRoomItem : UI_Base
         GetText((int)Texts.StateText).text = System.Enum.GetName(typeof(GameState), (int)state);
     }
 
-    public void OnGameRoomButton()
+    public void OnGameRoomButton(PointerEventData evt)
     {
         Debug.Log($"{_roomId}Item Clicked");
         MessageSystem.CallEventMessage(MESSAGE_EVENT_TYPE.MESS_ROOMLIST_SELECT, _roomId);

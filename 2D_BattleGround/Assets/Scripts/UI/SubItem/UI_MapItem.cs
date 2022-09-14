@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class UI_MapItem : UI_Base
 {
@@ -40,7 +41,7 @@ public class UI_MapItem : UI_Base
         _mapType = mapType;
     }
 
-    public void OnMapItemButton()
+    public void OnMapItemButton(PointerEventData evt)
     {
         switch (_mapType)
         {

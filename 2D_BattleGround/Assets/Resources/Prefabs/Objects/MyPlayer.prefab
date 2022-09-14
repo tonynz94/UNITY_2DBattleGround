@@ -120,7 +120,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _state: 0
-  _dir: 2
+  _dir: 0
   _lastDir: 2
   currentAni: 
   _cellPos: {x: 0, y: 0, z: 0}

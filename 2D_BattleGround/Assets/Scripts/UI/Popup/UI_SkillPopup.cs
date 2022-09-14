@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class UI_SkillPopup : UI_Popup
@@ -105,7 +106,7 @@ public class UI_SkillPopup : UI_Popup
         }
     }
 
-    public void OnSpeedUpSkillButton()
+    public void OnSpeedUpSkillButton(PointerEventData evt)
     {
         
         if (_tempSkillPoint == 0)
@@ -127,7 +128,7 @@ public class UI_SkillPopup : UI_Popup
         }
     }
 
-    public void OnRangeUpSkillButton()
+    public void OnRangeUpSkillButton(PointerEventData evt)
     {
         if (_tempSkillPoint == 0)
         {
@@ -148,7 +149,7 @@ public class UI_SkillPopup : UI_Popup
         }
     }
 
-    public void OnPowerUpSkillButton()
+    public void OnPowerUpSkillButton(PointerEventData evt)
     {
         if (_tempSkillPoint == 0)
         {
@@ -169,7 +170,7 @@ public class UI_SkillPopup : UI_Popup
         }
     }
 
-    public void OnWaterCountUpSkillButton()
+    public void OnWaterCountUpSkillButton(PointerEventData evt)
     {
         if (_tempSkillPoint == 0)
         {
@@ -190,7 +191,7 @@ public class UI_SkillPopup : UI_Popup
         }
     }
 
-    public void OnHomeButton()
+    public void OnHomeButton(PointerEventData evt)
     {
         //TODO 서버에 저장
         if (_isChanged)

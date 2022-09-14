@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class UI_CreateRoom : UI_Popup
 {
@@ -56,12 +57,12 @@ public class UI_CreateRoom : UI_Popup
         BindEvent(GetButton((int)Buttons.OKButton).gameObject, OnOKButton);
         BindEvent(GetButton((int)Buttons.BackButton).gameObject, OnBackButton);
 
-        BindEvent(GetButton((int)Buttons.MapItemButton_Tree).gameObject, () => OnMapSelect(Define.MapType.TreeMap));
-        BindEvent(GetButton((int)Buttons.MapItemButton_Lake).gameObject, () => OnMapSelect(Define.MapType.LakeMap));
-        BindEvent(GetButton((int)Buttons.MapItemButton_Grass).gameObject, () => OnMapSelect(Define.MapType.GrassMap));
+        BindEvent(GetButton((int)Buttons.MapItemButton_Tree).gameObject, (PointerEventData evt) => OnMapSelect(Define.MapType.TreeMap));
+        BindEvent(GetButton((int)Buttons.MapItemButton_Lake).gameObject, (PointerEventData evt) => OnMapSelect(Define.MapType.LakeMap));
+        BindEvent(GetButton((int)Buttons.MapItemButton_Grass).gameObject, (PointerEventData evt) => OnMapSelect(Define.MapType.GrassMap));
 
-        BindEvent(GetButton((int)Buttons.MapItemButton_Coop).gameObject, () => OnModeSelect(Define.GameMode.CooperativeMode));
-        BindEvent(GetButton((int)Buttons.MapItemButton_PVP).gameObject, () => OnModeSelect(Define.GameMode.PvPMode));
+        BindEvent(GetButton((int)Buttons.MapItemButton_Coop).gameObject, (PointerEventData evt) => OnModeSelect(Define.GameMode.CooperativeMode));
+        BindEvent(GetButton((int)Buttons.MapItemButton_PVP).gameObject, (PointerEventData evt) => OnModeSelect(Define.GameMode.PvPMode));
 
 
         GetObject((int)Objects.SelectModeObject).SetActive(true);
@@ -74,7 +75,7 @@ public class UI_CreateRoom : UI_Popup
         return true;
     }
 
-    public void OnOKButton()
+    public void OnOKButton(PointerEventData evt)
     {
 
         if (GetObject((int)Objects.SelectModeObject).activeSelf)
@@ -100,7 +101,7 @@ public class UI_CreateRoom : UI_Popup
         }
     }
 
-    public void OnBackButton()
+    public void OnBackButton(PointerEventData evt)
     {
         if(GetObject((int)Objects.SelectModeObject).activeSelf)
         {

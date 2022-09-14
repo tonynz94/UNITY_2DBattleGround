@@ -162,6 +162,9 @@ public class GameManager
         GameObject go = GetPlayerObject(sPkt.CGUID);
         BaseController controller = go.GetComponent<BaseController>();
 
+        if (sPkt.CGUID == Managers.Player.GetMyCGUID())
+            return;
+
         controller.CellPos = new Vector3Int(sPkt.cellPosX, sPkt.cellPosY, 0);
         controller.DestPos = new Vector3(sPkt.posX, sPkt.posY, 0);
         controller.Dir = (Define.MoveDir)sPkt.Dir;

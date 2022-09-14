@@ -99,6 +99,7 @@ public class UI_SkillPopup : UI_Popup
 
     public void SetSkillPointCountUI(string skillName , int count)
     {
+        GetText((int)Texts.SkillPointNumberText).text = _tempSkillPoint.ToString();
         for (int i = 1; i <= count; i++)
         {
             Image image = GetImage((int)((Images)System.Enum.Parse(typeof(Images), string.Format("{0}Point{1}",skillName, i))));

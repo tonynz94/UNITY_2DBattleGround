@@ -30,6 +30,8 @@ public class UI_Controller : UI_Scene
         if (base.Init() == false)
             return false;
 
+        gameObject.GetComponent<Canvas>().sortingOrder = 1;
+
         BindObject(typeof(Objects));
         BindButton(typeof(Buttons));
 
@@ -50,7 +52,7 @@ public class UI_Controller : UI_Scene
 
     private void Update()
     {
-        SetPlayerDirection(_JoyStickLeverObjectRect.transform.localPosition);
+        _myPlayerController.Dir = SetPlayerDirection(_JoyStickLeverObjectRect.transform.localPosition);
     }
 
     public void OnWaterBoomButton(PointerEventData evt)
@@ -84,7 +86,7 @@ public class UI_Controller : UI_Scene
             _myPlayerController.Dir = MoveDir.None;
     }
 
-    public void SetPlayerDirection(Vector2 normalizePos)
+    public MoveDir SetPlayerDirection(Vector2 normalizePos)
     {
         bool isPosXBigger = Mathf.Abs(normalizePos.x) > Mathf.Abs(normalizePos.y);
 
@@ -132,5 +134,11 @@ public class UI_Controller : UI_Scene
                 _tempDir = MoveDir.Down;
             }
         }
+        else
+        {
+            _tempDir = MoveDir.None;
+        }
+
+        return _tempDir;
     }
 }

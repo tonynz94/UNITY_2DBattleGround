@@ -28,7 +28,7 @@ public class NetworkManager
         IPHostEntry ipHost = Dns.GetHostEntry(host);
 		//IPAddress ipAddr = ipHost.AddressList[0];
 
-		string strIPAddress = "192.168.0.25";
+		string strIPAddress = "192.168.55.46";
 		Debug.Log(strIPAddress +" try Connect");
 		IPAddress ipAddr = IPAddress.Parse(strIPAddress);
 		IPEndPoint endPoint = new IPEndPoint(ipAddr, 7777);

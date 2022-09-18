@@ -106,12 +106,20 @@ public class UI_RoomList : UI_Popup
 
         if(Managers.Room.GetGameRoom(_selectRoomId).isStarted)
         {
+            Managers.UI.ShowPopupUI<UI_CommonPopup>().SetPopupCommon(
+                Define.PopupCommonType.YES, "Game Started", "Already Game Started join waiting room" ,
+                () => { Managers.UI.ClosePopupUI(this); } );
+
             Debug.Log("is already Started");
             return;
         }
 
         if(Managers.Room.GetGameRoom(_selectRoomId).GetPlayerCount() == 4)
         {
+            Managers.UI.ShowPopupUI<UI_CommonPopup>().SetPopupCommon(
+            Define.PopupCommonType.YES, "Full", "Its already Full Room",
+            () => { Managers.UI.ClosePopupUI(this); });
+
             Debug.Log("No slot to go in");
             return;
         }

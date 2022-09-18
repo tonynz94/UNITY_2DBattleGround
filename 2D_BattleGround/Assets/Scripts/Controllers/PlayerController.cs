@@ -43,6 +43,7 @@ public class PlayerController : BaseController
 
         State = ObjectState.Dead;
         GameObject.Destroy(this.gameObject, 0.5f);
+        GameObject.Destroy(FocusGridObject.gameObject);
     }
 
     protected override void UpdateAnimation()

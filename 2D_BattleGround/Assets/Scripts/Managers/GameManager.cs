@@ -118,7 +118,7 @@ public class GameManager
         if(isMyPlayer)
         {
             Camera.main.GetComponent<CameraController>().MyPlayerDie();      
-            MessageSystem.CallEventMessage(MESSAGE_EVENT_TYPE.MESS_PLAYERDEATH, _playerDic.Count);     
+            MessageSystem.CallEventMessage(MESSAGE_EVENT_TYPE.MESS_PLAYERDEATH, _playerDic.Count);
             return;
         }
 
@@ -132,9 +132,14 @@ public class GameManager
     }
 
     public void GameEnd()
-    {
-        MessageSystem.CallEventMessage(MESSAGE_EVENT_TYPE.MESS_PLAYERWINNER, null);
-        Debug.Log("¿ì½Â");
+    { 
+        if (_playerDic.ContainsKey(Managers.Player.GetMyCGUID()))
+        {
+            Managers.Player.GetPlayer(Managers.Player.GetMyCGUID()).LeaveFromGame();
+            MessageSystem.CallEventMessage(MESSAGE_EVENT_TYPE.MESS_PLAYERWINNER, null);
+        }
+
+        Debug.Log("Game Over");
     }
 
     public GameObject GetPlayerObject(int CGUID)

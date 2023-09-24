@@ -2,61 +2,117 @@
 using System.Collections.Generic;
 using System.Text;
 
+// Repository (사용자 데이터)
+// Service / Manager
+
+
+
 namespace Server.Game
 {
-    class PlayerManager
+    class PlayerFactory
     {
-        public static PlayerManager Instance { get; } = new PlayerManager();
-
-        //서버에 연결한 모든 플레이어들
-        public Dictionary<int, Player> _players { get; private set; } = new Dictionary<int, Player>();
-
-        object _lock = new object();
-        
-        public Player Add(int sesstionID, string nickName, bool isInGame, ClientSession clientSession)
-        {
-            lock (_lock)
-            {
+        Player CreateNewlyLoggedInPlayer() {
                 Player player = new Player();
                 player.Info.NickName = nickName;
                 player.Session = clientSession;
                 player.Session.MyPlayer = player;
-
-                _players.Add(sesstionID, player);
-
-                S_FirstEnter Spkt = new S_FirstEnter();
-                Spkt.CGUID = player.Session.SessionId;
-                Spkt.playerNickName = player.Info.NickName;
-
-                BroadCast(Spkt.Write());
-
-                return player;
-            }
+                return player
         }
+    }
 
-        public void BroadCast(ArraySegment<byte> packet)
+    class PlayerRepository
+    {
+        //서버에 연결한 모든 플레이어들
+        private readonly Dictionary<int, Player> _playersBySessionId { get; private set; } = new Dictionary<int, Player>();
+
+        public void Add(Player player) 
         {
-            lock (_lock)
-            {
-                foreach (Player player in _players.Values)
-                {
-                    player.Session.Send(packet);
-                }
-            }
+            lock();
         }
-
-        public Player GetPlayer(int CGUID)
+        public Player GetBySessionId(int CGUID)
         {
             Player player;
             _players.TryGetValue(CGUID, out player);
             return player;
         }
 
-        public String GetPlayerNickName(int CGUID)
+        public String GetNickName(int CGUID)
         {
             Player player = GetPlayer(CGUID);
             return player.Info.NickName;
         }
+
+        public ICollection<Player> FindPlayers()
+        {
+            return players.Values;
+        }
+    }
+
+    class Broadcaster 
+    {
+        public void SubscribeUser(Player player) 
+        {
+            player.LoginEvent += OnPlayerLogin;
+        }
+
+        void OnPlayerLogin(Player player) {
+            
+            S_FirstEnter event = new S_FirstEnter();
+            event.CGUID = player.Session.SessionId;
+            event.playerNickName = player.Info.NickName;
+
+            BroadcastToAllPlayers(event);
+        }
+
+        public void BroadcastToAllPlayers(ArraySegment<byte> packet)
+        {
+            IList<Player> allPlayers = playerRepository.FindAll();
+            lock(_lock) 
+            {
+                allPlayers.ForEach(player => player.Session.Send(packet);)
+            }
+        }
+
+    }
+
+
+    class PlayerManager
+    {
+        public static PlayerManager Instance { get; } = new PlayerManager();
+
+
+        object _lock = new object();
+        
+        public Player AddNewlyLoggedInPlayer(string nickName, ClientSession clientSession)
+        {
+
+            lock (_lock)
+            {
+                Player player = gameState.Find(nickName);
+                if (player != null) {
+                    // 못들어가게...
+                }
+
+                Player player = CreateNewlyLoggedInPlayer(session, nickName);
+                playerRepository.Add(player);
+
+                broadcaster.SubscribeUser(player);
+
+                player.FirstEnterEvent.Invoke();
+            }
+        }
+
+        private static Player CreateNewlyLoggedInPlayer(ClientSession session, string nickName) {
+                Player player = new Player()
+                {
+                    SessionId = clientSession.Id,
+                    Info.NickName = nickName;
+                }
+                
+                return player;
+        }
+
+       
 
         public void HandlePlayerSkillPoint(C_SkillState cPkt)
         {

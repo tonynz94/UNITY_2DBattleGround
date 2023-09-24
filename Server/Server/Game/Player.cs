@@ -33,6 +33,8 @@ namespace Server.Game
         public bool isGameOwner = false;
         public bool isPlayerReady = false;
 
+        public EventHandler<UserLoginEvent> userLoginEventHandler { get; } = new ();
+
         public int Exp
         {
             get
@@ -68,8 +70,8 @@ namespace Server.Game
     class Player
     {
         public PlayerInfo Info { get; set; } = new PlayerInfo(); 
-        public ClientSession Session { get; set; }
         public GameRoom Room { get; set; }
+        public long SessionId { get; init; }
 
         public bool isPossableWaterBoomSettedInField()
         {
@@ -83,6 +85,7 @@ namespace Server.Game
 
         public void SetWaterBoomCountUp()
         {
+            // increment
             Info.currentWaterBoomCountInField++;
         }
 
@@ -99,6 +102,10 @@ namespace Server.Game
             Info.maxHP = 200;
             Info.currentHP = 200;
             Info.currentWaterBoomCountInField = 0;
+        }
+
+        private void Reset() {
+            
         }
     }
 }
